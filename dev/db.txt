@@ -1,0 +1,12 @@
+TABLES
+
+    Post
+
+        COLUMNS
+
+            id
+            subject
+            title
+            body
+            created
+            updated

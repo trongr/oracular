@@ -1,0 +1,12 @@
+TABLES
+
+    entries
+
+        Columns
+
+            id
+            subject
+            title
+            body
+            created
+            updated
