@@ -1,0 +1,3 @@
+Hello from login
+
+{% if username %}<h1>{{username}} {{password}}</h1>{% endif %}

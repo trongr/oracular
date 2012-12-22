@@ -12,6 +12,3 @@ class Post(models.Model):
     def __unicode__(self):
         return "{0}/{1}: {2}".format(self.subject, self.title, self.body)
 
-def User(models.Model):
-
-    pass

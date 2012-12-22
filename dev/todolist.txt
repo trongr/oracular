@@ -3,10 +3,10 @@ C/
     STATUS
     FEATURES
 
-STATUS/
+C/STATUS
 
     Admin done
 
-FEATURES/
+C/FEATURES
 
     Implement multiusers

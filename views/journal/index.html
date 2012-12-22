@@ -1,1 +1,21 @@
-Hello from views/journal/index.html!
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ STATIC_URL }}index.css">
+</head>
+<body>
+
+{% load url from future %}
+<form id="loginform" action="{% url 'journal:home' %}" method="post">
+{% csrf_token %}
+    <input type="text" name="username" placeholder="username">
+    <input type="password" name="password" placeholder="password">
+    <input type="submit" value="login">
+</form>
+
+<div id="error">
+{% if error %}{{error}}{% endif %}
+</div>
+
+</body>
+</html>

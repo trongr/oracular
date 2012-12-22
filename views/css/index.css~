@@ -1,0 +1,12 @@
+* {
+    font-family: serif;
+}
+
+body {
+    background-color: orange;
+}
+
+#loginform {
+    float: right;
+}
+

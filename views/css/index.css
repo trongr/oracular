@@ -1,0 +1,19 @@
+* {
+    font-family: serif;
+}
+
+body {
+    background-color: orange;
+}
+
+#loginform {
+    float: right;
+}
+
+/* TODO. Position divs properly */
+#error{
+    background-color: red;
+    font-size: 22px;
+    width: 333px;
+    height: 111px;
+}

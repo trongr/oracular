@@ -5,4 +5,5 @@ urlpatterns = patterns(
     '',
     url(r'^$', views.index, name='index'),
     url(r'^edit/(?P<post_id>\d+)/$', views.edit, name='edit'),
-    )
+    url(r'^home/$', views.home, name='home'),
+)
