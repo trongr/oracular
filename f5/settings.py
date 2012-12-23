@@ -68,6 +68,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     "/home/nahn/nt/django/f5/views/css/",
+    "/home/nahn/nt/django/f5/views/js/",
 )
 
 # List of finder classes that know how to find static files in
