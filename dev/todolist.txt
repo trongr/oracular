@@ -1,12 +1,17 @@
 C/
 
-    STATUS
-    FEATURES
+    STATUS: stat/
+    FEATURES: f/
+    styles: s/
 
-C/STATUS
+stat/
 
-    Admin done
+    User login done
 
-C/FEATURES
+f/
 
-    Implement multiusers
+    User registration
+
+s/
+
+    CSS: div positioning

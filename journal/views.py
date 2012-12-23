@@ -24,3 +24,6 @@ def home(request):
                 'error': 'wrong login'
                 })
 
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect(reverse("journal:index"))

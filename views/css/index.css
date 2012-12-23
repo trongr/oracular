@@ -4,16 +4,30 @@
 
 body {
     background-color: orange;
+    position: relative;
+}
+
+#logoutbox {
+    background-color: yellow;
+    text-align: right;
+    padding: 11px;
 }
 
 #loginform {
     float: right;
 }
 
-/* TODO. Position divs properly */
+.clear {
+    clear: both;
+}
+
 #error{
     background-color: red;
-    font-size: 22px;
-    width: 333px;
-    height: 111px;
+    font-size: 33px;
+    margin: 22px;
+    padding: 22px;
+}
+
+#welcome {
+    padding: 11px;
 }
