@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from journal.models import Post
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return render(request, 'journal/index.html')
@@ -24,6 +25,7 @@ def home(request):
                 'error': 'wrong login'
                 })
 
+@login_required
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse("journal:index"))
