@@ -1,20 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
-<link rel="stylesheet" href="{{ STATIC_URL }}index.css">
-</head>
-<body>
+    <head>
+        {% load url from future %}
+        <link rel="stylesheet" href="{{ STATIC_URL }}global.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}home.css">
+    </head>
+    <body>
+        <a class="logout controls" href="{% url 'journal:logout' %}">logout</a>
+        <div class="clear"></div>
 
-<div id="logoutbox">
-{% load url from future %}
-<a href="{% url 'journal:logout' %}">logout</a>
-</div>
-
-<div class="clear"></div>
-
-<div id="welcome">
-{% if username %}Hello <strong>{{ username }}</strong>{% endif %}
-</div>
-
-</body>
+    </body>
 </html>

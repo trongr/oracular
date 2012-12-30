@@ -1,0 +1,15 @@
+#register_box {
+    margin-top: 10%;
+    margin-left: 30%;
+    width: 40%;
+}
+
+.register_input {
+    margin: 5px;
+    width: 100%;
+}
+
+.register_input.button {
+    float: right;
+    width: auto;
+}

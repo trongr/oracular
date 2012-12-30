@@ -1,0 +1,54 @@
+* {
+    border: none;
+}
+
+input.text_input2:hover {
+    background-color: white;
+    color: black;
+}
+
+input.button:hover {
+    background-color: white;
+    color: red;
+}
+
+body {
+    background-color: gainsboro;
+}
+
+.clear {
+    clear: both;
+}
+
+#error {
+    background-color: lightsteelblue;
+    color: black;
+    font-size: larger;
+    text-align: center;
+    padding: 22px;
+    margin: 25px;
+    margin-left: 10%;
+    width: 80%;
+}
+
+.controls {
+    background-color: lightslategrey;
+    color: white;
+    font-family: arial;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.controls.text_input {
+    background-color: whitesmoke;
+    color: black;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:hover {
+    background-color: white;
+    color: red;
+}

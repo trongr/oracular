@@ -1,33 +1,8 @@
-* {
-    font-family: serif;
-}
-
-body {
-    background-color: orange;
-    position: relative;
-}
-
-#logoutbox {
-    background-color: yellow;
-    text-align: right;
-    padding: 11px;
-}
-
 #loginform {
     float: right;
 }
 
-.clear {
-    clear: both;
-}
-
-#error{
-    background-color: red;
-    font-size: 33px;
-    margin: 22px;
-    padding: 22px;
-}
-
-#welcome {
-    padding: 11px;
+#register {
+    float: right;
+    margin-left: 10px;
 }

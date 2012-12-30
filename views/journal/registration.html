@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>F5</title>
+        {% load url from future %}
+        <link rel="stylesheet" href="{{ STATIC_URL }}global.css"/>
+        <link rel="stylesheet" href="{{ STATIC_URL }}registration.css"/>
+    </head>
+    <body>
+        <form id="register_box" action="{% url 'journal:register' %}" method="post">
+            {% csrf_token %}
+            <input class="controls text_input register_input" type="text" name="first_name" placeholder="first name (optional)"><br>
+            <input class="controls text_input register_input" type="text" name="last_name" placeholder="last name (optional)"><br>
+            <input class="controls text_input register_input" type="text" name="username" placeholder="username"><br>
+            <input class="controls text_input register_input" type="password" name="password" placeholder="password"><br>
+            <input class="controls text_input register_input" type="password" name="repeat_password" placeholder="repeat password"><br>
+            <input class="controls text_input register_input" type="email" name="email" placeholder="email"><br>
+            <input class="controls button register_input" type="submit" value="login"><br>
+        </form>
+        <div class="clear"></div>
+        {% if error %}<div id="error">{{error}}</div>{% endif %}
+    </body>
+</html>

@@ -3,8 +3,8 @@
     <head>
         <title>F5</title>
         {% load url from future %}
-        <link rel="stylesheet" href="{{ STATIC_URL }}index.css"/>
         <link rel="stylesheet" href="{{ STATIC_URL }}global.css"/>
+        <link rel="stylesheet" href="{{ STATIC_URL }}register.css"/>
         <!-- <script src="{{ STATIC_URL }}jquery-1.7.1.min.js"></script> -->
         <script>
             $(document).ready(function(){
@@ -17,11 +17,11 @@
         </script>
     </head>
     <body>
-        <a id="register" class="controls" href="{% url 'journal:registration' %}">register</a>
+        <a id="register" class="controls" href="{% url 'journal:register' %}">register</a>
         <form id="loginform" action="{% url 'journal:home' %}" method="post">
             {% csrf_token %}
-            <input class="controls text_input" type="text" name="username" placeholder="username">
-            <input class="controls text_input" type="password" name="password" placeholder="password">
+            <input class="controls" type="text" name="username" placeholder="username">
+            <input class="controls" type="password" name="password" placeholder="password">
             <input class="controls button" type="submit" value="login">
         </form>
         <div class="clear"></div>

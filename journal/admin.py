@@ -3,10 +3,10 @@ from journal.models import Post
 
 class PostAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('Post',             {'fields': ['subject', 'title', 'body']}),
+        ('Post',             {'fields': ['subject', 'title', 'body', 'creator']}),
         ('Times', {'fields': ['created', 'updated'], 'classes': ['collapse']})
-        ]
-    list_display = ["subject", "title", "body", "created", "updated"]
+    ]
+    list_display = ["subject", "title", "body", "creator", "created", "updated"]
     search_fields = ["title"]
     list_filter = ['created']
     date_hierarchy = 'created'
