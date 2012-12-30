@@ -7,7 +7,7 @@ input.text_input2:hover {
     color: black;
 }
 
-input.button:hover {
+input.button:hover, input.button:focus {
     background-color: white;
     color: red;
 }

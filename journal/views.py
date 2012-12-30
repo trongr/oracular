@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 
 from journal.models import Post
 
+import re
+
 def index(request):
     return render(request, 'journal/index.html')
 
@@ -43,12 +45,17 @@ def register(request):
     password = request.POST.get('password', '')
     repeat_password = request.POST.get('repeat_password', '')
     email = request.POST.get("email", "")
-    if password != repeat_password or len(password) < 6:
-        return HttpResponseRedirect(reverse('journal:registration')) # TODO. Pass along error msg
+
+    error_msg = check_registration(username, password, repeat_password, email)
+    if error_msg is not None:
+        return render(request, "journal/registration.html", {
+            'error_msg': error_msg
+        })
+
     try:
         User.objects.create_user(username, email, password)
-    except: # TODO. More fine-grained error checkinng.
-        return HttpResponseRedirect(reverse('journal:registration')) # TODO. error msg
+    except:
+        return render(request, "journal/registration.html", {'error': "something's wrong"})
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
@@ -56,3 +63,17 @@ def register(request):
             'username': username
         })
     return render(request, "journal/index.html", {'error': "something's wrong"})
+
+def check_registration(username, password, repeat_password, email):
+    error_msg = None
+    if not re.match(r'^\w+$', username):
+        error_msg = "username can only contain letters or numbers"
+    elif User.objects.filter(username=username).exists():
+        error_msg = "username already exists"
+    elif len(password) < 6:
+        error_msg = "password must have at least 6 characters"
+    elif password != repeat_password:
+        error_msg = "passwords don't match"
+    elif email != "" and User.objects.filter(email=email).exists():
+        error_msg = "email already registered"
+    return error_msg
