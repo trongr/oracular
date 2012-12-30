@@ -8,6 +8,6 @@
     <body>
         <a class="logout controls" href="{% url 'journal:logout' %}">logout</a>
         <div class="clear"></div>
-
+        {% if username %}{{ username }}{% endif %}
     </body>
 </html>

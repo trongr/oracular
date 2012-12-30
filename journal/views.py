@@ -1,3 +1,5 @@
+import re
+
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
@@ -8,8 +10,6 @@ from django.contrib.auth.decorators import login_required
 
 from journal.models import Post
 
-import re
-
 def index(request):
     return render(request, 'journal/index.html')
 
@@ -17,8 +17,12 @@ def edit(request):
     return render(request, "journal/edit.html")
 
 def home(request):
-    username = request.POST.get('username', '')
+    if request.user.is_authenticated():
+        return render(request, "journal/home.html", {
+            'username': request.user.username
+        })
     password = request.POST.get('password', '')
+    username = request.POST.get('username', '')
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
@@ -59,9 +63,7 @@ def register(request):
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
-        return render(request, "journal/home.html", {
-            'username': username
-        })
+        return HttpResponseRedirect(reverse("journal:home"))
     return render(request, "journal/index.html", {'error': "something's wrong"})
 
 def check_registration(username, password, repeat_password, email):
