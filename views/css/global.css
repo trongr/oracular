@@ -39,6 +39,11 @@ body {
     padding: 5px;
 }
 
+.controls:hover {
+    background-color: white;
+    color: red;
+}
+
 .controls.text_input {
     background-color: whitesmoke;
     color: black;

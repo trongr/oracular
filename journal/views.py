@@ -1,4 +1,5 @@
 import re
+from random import randint
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -18,22 +19,27 @@ def edit(request):
 
 def home(request):
     if request.user.is_authenticated():
+        creator = request.user.id
+        count = Post.objects.filter(creator=creator).count()
+        ind = randint(0, count - 1)
+        post = Post.objects.filter(creator=creator)[ind]
         return render(request, "journal/home.html", {
-            'username': request.user.username
+            'username': request.user.username,
+            'post': post,
         })
+
+def login(request):
     password = request.POST.get('password', '')
     username = request.POST.get('username', '')
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
-        return render(request, "journal/home.html", {
-            'username': username
-        })
-    else:
-        return render(request, "journal/index.html", {
-            'error': 'wrong'
-        })
+        return HttpResponseRedirect(reverse('journal:home'))
+    return render(request, "journal/index.html", {
+        'error': 'wrong'
+    })
 
+# Do we really need @login_required here?
 @login_required
 def logout(request):
     auth.logout(request)

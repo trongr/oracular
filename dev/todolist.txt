@@ -1,17 +1,14 @@
-C/
+CONTENTS
 
-    STATUS: stat/
-    FEATURES: f/
-    styles: s/
+    STATUS
+    FEATURES
 
-stat/
+STATS
 
-    User login done
+    Registration done. Random posts done.
 
-f/
+FEATURES
 
-    User registration
-
-s/
-
-    CSS: div positioning
+    Creating new posts
+    Make subjects into tags / filters
+    Multiple random posts from multiple tags

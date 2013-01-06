@@ -5,26 +5,39 @@
         {% load url from future %}
         <link rel="stylesheet" href="{{ STATIC_URL }}index.css"/>
         <link rel="stylesheet" href="{{ STATIC_URL }}global.css"/>
-        <!-- <script src="{{ STATIC_URL }}jquery-1.7.1.min.js"></script> -->
+        <script src="{{ STATIC_URL }}jquery-1.7.1.min.js"></script>
         <script>
-            $(document).ready(function(){
-                <!-- Can do this using just django -->
-                <!-- <\!-- Remove div if no error message -\-> -->
-                <!-- if ($.trim($("#error").text()) == ""){ -->
-                <!--     $("#error").remove(); -->
-                <!-- } -->
+            $(function(){
+                $("#username").focus();
             });
         </script>
-    </head>
+        </head>
     <body>
-        <a id="register" class="controls" href="{% url 'journal:registration' %}">register</a>
-        <form id="loginform" action="{% url 'journal:home' %}" method="post">
-            {% csrf_token %}
-            <input class="controls text_input" type="text" name="username" placeholder="username">
-            <input class="controls text_input" type="password" name="password" placeholder="password">
-            <input class="controls button" type="submit" value="login">
+        <a  id="register"
+            class="controls"
+            href="{% url 'journal:registration' %}">
+                signup
+                </a>
+        <form   id="loginform"
+                action="{% url 'journal:login' %}"
+                method="post">
+                {% csrf_token %}
+                <input  id="username"
+                        class="controls text_input"
+                        type="text"
+                        name="username"
+                        placeholder="username">
+                <input  class="controls text_input"
+                        type="password"
+                        name="password"
+                        placeholder="password">
+                <input  class="controls button"
+                        type="submit"
+                        value="login">
         </form>
         <div class="clear"></div>
-        {% if error %}<div id="error">{{error}}</div>{% endif %}
+        {% if error %}
+        <div id="error">{{error}}</div>
+        {% endif %}
     </body>
 </html>

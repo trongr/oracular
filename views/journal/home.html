@@ -6,8 +6,19 @@
         <link rel="stylesheet" href="{{ STATIC_URL }}home.css">
     </head>
     <body>
-        <a class="logout controls" href="{% url 'journal:logout' %}">logout</a>
-        <div class="clear"></div>
-        {% if username %}{{ username }}{% endif %}
+        <a  id="logout"
+            class="controls"
+            href="{% url 'journal:logout' %}">logout</a>
+        <div id="random">
+            {% if post %}
+            <div id="headings">
+                <div id="title" class="editable">{{ post.title }}</div>
+                <div id="date">{{ post.updated }}</div>
+            </div>
+            <div id="body" class="editable">{{ post.body }}</div>
+            {% else %}
+            <div id="body">You don't have any post</div>
+            {% endif %}
+        </div>
     </body>
 </html>
