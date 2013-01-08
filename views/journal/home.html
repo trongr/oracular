@@ -9,16 +9,25 @@
         <a  id="logout"
             class="controls"
             href="{% url 'journal:logout' %}">logout</a>
-        <div id="random">
+        <div class="random">
             {% if post %}
-            <div id="headings">
-                <div id="title" class="editable">{{ post.title }}</div>
-                <div id="date">{{ post.updated }}</div>
+            <div class="headings">
+                <div class="editable title">{{ post.title }}</div>
+                <div class="date">{{ post.updated }}</div>
             </div>
-            <div id="body" class="editable">{{ post.body }}</div>
+            <div class="editable body">{{ post.body }}</div>
             {% else %}
-            <div id="body">You don't have any post</div>
+            <div class="body">You don't have any post</div>
             {% endif %}
         </div>
+        <form class="random" action="{% url 'journal:edit_post' post.id %}" method="post">
+            {% csrf_token %}
+            <div class="headings">
+                <textarea class="title" type="text" name="title_edit">{{ post.title }}</textarea>
+                <div class="date">{{ post.updated }}</div>
+            </div>
+            <textarea class="body" type="text" name="body_edit">{{ post.body }}</textarea>
+            <input class="controls button" type="submit" value="post">
+        </form>
     </body>
 </html>

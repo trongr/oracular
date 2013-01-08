@@ -2,7 +2,7 @@
     border: none;
 }
 
-input.text_input2:hover {
+input.text_input:hover {
     background-color: white;
     color: black;
 }

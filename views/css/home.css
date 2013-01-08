@@ -3,14 +3,15 @@
     color: red;
 }
 
-#random {
+.random {
     float: left;
-    width: 80%;
+    max-width: 80%;
+    display: inline-block;
     background-color: #B9D3EE;
     color: black;
 }
 
-#headings {
+.headings {
     background-color: #abc;
     color: white;
     display: table;
@@ -19,7 +20,7 @@
     width: 100%;
 }
 
-#title {
+.title {
     display: table-cell;
     vertical-align: middle;
     text-align: left;
@@ -28,7 +29,7 @@
     font-weight: bold;
 }
 
-#date {
+.date {
     display: table-cell;
     vertical-align: middle;
     text-align: right;
@@ -37,7 +38,7 @@
     font-weight: bold;
 }
 
-#body {
+.body {
     clear: both;
     font-family: serif;
     font-size: x-large;

@@ -1,5 +1,6 @@
 import re
 from random import randint
+from datetime import datetime
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -14,8 +15,20 @@ from journal.models import Post
 def index(request):
     return render(request, 'journal/index.html')
 
-def edit(request):
-    return render(request, "journal/edit.html")
+@login_required
+def edit_post(request, post_id):
+    if Post.objects.filter(creator=request.user.id).filter(id=post_id).exists():
+        title = request.POST["title_edit"]
+        body = request.POST["body_edit"]
+        post = Post.objects.get(id=post_id)
+        post.title = title
+        post.body = body
+        post.updated = datetime.now()
+        post.save()
+        return HttpResponseRedirect(reverse('journal:home'))
+    return render(request, "home.html", {
+        "error_msg": "something's wrong: couldn't edit post"
+    })
 
 def home(request):
     if request.user.is_authenticated():
@@ -39,7 +52,6 @@ def login(request):
         'error': 'wrong'
     })
 
-# Do we really need @login_required here?
 @login_required
 def logout(request):
     auth.logout(request)

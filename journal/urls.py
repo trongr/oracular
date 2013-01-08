@@ -9,5 +9,5 @@ urlpatterns = patterns(
     url(r'^registration/$', views.registration, name='registration'),
     url(r'^register/$', views.register, name='register'),
     url(r'^logout/$', views.logout, name='logout'),
-    url(r'^edit/(?P<post_id>\d+)/$', views.edit, name='edit'),
+    url(r'^edit_post/(?P<post_id>\d+)/$', views.edit_post, name='edit_post'),
 )
