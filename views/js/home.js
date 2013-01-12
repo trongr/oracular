@@ -5,4 +5,5 @@ function edit_random_post(){
     $("#random_edit_form").css({
         "display": "block",
     });
+    $("textarea.title").focus();
 }

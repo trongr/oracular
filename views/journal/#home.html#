@@ -12,7 +12,7 @@
         <div id="random_post" onclick="edit_random_post()" class="random">
             {% if post %}
             <div class="headings">
-                <div class="editable title">{{ post.title }}</div><br>
+                <div class="editable title">{{ post.title }}</div>
                 <div class="date">{{ post.updated }}</div>
             </div>
             <div class="editable body">{{ post.body }}</div>
@@ -26,7 +26,7 @@
                 <input class="title" type="text" name="title_edit" value="{{ post.title }}"></input>
                 <div class="date">{{ post.updated }}</div>
             </div>
-            <textarea class="body" type="text" name="body_edit">{{ post.body }}</textarea>
+            <textarea class="body" type="text" name="body_edit" >{{ post.body }}</textarea>
             <input class="controls button" type="submit" value="post">
         </form>
     </body>
