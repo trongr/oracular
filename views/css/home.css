@@ -50,3 +50,7 @@
 #logout {
     float: right;
 }
+
+#random_edit_form {
+    display: none;
+}

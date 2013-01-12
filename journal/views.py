@@ -77,12 +77,16 @@ def register(request):
     try:
         User.objects.create_user(username, email, password)
     except:
-        return render(request, "journal/registration.html", {'error': "something's wrong"})
+        return render(request, "journal/registration.html", {
+            'error': "something's wrong"
+        })
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
         return HttpResponseRedirect(reverse("journal:home"))
-    return render(request, "journal/index.html", {'error': "something's wrong"})
+    return render(request, "journal/index.html", {
+        'error': "something's wrong"
+    })
 
 def check_registration(username, password, repeat_password, email):
     error_msg = None

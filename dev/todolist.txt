@@ -12,3 +12,6 @@ FEATURES
     Creating new posts
     Make subjects into tags / filters
     Multiple random posts from multiple tags
+    Public / private posts
+    Voting on public posts
+    Alternate themes: all black

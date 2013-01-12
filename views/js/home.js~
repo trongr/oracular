@@ -1,0 +1,4 @@
+function edit_random_post(){
+    alert("yes");
+
+}
