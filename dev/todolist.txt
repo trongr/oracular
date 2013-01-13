@@ -1,17 +1,20 @@
-CONTENTS
+Database
 
-    STATUS
-    FEATURES
+    Make tags table
+    Make post_tags table
 
-STATS
+home.html
 
-    Registration done. Random posts done.
+    Show multiple random posts
+    Show multiple random posts by tag
+    Create new posts
+    Declare public / private
 
-FEATURES
+index.html
 
-    Creating new posts
-    Make subjects into tags / filters
-    Multiple random posts from multiple tags
-    Public / private posts
+    Show public posts
     Voting on public posts
+
+Design
+
     Alternate themes: all black

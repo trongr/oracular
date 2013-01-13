@@ -2,11 +2,21 @@ TABLES
 
     Post
 
-        COLUMNS
+        id
+        subject
+        title
+        body
+        created
+        updated
 
-            id
-            subject
-            title
-            body
-            created
-            updated
+    Tags
+
+        id
+        name
+
+    Post_tags
+
+        tag_id
+        post_id
+
+
