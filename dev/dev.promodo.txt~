@@ -18,3 +18,16 @@ index.html
 Design
 
     Alternate themes: all black
+
+Registration
+
+    Email verification. Maybe use mailchimp
+
+Deployment
+
+    Heroku
+    How to maintain a DB in development
+
+Security
+
+    Input validation

@@ -1,0 +1,40 @@
+Database
+
+    Make tags table
+
+        tags(_id, tag_name, num_posts)
+
+    Make post_tags table
+
+        post_tags(_id, _post_id, tag_id)
+
+    syncdb
+
+home.html
+
+    Show multiple random posts
+    Show multiple random posts by tag
+    Create new posts
+    Declare public / private
+
+index.html
+
+    Show public posts
+    Voting on public posts
+
+Design
+
+    Alternate themes: all black
+
+Registration
+
+    Email verification. Maybe use mailchimp
+
+Deployment
+
+    Heroku
+    How to maintain a DB in development
+
+Security
+
+    Input validation
