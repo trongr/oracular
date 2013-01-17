@@ -4,19 +4,15 @@ home.html
 
         home.html
 
-            New button, tool panel on top
+            Focus edit box on click []
+            New button, tool panel on top []
 
-                logout button float right, new button float left.
-                Link instead of button (searchable as you type)
+                logout button float right, new button float left.   []
+                Link instead of button (searchable as you type) []
 
             Copy box from Edit box
 
         home.css
-
-            Formatting
-            #new_post_button
-
-                Align vertically    []
 
             #new_post
 
@@ -31,11 +27,22 @@ home.html
 
                     .container: boxsizing
 
+            textarea left right margin 5px [nvm]
+            Formatting []
+            #new_post_button []
+
+                Align vertically    []
+
             random post margin: 20px. Remove toolbox margin-bottom  []
 
         home.js
 
             on NEW button click: unhide edit box: create_post()
+            Button: onclick onkeypress using jquery []
+
+                Set onclick and onkeypresses onload [onkeypress not done]   []
+                #random_post edit_random_post   []
+                #new_post_button create_post    []
 
         views.py
 
@@ -60,6 +67,9 @@ Deployment
     How to maintain a DB in development
 
 Make an intro / help page
+
+    For power users: most elements of the site are searchable as you
+    type: faster navigation.
 
 Design
 

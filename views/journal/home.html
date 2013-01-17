@@ -9,11 +9,10 @@
     </head>
     <body>
         <div id="toolbox" class="container">
-            <a id="new_post_button" onclick="create_post()" class="controls">new</a>
+            <a id="new_post_button" class="controls" href="#">new</a>
             <a id="logout" class="controls" href="{% url 'journal:logout' %}">logout</a>
         </div>
-
-        <div id="random_post" onclick="edit_random_post()" class="random">
+        <a id="random_post" class="random" href="#">
             {% if post %}
             <div class="headings container">
                 <div class="editable title">{{ post.title }}</div>
@@ -23,14 +22,14 @@
             {% else %}
             <div class="body">You don't have any post</div>
             {% endif %}
-        </div>
+        </a>
         <form id="random_edit_form" class="random" action="{% url 'journal:edit_post' post.id %}" method="post">
             {% csrf_token %}
             <div class="headings container">
                 <input class="title" type="text" name="title_edit" value="{{ post.title }}"></input>
                 <div class="date">{{ post.updated }}</div>
             </div>
-            <textarea class="body container" type="text" name="body_edit" >{{ post.body }}</textarea><br>
+            <textarea id="body_edit" class="body container" type="text" name="body_edit">{{ post.body }}</textarea><br>
             <input id="submit_button" class="controls button" type="submit" value="post">
         </form>
     </body>
