@@ -8,10 +8,14 @@
         <script src="{{ STATIC_URL }}home.js"></script>
     </head>
     <body>
-        <a id="logout" class="controls" href="{% url 'journal:logout' %}">logout</a>
+        <div id="toolbox" class="container">
+            <a id="new_post_button" onclick="create_post()" class="controls">new</a>
+            <a id="logout" class="controls" href="{% url 'journal:logout' %}">logout</a>
+        </div>
+
         <div id="random_post" onclick="edit_random_post()" class="random">
             {% if post %}
-            <div class="headings">
+            <div class="headings container">
                 <div class="editable title">{{ post.title }}</div>
                 <div class="date">{{ post.updated }}</div>
             </div>
@@ -22,11 +26,11 @@
         </div>
         <form id="random_edit_form" class="random" action="{% url 'journal:edit_post' post.id %}" method="post">
             {% csrf_token %}
-            <div class="headings">
+            <div class="headings container">
                 <input class="title" type="text" name="title_edit" value="{{ post.title }}"></input>
                 <div class="date">{{ post.updated }}</div>
             </div>
-            <textarea class="body" type="text" name="body_edit" >{{ post.body }}</textarea><br>
+            <textarea class="body container" type="text" name="body_edit" >{{ post.body }}</textarea><br>
             <input id="submit_button" class="controls button" type="submit" value="post">
         </form>
     </body>

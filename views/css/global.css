@@ -12,8 +12,10 @@ input.button:hover, input.button:focus {
     color: red;
 }
 
-body {
+html, body {
     background-color: gainsboro;
+    margin: 0;
+    padding: 0;
 }
 
 .clear {
@@ -65,4 +67,10 @@ a:link {
 a:hover {
     background-color: white;
     color: red;
+}
+
+.container {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }

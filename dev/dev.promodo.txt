@@ -1,26 +1,65 @@
-Database
-
-    Make tags table
-
-        tags(_id, tag_name, num_posts)
-
-    Make post_tags table
-
-        post_tags(_id, _post_id, tag_id)
-
-    syncdb
-
 home.html
 
-    Show multiple random posts
-    Show multiple random posts by tag
     Create new posts
+
+        home.html
+
+            New button, tool panel on top
+
+                logout button float right, new button float left.
+                Link instead of button (searchable as you type)
+
+            Copy box from Edit box
+
+        home.css
+
+            Formatting
+            #new_post_button
+
+                Align vertically    []
+
+            #new_post
+
+                Hide create box by default
+
+            #toolbox
+
+                bar bg color    []
+                Fit buttons inside  []
+                top left margin gap: caused by position: relative   []
+                width: 100% overflows   []
+
+                    .container: boxsizing
+
+            random post margin: 20px. Remove toolbox margin-bottom  []
+
+        home.js
+
+            on NEW button click: unhide edit box: create_post()
+
+        views.py
+
+            create_post()
+            Redirect to home.html (everything redirects home :)
+
+    Show multiple random posts
+
+        Generate div instead of unhiding
+
+    Show multiple random posts by tag
     Declare public / private
 
 index.html
 
     Show public posts
     Voting on public posts
+
+Deployment
+
+    Heroku
+    How to maintain a DB in development
+
+Make an intro / help page
 
 Design
 
@@ -29,11 +68,6 @@ Design
 Registration
 
     Email verification. Maybe use mailchimp
-
-Deployment
-
-    Heroku
-    How to maintain a DB in development
 
 Security
 
