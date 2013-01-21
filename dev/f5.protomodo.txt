@@ -1,0 +1,51 @@
+Create new posts
+    js generate date
+
+    tags input field
+        edit_post views.py
+    subject css
+    create_post()
+        get post info
+        check title nonempty
+            client
+            server
+        create post
+        Redirect to home.html (everything redirects home :)
+    change names
+        input place holders / values
+        #submit_button home.js
+        #new_post_form
+            Hide by default
+    footings css
+        subject field expand to fill
+    Copy box from Edit box
+    on NEW button click: unhide edit box: create_new_post_form()
+    placeholder issues
+        values cached by browser
+        can't see cursor
+            see index.html
+    change request url
+        urls.py
+Show multiple random posts
+    display subject
+    Generate div instead of unhiding
+Show multiple random posts by tag
+    create new post tags input field
+Declare public / private
+Escape cancels editing and removes edit box
+
+index.html
+    Show public posts
+    Voting on public posts
+Deployment
+    Heroku
+    How to maintain a DB in development
+Make an intro / help page
+    For power users: most elements of the site are searchable as you
+    type: faster navigation.
+Design
+    Alternate themes: all black
+Registration
+    Email verification. Maybe use mailchimp
+Security
+    Input validation

@@ -21,6 +21,15 @@
     width: 100%;
 }
 
+/* .footings { */
+/*     background-color: #B9D3EE; */
+/*     color: white; */
+/*     display: table; */
+/*     margin: 5px; */
+/*     padding: 10px; */
+/*     width: 100%; */
+/* } */
+
 .title {
     display: table-cell;
     vertical-align: middle;
@@ -46,6 +55,11 @@
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 10px;
+}
+
+.subject {
+    margin-left: 15px;
+    margin-bottom: 10px;
 }
 
 #logout {
@@ -84,4 +98,8 @@ input {
 
 #new_post_button {
     float: left;
+}
+
+#new_post_form {
+    display: none;
 }

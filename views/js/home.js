@@ -10,9 +10,12 @@ function edit_random_post(){
     $("#random_edit_form").css({
         "display": "block",
     });
-    $("input.title").focus();
+    $("title_edit").focus();
 }
 
 function create_post(){
-    alert("Hello");
+    $("#new_post_form").css({
+        "display": "block",
+    });
+    $("#new_post_form_title").focus();
 }

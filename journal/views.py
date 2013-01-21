@@ -20,9 +20,11 @@ def edit_post(request, post_id):
     if Post.objects.filter(creator=request.user.id).filter(id=post_id).exists():
         title = request.POST["title_edit"]
         body = request.POST["body_edit"]
+        subject = request.POST["subject_edit"]
         post = Post.objects.get(id=post_id)
         post.title = title
         post.body = body
+        post.subject = subject
         post.updated = datetime.now()
         post.save()
         return HttpResponseRedirect(reverse('journal:home'))
@@ -101,3 +103,18 @@ def check_registration(username, password, repeat_password, email):
     elif email != "" and User.objects.filter(email=email).exists():
         error_msg = "email already registered"
     return error_msg
+
+@login_required
+def create_post(request):
+    subject = request.POST.get('new_post_subject', '')
+    title = request.POST.get('new_post_title', '')
+    body = request.POST.get('new_post_body', '')
+    creator = request.user
+    try:
+        Post.objects.create(title=title, body=body, creator=creator, subject=subject)
+        return HttpResponseRedirect(reverse("journal:home"))
+    except:
+        return render(request, "journal/home.html", {
+            'error': "something's wrong"
+        })
+

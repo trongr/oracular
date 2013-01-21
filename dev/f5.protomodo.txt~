@@ -1,84 +1,51 @@
 home.html
-
+    Escape cancels editing and removes edit box
     Create new posts
-
         home.html
-
             Focus edit box on click []
             New button, tool panel on top []
-
                 logout button float right, new button float left.   []
                 Link instead of button (searchable as you type) []
-
             Copy box from Edit box
-
         home.css
-
             #new_post
-
                 Hide create box by default
-
             #toolbox
-
                 bar bg color    []
                 Fit buttons inside  []
                 top left margin gap: caused by position: relative   []
                 width: 100% overflows   []
-
                     .container: boxsizing
-
             textarea left right margin 5px [nvm]
             Formatting []
             #new_post_button []
-
                 Align vertically    []
-
             random post margin: 20px. Remove toolbox margin-bottom  []
-
         home.js
-
             on NEW button click: unhide edit box: create_post()
             Button: onclick onkeypress using jquery []
-
                 Set onclick and onkeypresses onload [onkeypress not done]   []
                 #random_post edit_random_post   []
                 #new_post_button create_post    []
-
         views.py
-
             create_post()
             Redirect to home.html (everything redirects home :)
-
     Show multiple random posts
-
         Generate div instead of unhiding
-
     Show multiple random posts by tag
     Declare public / private
-
 index.html
-
     Show public posts
     Voting on public posts
-
 Deployment
-
     Heroku
     How to maintain a DB in development
-
 Make an intro / help page
-
     For power users: most elements of the site are searchable as you
     type: faster navigation.
-
 Design
-
     Alternate themes: all black
-
 Registration
-
     Email verification. Maybe use mailchimp
-
 Security
-
     Input validation

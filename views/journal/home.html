@@ -10,8 +10,36 @@
     <body>
         <div id="toolbox" class="container">
             <a id="new_post_button" class="controls" href="#">new</a>
-            <a id="logout" class="controls" href="{% url 'journal:logout' %}">logout</a>
+            <a  id="logout"
+                class="controls"
+                href="{% url 'journal:logout' %}">logout</a>
         </div>
+
+        <form   id="new_post_form"
+                class="random"
+                action="{% url 'journal:create_post' %}"
+                method="post">
+            {% csrf_token %}
+            <div class="headings container">
+                <input  id="new_post_form_title"
+                        class="title text_input"
+                        type="text"
+                        name="new_post_title">
+                <div class="date">date placeholder</div>
+            </div>
+            <textarea   class="body container"
+                        type="text"
+                        name="new_post_body"></textarea><br>
+            <input  id="new_post_form_subject"
+                    class="title text_input"
+                    type="text"
+                    name="new_post_subject">
+            <input  id="submit_button"
+                    class="controls button"
+                    type="submit"
+                    value="post">
+        </form>
+
         <a id="random_post" class="random" href="#">
             {% if post %}
             <div class="headings container">
@@ -19,18 +47,37 @@
                 <div class="date">{{ post.updated }}</div>
             </div>
             <div class="editable body">{{ post.body }}</div>
+            <div class="editable subject">{{ post.subject }}</div>
             {% else %}
             <div class="body">You don't have any post</div>
             {% endif %}
         </a>
-        <form id="random_edit_form" class="random" action="{% url 'journal:edit_post' post.id %}" method="post">
+
+        <form   id="random_edit_form"
+                class="random"
+                action="{% url 'journal:edit_post' post.id %}"
+                method="post">
             {% csrf_token %}
             <div class="headings container">
-                <input class="title" type="text" name="title_edit" value="{{ post.title }}"></input>
+                <input  id="title_edit"
+                        class="title"
+                        type="text"
+                        name="title_edit"
+                        value="{{ post.title }}">
                 <div class="date">{{ post.updated }}</div>
             </div>
-            <textarea id="body_edit" class="body container" type="text" name="body_edit">{{ post.body }}</textarea><br>
-            <input id="submit_button" class="controls button" type="submit" value="post">
+            <textarea   id="body_edit"
+                        class="body container"
+                        type="text" name="body_edit">{{ post.body }}</textarea><br>
+            <input  id="subject_edit"
+                    class="title text_input"
+                    type="text"
+                    name="subject_edit"
+                    value="{{ post.subject }}">
+            <input  id="submit_button"
+                    class="controls button"
+                    type="submit"
+                    value="save">
         </form>
     </body>
 </html>
