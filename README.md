@@ -12,10 +12,10 @@ Current features
 
 * Refreshing displays only a single entry.
 
-Working version
+Test site
 ---------------
 
-[on heroku](http://ffive.herokuapp.com/journal/)
+  [on heroku](http://ffive.herokuapp.com/journal/)
 
 Under construction
 ------------------
