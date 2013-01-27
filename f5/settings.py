@@ -2,7 +2,7 @@ import os.path
 
 # Django settings for f5 project.
 
-DEBUG = True
+DEBUG = False # TODO
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -161,7 +161,8 @@ LOGGING = {
     }
 }
 
-# hacking it: uncomment this block before pushing to heroku
+# TODO
+#   hacking it: uncomment this block before pushing to heroku
 # # Parse database configuration from $DATABASE_URL
 import dj_database_url
 DATABASES = {
