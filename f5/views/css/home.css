@@ -103,3 +103,7 @@ input {
 #new_post_form {
     display: none;
 }
+
+#no_post {
+    margin: 40px;
+}

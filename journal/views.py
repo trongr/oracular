@@ -36,12 +36,16 @@ def home(request):
     if request.user.is_authenticated():
         creator = request.user.id
         count = Post.objects.filter(creator=creator).count()
-        ind = randint(0, count - 1)
-        post = Post.objects.filter(creator=creator)[ind]
+        if count > 0:
+            ind = randint(0, count - 1)
+            post = Post.objects.filter(creator=creator)[ind]
+        else:
+            post = None
         return render(request, "journal/home.html", {
             'username': request.user.username,
             'post': post,
         })
+
 
 def login(request):
     password = request.POST.get('password', '')

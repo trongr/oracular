@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="{{ STATIC_URL }}global.css">
         <link rel="stylesheet" href="{{ STATIC_URL }}home.css">
         <script src="{{ STATIC_URL }}jquery-1.7.1.min.js"></script>
+        <script src="{{ STATIC_URL }}moment.min.js"></script>
         <script src="{{ STATIC_URL }}home.js"></script>
     </head>
     <body>
@@ -25,7 +26,7 @@
                         class="title text_input"
                         type="text"
                         name="new_post_title">
-                <div class="date">date placeholder</div>
+                <div id="new_post_date" class="date"></div>
             </div>
             <textarea   class="body container"
                         type="text"
@@ -40,19 +41,15 @@
                     value="post">
         </form>
 
+        {% if post %}
         <a id="random_post" class="random" href="#">
-            {% if post %}
             <div class="headings container">
                 <div class="editable title">{{ post.title }}</div>
                 <div class="date">{{ post.updated }}</div>
             </div>
             <div class="editable body">{{ post.body }}</div>
             <div class="editable subject">{{ post.subject }}</div>
-            {% else %}
-            <div class="body">You don't have any post</div>
-            {% endif %}
         </a>
-
         <form   id="random_edit_form"
                 class="random"
                 action="{% url 'journal:edit_post' post.id %}"
@@ -79,5 +76,8 @@
                     type="submit"
                     value="save">
         </form>
+        {% else %}
+            <div id="no_post" class="body">You don't have any post</div>
+        {% endif %}
     </body>
 </html>

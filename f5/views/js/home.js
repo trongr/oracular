@@ -18,4 +18,6 @@ function create_post(){
         "display": "block",
     });
     $("#new_post_form_title").focus();
+
+    $("#new_post_date").html(moment().format("MMM. D, YYYY, h:mm:ss a"));
 }
