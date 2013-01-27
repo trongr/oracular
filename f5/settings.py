@@ -104,11 +104,14 @@ ROOT_URLCONF = 'f5.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'f5.wsgi.application'
 
+import os.path
+PROJECT_DIR = os.path.dirname(__file__)
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/nahn/nt/django/f5/views/'
+    os.path.join(PROJECT_DIR, "views"),
+    "/home/nahn/nt/django/f5/views/",
 )
 
 INSTALLED_APPS = (
