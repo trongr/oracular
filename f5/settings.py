@@ -1,3 +1,5 @@
+import os.path
+
 # Django settings for f5 project.
 
 DEBUG = True
@@ -104,7 +106,6 @@ ROOT_URLCONF = 'f5.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'f5.wsgi.application'
 
-import os.path
 PROJECT_DIR = os.path.dirname(__file__)
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -157,6 +158,9 @@ LOGGING = {
     }
 }
 
-# Parse database configuration from $DATABASE_URL
+# hacking it: uncomment this block before pushing to heroku
+# # Parse database configuration from $DATABASE_URL
 import dj_database_url
-DATABASES['default'] = dj_database_url.config()
+DATABASES = {
+    "default": dj_database_url.config(default="postgres://localhost/f5")
+}
