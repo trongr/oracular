@@ -1,9 +1,11 @@
+from django.http import HttpResponseRedirect
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r"^$", lambda x: HttpResponseRedirect('/journal/')),
     # Examples:
     # url(r'^$', 'f5.views.home', name='home'),
     url(r'^journal/', include('journal.urls', namespace='journal')),
