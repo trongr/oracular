@@ -8,20 +8,20 @@ forget anything ever again.
 Current features
 ----------------
 
-    Create new entries. Edit old entries.
+* Create new entries. Edit old entries.
 
-    Refreshing displays only a single entry.
+* Refreshing displays only a single entry.
 
 Working version
 ---------------
 
-    [on heroku](http://ffive.herokuapp.com/journal/)
+[on heroku](http://ffive.herokuapp.com/journal/)
 
 Under construction
 ------------------
 
-    Display multiple entries by tags.
+* Display multiple entries by tags.
 
-    More formats: latex, pictures, voice recording, video.
+* More formats: latex, pictures, voice recording, video.
 
-    Ajax entries.
+* Ajax entries.
