@@ -1,10 +1,3 @@
-
-Deployment
-    Heroku
-    How to maintain a DB in development
-Make an intro / help page
-    For power users: most elements of the site are searchable as you
-    type: faster navigation.
 list random posts by tags
     js
         random post onclick
@@ -31,15 +24,13 @@ list random posts by tags
         models
             tags(id, name, num_posts)
             posttags(id, tag_id, post_id)
+more formats
+    picture posts
+    latex
+        easy: just link mathjax
 user profile
     profile pic
     bio
-set up guest user account
-    login
-    sample posts
-        subjects
-            quotes
-            inspirational
 going public
     post voting
         use cases: what can you do with votes?
@@ -62,30 +53,15 @@ going public
     viewing public posts
         index.html or panel in home.html? both
     add tag to a post?
-Escape cancels editing and removes edit box
-Design
-    Alternate themes: all black
-Registration
-    Email verification. Maybe use mailchimp
-Security
-    Input validation
-+----------------------------------------------------------------+
-|                                                                |
-|                            archive                             |
-|                                                                |
-+----------------------------------------------------------------+
-2013-01-22 TUE 16:26:39
-                        lifespan issue
-                            do js vars survive?
-                            accessible from imported scripts?
-                    only dj knows about the request link
-                        js has to know about it
-                        so just save it in a js variable
-maintain both heroku and github?
-Declare public / private
-2013-01-25 FRI 02:28:04
+set up guest user account
+    login
+    sample posts
+        subjects
+            quotes
+            inspirational
 Create new posts
     js generate date
+
     tags input field
         edit_post views.py
     subject css
@@ -111,11 +87,35 @@ Create new posts
             see index.html
     change request url
         urls.py
-index.html
-    Show public posts
-    Voting on public posts
 Show multiple random posts
     display subject
     Generate div instead of unhiding
 Show multiple random posts by tag
     create new post tags input field
+Declare public / private
+Escape cancels editing and removes edit box
+
+index.html
+    Show public posts
+    Voting on public posts
+Deployment
+    Heroku
+    How to maintain a DB in development
+Make an intro / help page
+    For power users: most elements of the site are searchable as you
+    type: faster navigation.
+Design
+    Alternate themes: all black
+Registration
+    Email verification. Maybe use mailchimp
+Security
+    Input validation
+------------------------------------------------------------------
+2013-01-22 TUE 16:26:39
+                        lifespan issue
+                            do js vars survive?
+                            accessible from imported scripts?
+                    only dj knows about the request link
+                        js has to know about it
+                        so just save it in a js variable
+maintain both heroku and github?

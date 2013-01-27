@@ -1,0 +1,14 @@
+more formats
+    latex
+        easy: just link mathjax
+    picture posts
+    sound
+        voice diary
+    videos
+        bandwidth problem
+            solution
+                every second of every day
+    web pages
+        store visited websites to reload
+        convenient mechanism to store part of a website
+        integrate personal posts from other services
