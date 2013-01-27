@@ -112,7 +112,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PROJECT_DIR, "views"),
-    "/home/nahn/nt/django/f5/views/",
+    "/home/nahn/nt/django/f5/f5/views/",
 )
 
 INSTALLED_APPS = (
