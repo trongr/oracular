@@ -1,10 +1,29 @@
 var HOMEPAGE = "http://localhost:8000/journal/";
 
 $(document).ready(function(){
-    $("#random_post").click(function(){edit_random_post(); return false;});
     $("#newpostbutton").click(function(){shownewpostform(); return false;});
     $("#newpostform").hide();
+    mkrandomposts();
 });
+
+function mkrandomposts(){
+    $.getJSON(HOMEPAGE + "randomposts", function(json){
+        var randomposts = $("#randomposts");
+        $.each(json.posts, function(i, post){
+            randomposts.append(
+                $("<div/>", {
+                    id: post.id,
+                    class: "randompost",
+                    html: post.title + " " + post.body + " " + post.subject + " " + post.updated,
+                }).click(function(){editpost(); return false;})
+            );
+        });
+    });
+}
+
+function editpost(){
+    alert("hello");
+}
 
 function shownewpostform(){
     $("#newpostdate").html(moment().format("MMM. D, YYYY, h:mm:ss a"));
@@ -27,24 +46,22 @@ function submitpost(){
     var body = $("#newpostbody").val();
     var subject = $("#newpostsubject").val();
     var token = getCookie('csrftoken');
-    $.post(HOMEPAGE + "create_post", {
+    $.post(HOMEPAGE + "createpost", {
         title: title,
         body: body,
         subject: subject,
         csrfmiddlewaretoken: token,
     }, function(post){
-        // clearnewpostform();
-        // mkpost(post);
-        console.log(post);
+        clearnewpostform();
+
+        // todo. repopulate randomposts divs. right now you're just adding more divs
+        mkrandomposts();
     });
 }
 
+// todo
 function clearnewpostform(){
-
-}
-
-function mkpost(post){
-
+    $("#newpostform").hide();
 }
 
 function getCookie(name) {

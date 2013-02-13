@@ -22,22 +22,24 @@
             <input id="newpostsubmit" type="submit" onclick="submitpost()" value="post">
         </div>
 
-        {% if post %}
-            <a id="random_post" href="#">
-                <div>{{ post.title }}</div>
-                <div>{{ post.updated }}</div>
-                <div>{{ post.body }}</div>
-                <div>{{ post.subject }}</div>
-            </a>
-            <div id="random_edit_form" action="{% url 'journal:edit_post' post.id %}" method="post">
-                <input id="title_edit" type="text" name="title_edit" value="{{ post.title }}">
-                <div>{{ post.updated }}</div>
-                <textarea id="body_edit" type="text" name="body_edit">{{ post.body }}</textarea><br>
-                <input id="subject_edit" type="text" name="subject_edit" value="{{ post.subject }}">
-                <input id="submit_button" type="submit" value="save">
-            </div>
-        {% else %}
-            <div id="no_post" class="body">You don't have any post</div>
-        {% endif %}
+        <div id="randomposts"></div>
+
+        <!-- {% if post %} -->
+        <!--     <a id="random_post" href="#"> -->
+        <!--         <div>{{ post.title }}</div> -->
+        <!--         <div>{{ post.updated }}</div> -->
+        <!--         <div>{{ post.body }}</div> -->
+        <!--         <div>{{ post.subject }}</div> -->
+        <!--     </a> -->
+        <!--     <div id="random_edit_form" action="{% url 'journal:edit_post' post.id %}" method="post"> -->
+        <!--         <input id="title_edit" type="text" name="title_edit" value="{{ post.title }}"> -->
+        <!--         <div>{{ post.updated }}</div> -->
+        <!--         <textarea id="body_edit" type="text" name="body_edit">{{ post.body }}</textarea><br> -->
+        <!--         <input id="subject_edit" type="text" name="subject_edit" value="{{ post.subject }}"> -->
+        <!--         <input id="submit_button" type="submit" value="save"> -->
+        <!--     </div> -->
+        <!-- {% else %} -->
+        <!--     <div id="no_post">You don't have any post</div> -->
+        <!-- {% endif %} -->
     </body>
 </html>

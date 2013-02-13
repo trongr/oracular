@@ -1,4 +1,8 @@
 import json
+# from django.core.serializers.json import DjangoJSONEncoder
+# from django.core import serializers
+from rest_framework import serializers
+from rest_framework.renderers import JSONRenderer
 
 import re
 from random import randint
@@ -15,10 +19,17 @@ from django.contrib.auth.decorators import login_required
 from journal.models import Post
 
 JSONTYPE = "application/json"
+
+POSTID = "id"
 TITLE = "title"
 BODY = "body"
 SUBJECT = "subject"
+UPDATED = "updated"
+
 STATUS = "status"
+
+USERNAME = "username"
+POST = "post"
 
 def index(request):
     return render(request, 'journal/index.html')
@@ -116,7 +127,7 @@ def check_registration(username, password, repeat_password, email):
     return error_msg
 
 @login_required
-def create_post(request):
+def createpost(request):
     title = request.POST.get(TITLE, "")
     body = request.POST.get(BODY, "")
     subject = request.POST.get(SUBJECT, "")
@@ -132,3 +143,35 @@ def create_post(request):
         return HttpResponse(json.dumps({
             STATUS: 1,
         }), content_type=JSONTYPE)
+
+@login_required
+def randomposts(request):
+    if request.user.is_authenticated():
+        creator = request.user.id
+        maximum = Post.objects.filter(creator=creator).count()
+        randomlist = randomindices(maximum, 4)
+        posts = []
+        for i, post in enumerate(Post.objects.filter(creator=creator)):
+            if i in randomlist:
+                posts.append(post)
+        data = {
+            "posts": PostSerializer(posts, many=True).data
+        }
+        return JSONResponse(data)
+
+def randomindices(maximum, count):
+    return [randint(0, maximum - 1) for i in xrange(count)]
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('id', 'title', 'body', 'subject', 'updated')
+
+class JSONResponse(HttpResponse):
+    """
+        An HttpResponse that renders it's content into JSON.
+    """
+    def __init__(self, data, **kwargs):
+        content = JSONRenderer().render(data)
+        kwargs['content_type'] = 'application/json'
+        super(JSONResponse, self).__init__(content, **kwargs)
