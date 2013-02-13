@@ -7,76 +7,35 @@
         <script src="{{ STATIC_URL }}jquery-1.7.1.min.js"></script>
         <script src="{{ STATIC_URL }}moment.min.js"></script>
         <script src="{{ STATIC_URL }}home.js"></script>
-        <script>
-            var HOMEPAGE = "localhost:8000/";
-        </script>
     </head>
     <body>
-        <div id="toolbox" class="container">
-            <a id="newpostbutton" class="controls" href="#">new</a>
-            <a  id="logout"
-                class="controls"
-                href="{% url 'journal:logout' %}">logout</a>
+        <div id="toolbox">
+            <a id="newpostbutton" href="#">new</a>
+            <a id="logout" href="{% url 'journal:logout' %}">logout</a>
         </div>
 
-        <form   id="newpostform"
-                class="random">
-            <div class="headings container">
-                <input  id="newposttitle"
-                        class="title text_input"
-                        type="text"
-                        name="new_post_title">
-                <div id="newpostdate" class="date"></div>
-            </div>
-            <textarea   id="newpostbody"
-                        class="body container"
-                        type="text"
-                        name="new_post_body"></textarea><br>
-            <input  id="newpostsubject"
-                    class="title text_input"
-                    type="text"
-                    name="new_post_subject">
-            <input  id="newpostsubmit"
-                    class="controls button"
-                    type="submit"
-                    onclick="submitpost()"
-                    value="post">
-        </form>
+        <div id="newpostform">
+            <input id="newposttitle" type="text" name="new_post_title">
+            <div id="newpostdate"></div>
+            <textarea id="newpostbody" type="text" name="new_post_body"></textarea><br>
+            <input id="newpostsubject" type="text" name="new_post_subject">
+            <input id="newpostsubmit" type="submit" onclick="submitpost()" value="post">
+        </div>
 
         {% if post %}
-        <a id="random_post" class="random" href="#">
-            <div class="headings container">
-                <div class="editable title">{{ post.title }}</div>
-                <div class="date">{{ post.updated }}</div>
+            <a id="random_post" href="#">
+                <div>{{ post.title }}</div>
+                <div>{{ post.updated }}</div>
+                <div>{{ post.body }}</div>
+                <div>{{ post.subject }}</div>
+            </a>
+            <div id="random_edit_form" action="{% url 'journal:edit_post' post.id %}" method="post">
+                <input id="title_edit" type="text" name="title_edit" value="{{ post.title }}">
+                <div>{{ post.updated }}</div>
+                <textarea id="body_edit" type="text" name="body_edit">{{ post.body }}</textarea><br>
+                <input id="subject_edit" type="text" name="subject_edit" value="{{ post.subject }}">
+                <input id="submit_button" type="submit" value="save">
             </div>
-            <div class="editable body">{{ post.body }}</div>
-            <div class="editable subject">{{ post.subject }}</div>
-        </a>
-        <form   id="random_edit_form"
-                class="random"
-                action="{% url 'journal:edit_post' post.id %}"
-                method="post">
-            <div class="headings container">
-                <input  id="title_edit"
-                        class="title"
-                        type="text"
-                        name="title_edit"
-                        value="{{ post.title }}">
-                <div class="date">{{ post.updated }}</div>
-            </div>
-            <textarea   id="body_edit"
-                        class="body container"
-                        type="text" name="body_edit">{{ post.body }}</textarea><br>
-            <input  id="subject_edit"
-                    class="title text_input"
-                    type="text"
-                    name="subject_edit"
-                    value="{{ post.subject }}">
-            <input  id="submit_button"
-                    class="controls button"
-                    type="submit"
-                    value="save">
-        </form>
         {% else %}
             <div id="no_post" class="body">You don't have any post</div>
         {% endif %}

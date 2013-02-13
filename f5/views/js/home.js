@@ -1,3 +1,5 @@
+var HOMEPAGE = "http://localhost:8000/journal/";
+
 $(document).ready(function(){
     $("#random_post").click(function(){edit_random_post(); return false;});
     $("#newpostbutton").click(function(){shownewpostform(); return false;});
@@ -25,14 +27,15 @@ function submitpost(){
     var body = $("#newpostbody").val();
     var subject = $("#newpostsubject").val();
     var token = getCookie('csrftoken');
-    $.post("http://localhost:8000/journal/create_post/", {
+    $.post(HOMEPAGE + "create_post", {
         title: title,
         body: body,
         subject: subject,
         csrfmiddlewaretoken: token,
     }, function(post){
-        clearnewpostform();
-        mkpost(post);
+        // clearnewpostform();
+        // mkpost(post);
+        console.log(post);
     });
 }
 

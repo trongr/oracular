@@ -10,5 +10,5 @@ urlpatterns = patterns(
     url(r'^register/$', views.register, name='register'),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^edit_post/(?P<post_id>\d+)/$', views.edit_post, name='edit_post'),
-    url(r'^create_post/$', views.create_post, name='create_post'),
+    url(r'^create_post$', views.create_post, name='create_post'),
 )
