@@ -161,10 +161,10 @@ LOGGING = {
     }
 }
 
-# TODO
-#   hacking it: uncomment this block before pushing to heroku
-# # Parse database configuration from $DATABASE_URL
-import dj_database_url
-DATABASES = {
-    "default": dj_database_url.config(default="postgres://localhost/f5")
-}
+# # TODO
+# #   hacking it: uncomment this block before pushing to heroku
+# # # Parse database configuration from $DATABASE_URL
+# import dj_database_url
+# DATABASES = {
+#     "default": dj_database_url.config(default="postgres://localhost/f5")
+# }

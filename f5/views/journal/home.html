@@ -7,37 +7,39 @@
         <script src="{{ STATIC_URL }}jquery-1.7.1.min.js"></script>
         <script src="{{ STATIC_URL }}moment.min.js"></script>
         <script src="{{ STATIC_URL }}home.js"></script>
+        <script>
+            var HOMEPAGE = "localhost:8000/";
+        </script>
     </head>
     <body>
         <div id="toolbox" class="container">
-            <a id="new_post_button" class="controls" href="#">new</a>
+            <a id="newpostbutton" class="controls" href="#">new</a>
             <a  id="logout"
                 class="controls"
                 href="{% url 'journal:logout' %}">logout</a>
         </div>
 
-        <form   id="new_post_form"
-                class="random"
-                action="{% url 'journal:create_post' %}"
-                method="post">
-            {% csrf_token %}
+        <form   id="newpostform"
+                class="random">
             <div class="headings container">
-                <input  id="new_post_form_title"
+                <input  id="newposttitle"
                         class="title text_input"
                         type="text"
                         name="new_post_title">
-                <div id="new_post_date" class="date"></div>
+                <div id="newpostdate" class="date"></div>
             </div>
-            <textarea   class="body container"
+            <textarea   id="newpostbody"
+                        class="body container"
                         type="text"
                         name="new_post_body"></textarea><br>
-            <input  id="new_post_form_subject"
+            <input  id="newpostsubject"
                     class="title text_input"
                     type="text"
                     name="new_post_subject">
-            <input  id="submit_button"
+            <input  id="newpostsubmit"
                     class="controls button"
                     type="submit"
+                    onclick="submitpost()"
                     value="post">
         </form>
 
@@ -54,7 +56,6 @@
                 class="random"
                 action="{% url 'journal:edit_post' post.id %}"
                 method="post">
-            {% csrf_token %}
             <div class="headings container">
                 <input  id="title_edit"
                         class="title"

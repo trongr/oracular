@@ -1,3 +1,5 @@
+import json
+
 import re
 from random import randint
 from datetime import datetime
@@ -11,6 +13,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 from journal.models import Post
+
+JSONTYPE = "application/json"
+TITLE = "title"
+BODY = "body"
+SUBJECT = "subject"
+STATUS = "status"
 
 def index(request):
     return render(request, 'journal/index.html')
@@ -45,7 +53,6 @@ def home(request):
             'username': request.user.username,
             'post': post,
         })
-
 
 def login(request):
     password = request.POST.get('password', '')
@@ -110,15 +117,18 @@ def check_registration(username, password, repeat_password, email):
 
 @login_required
 def create_post(request):
-    subject = request.POST.get('new_post_subject', '')
-    title = request.POST.get('new_post_title', '')
-    body = request.POST.get('new_post_body', '')
+    title = request.POST.get(TITLE, "")
+    body = request.POST.get(BODY, "")
+    subject = request.POST.get(SUBJECT, "")
     creator = request.user
     try:
         Post.objects.create(title=title, body=body, creator=creator, subject=subject)
-        return HttpResponseRedirect(reverse("journal:home"))
+        return HttpResponse(json.dumps({
+            TITLE: title,
+            BODY: body,
+            SUBJECT: subject,
+        }), content_type=JSONTYPE)
     except:
-        return render(request, "journal/home.html", {
-            'error': "something's wrong"
-        })
-
+        return HttpResponse(json.dumps({
+            STATUS: 1,
+        }), content_type=JSONTYPE)

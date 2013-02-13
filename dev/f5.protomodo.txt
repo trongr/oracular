@@ -1,4 +1,18 @@
 
+heroku
+    worker process
+    django-celery
+    foreman
+promotion
+    send site to r and 309 team
+    guest account
+        put this on github readme
+        username
+        password
+    Make an intro / help page
+        For power users
+            most elements of the site are searchable as you
+        type: faster navigation.
 Deployment
     Heroku
     How to maintain a DB in development
@@ -69,6 +83,8 @@ Registration
     Email verification. Maybe use mailchimp
 Security
     Input validation
+production
+    dedicated static server
 +----------------------------------------------------------------+
 |                                                                |
 |                            archive                             |
@@ -119,3 +135,60 @@ Show multiple random posts
     Generate div instead of unhiding
 Show multiple random posts by tag
     create new post tags input field
+2013-01-27 SUN 12:00:02
+js date
+    home.js
+        get div
+            #new_post_date
+        Date.getTime()
+        innerHTML
+            html
+fixing empty posts
+    if zero post
+        send post = None to home.html
+        home.html
+    otw send regular post
+Deployment
+    Heroku
+        prereq
+            heroku toolbelt
+            python and virtualenv
+            heroku user account
+        virtualenv
+            virtualenv venv --distribute
+            source venv/bin/activate
+            pip install Django psycopg2 [dj-database-url]
+            on session end
+                deactivate
+        db settings
+            dj-database-url
+        declare processes
+        git
+        deploy
+            heroku create
+            git push heroku master
+                if permission denied
+                    generate ssh key
+                    upload to heroku
+        visit your app
+            url routing wrong
+                heroku run bash --app ffive
+            tried adding os.path
+                push again
+        dyno
+        view logs
+            heroku logs
+        syncing db
+            remotely
+                heroku run python manage.py syncdb
+            locally kind of a hack
+                have to un/comment a block
+                    at bottom of f5/f5/settings.py
+        django shell
+        wsgi server alternative
+        running worker
+    How to maintain a DB in development
+git to multiple repos
+    git
+    heroku
+    git push all --all

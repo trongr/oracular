@@ -82,7 +82,7 @@ input {
     display: none;
 }
 
-#submit_button {
+#newpostsubmit {
     float: right;
     font-size: large;
 }
@@ -96,12 +96,8 @@ input {
     display: table;
 }
 
-#new_post_button {
+#newpostbutton {
     float: left;
-}
-
-#new_post_form {
-    display: none;
 }
 
 #no_post {

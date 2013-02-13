@@ -1,7 +1,14 @@
 $(document).ready(function(){
-    $("#new_post_button").click(function(){create_post(); return false;});
     $("#random_post").click(function(){edit_random_post(); return false;});
+    $("#newpostbutton").click(function(){shownewpostform(); return false;});
+    $("#newpostform").hide();
 });
+
+function shownewpostform(){
+    $("#newpostdate").html(moment().format("MMM. D, YYYY, h:mm:ss a"));
+    $("#newpostform").show();
+    $("#newposttitle").focus();
+}
 
 function edit_random_post(){
     $("#random_post").css({
@@ -13,11 +20,42 @@ function edit_random_post(){
     $("title_edit").focus();
 }
 
-function create_post(){
-    $("#new_post_form").css({
-        "display": "block",
+function submitpost(){
+    var title = $("#newposttitle").val();
+    var body = $("#newpostbody").val();
+    var subject = $("#newpostsubject").val();
+    var token = getCookie('csrftoken');
+    $.post("http://localhost:8000/journal/create_post/", {
+        title: title,
+        body: body,
+        subject: subject,
+        csrfmiddlewaretoken: token,
+    }, function(post){
+        clearnewpostform();
+        mkpost(post);
     });
-    $("#new_post_form_title").focus();
+}
 
-    $("#new_post_date").html(moment().format("MMM. D, YYYY, h:mm:ss a"));
+function clearnewpostform(){
+
+}
+
+function mkpost(post){
+
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
