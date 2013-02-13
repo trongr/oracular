@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
 
 import re
-from random import randint
+import random
 from datetime import datetime
 
 from django.http import HttpResponseRedirect, HttpResponse
@@ -30,6 +30,8 @@ STATUS = "status"
 
 USERNAME = "username"
 POST = "post"
+
+POSTCOUNT = "postcount"
 
 def index(request):
     return render(request, 'journal/index.html')
@@ -56,7 +58,7 @@ def home(request):
         creator = request.user.id
         count = Post.objects.filter(creator=creator).count()
         if count > 0:
-            ind = randint(0, count - 1)
+            ind = random.randint(0, count - 1)
             post = Post.objects.filter(creator=creator)[ind]
         else:
             post = None
@@ -148,8 +150,9 @@ def createpost(request):
 def randomposts(request):
     if request.user.is_authenticated():
         creator = request.user.id
+        postcount = int(request.GET.get(POSTCOUNT, 1))
         maximum = Post.objects.filter(creator=creator).count()
-        randomlist = randomindices(maximum, 4)
+        randomlist = random.sample(xrange(maximum), min(maximum, postcount))
         posts = []
         for i, post in enumerate(Post.objects.filter(creator=creator)):
             if i in randomlist:
@@ -158,9 +161,6 @@ def randomposts(request):
             "posts": PostSerializer(posts, many=True).data
         }
         return JSONResponse(data)
-
-def randomindices(maximum, count):
-    return [randint(0, maximum - 1) for i in xrange(count)]
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:

@@ -3,21 +3,31 @@ var HOMEPAGE = "http://localhost:8000/journal/";
 $(document).ready(function(){
     $("#newpostbutton").click(function(){shownewpostform(); return false;});
     $("#newpostform").hide();
+    $("#reloadbutton").click(function(){mkrandomposts(); return false;});
     mkrandomposts();
 });
 
 function mkrandomposts(){
-    $.getJSON(HOMEPAGE + "randomposts", function(json){
+    $.getJSON(HOMEPAGE + "randomposts", {
+        postcount: 4
+    }, function(json){
         var randomposts = $("#randomposts");
-        $.each(json.posts, function(i, post){
-            randomposts.append(
-                $("<div/>", {
-                    id: post.id,
-                    class: "randompost",
-                    html: post.title + " " + post.body + " " + post.subject + " " + post.updated,
-                }).click(function(){editpost(); return false;})
-            );
-        });
+        if (randomposts.children().length > 0){ // replace html's instead of creating
+            $.each(json.posts, function(i, post){
+                // nth-child is 1-indexed
+                $("#randomposts .randompost:nth-child(" + (i + 1) + ")").html(post.title + " " + post.body + " " + post.subject + " " + post.updated);
+            });
+        } else {
+            $.each(json.posts, function(i, post){
+                randomposts.append(
+                    $("<div/>", {
+                        id: post.id,
+                        class: "randompost",
+                        html: post.title + " " + post.body + " " + post.subject + " " + post.updated,
+                    }).click(function(){editpost(); return false;})
+                );
+            });
+        }
     });
 }
 
