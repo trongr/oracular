@@ -1,17 +1,32 @@
 var HOMEPAGE = "http://localhost:8000/journal/";
 
+var POSTCOUNT = 6;
+
+// keycodes
+var KEYSPACE = 32;
+
 $(document).ready(function(){
     $("#newpostbutton").click(function(){shownewpostform(); return false;});
     $("#newpostform").hide();
     $("#reloadbutton").click(function(){mkrandomposts(); return false;});
+    $(document).bind("keydown", keyboardshortcuts);
     mkrandomposts();
 });
 
+function keyboardshortcuts(e){
+    switch (e.which || e.keyCode){
+    case KEYSPACE:
+        mkrandomposts();
+        break;
+    }
+}
+
 function mkrandomposts(){
     $.getJSON(HOMEPAGE + "randomposts", {
-        postcount: 4
+        postcount: POSTCOUNT
     }, function(json){
         var randomposts = $("#randomposts");
+        // todo. init empty randompost divs and remove else
         if (randomposts.children().length > 0){ // replace html's instead of creating
             $.each(json.posts, function(i, post){
                 // nth-child is 1-indexed
