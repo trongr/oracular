@@ -4,19 +4,44 @@ var POSTCOUNT = 6;
 
 // keycodes
 var KEYSPACE = 32;
+var KEYENTER = 13;
 
 $(document).ready(function(){
+    // $("#newpostform").hide(); // don't do this: you can see it a split second before it hides
     $("#newpostbutton").click(function(){shownewpostform(); return false;});
-    $("#newpostform").hide();
     $("#reloadbutton").click(function(){mkrandomposts(); return false;});
     $(document).bind("keydown", keyboardshortcuts);
     mkrandomposts();
+    newpostformbindenterkeypress();
+    $("a").tooltip({'placement': 'bottom'});
 });
+
+// this is a hack to allow enter submit on form input, because for
+// some reason <form/> won't let you ajax csrftoken, so had to switch
+// to div, but then <input/> doesn't submit on enter keydown
+function newpostformbindenterkeypress(){
+    $("input").bind("keydown", inputkeydownsubmit);
+}
+
+function inputkeydownsubmit(e){
+    switch (e.which || e.keyCode){
+    case KEYENTER:
+        submitpost();
+        break;
+    }
+}
 
 function keyboardshortcuts(e){
     switch (e.which || e.keyCode){
     case KEYSPACE:
-        mkrandomposts();
+        if (e.ctrlKey){
+            mkrandomposts();
+        }
+        break;
+    case KEYENTER:
+        if (e.ctrlKey){
+            shownewpostform();
+        }
         break;
     }
 }
@@ -51,7 +76,7 @@ function editpost(){
 }
 
 function shownewpostform(){
-    $("#newpostdate").html(moment().format("MMM. D, YYYY, h:mm:ss a"));
+    // $("#newpostdate").html(moment().format("MMM. D, YYYY, h:mm:ss a"));
     $("#newpostform").show();
     $("#newposttitle").focus();
 }
@@ -71,17 +96,25 @@ function submitpost(){
     var body = $("#newpostbody").val();
     var subject = $("#newpostsubject").val();
     var token = getCookie('csrftoken');
-    $.post(HOMEPAGE + "createpost", {
-        title: title,
-        body: body,
-        subject: subject,
-        csrfmiddlewaretoken: token,
-    }, function(post){
-        clearnewpostform();
-
-        // todo. repopulate randomposts divs. right now you're just adding more divs
-        mkrandomposts();
+    $.ajax({
+        url: HOMEPAGE + "createpost",
+        type: "POST",
+        data: {
+            title: title,
+            body: body,
+            subject: subject,
+            csrfmiddlewaretoken: token,
+        },
+        success: function(post){
+            clearnewpostform();
+            // todo. repopulate randomposts divs. right now you're just adding more divs
+            mkrandomposts();
+        }
     });
+}
+
+function cancelnewpost(){
+    $("#newpostform").hide();
 }
 
 // todo

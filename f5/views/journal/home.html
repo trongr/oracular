@@ -1,46 +1,96 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-    <head>
-        {% load url from future %}
-        <link rel="stylesheet" href="{{ STATIC_URL }}global.css">
-        <link rel="stylesheet" href="{{ STATIC_URL }}home.css">
-        <script src="{{ STATIC_URL }}jquery-1.7.1.min.js"></script>
-        <script src="{{ STATIC_URL }}moment.min.js"></script>
-        <script src="{{ STATIC_URL }}home.js"></script>
-    </head>
-    <body>
-        <div id="toolbox">
-            <a id="newpostbutton" class="button" href="#">new</a>
-            <a id="reloadbutton" class="button" href="#">reload</a>
-            <a id="logout" href="{% url 'journal:logout' %}">logout</a>
+<head>
+{% load url from future %}
+<!-- <link rel="stylesheet" href="{{ STATIC_URL }}css/global.css"> -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/home.css">
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <!-- <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> -->
+      <!--   <span class="icon-bar"></span> -->
+      <!--   <span class="icon-bar"></span> -->
+      <!--   <span class="icon-bar"></span> -->
+      <!-- </button> -->
+      <!-- <a class="brand" href="#">new</a> -->
+      <div class="nav-collapse collapse">
+        <p class="navbar-text pull-right">
+            <a id="logout" class="navbar-link mylabel" href="{% url 'journal:logout' %}"><i class="icon-signout"></i> logout</a>
+        </p>
+        <ul class="nav">
+            <li><a id="newpostbutton" class="mylabel" href="#" rel="tooltip" title="CTRL + ENTER"><i class="icon-edit"></i> new</a></li>
+            <li><a id="reloadbutton" class="mylabel" href="#" rel="tooltip" title="CTRL + SPACE"><i class="icon-refresh"></i> reload</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+
+<div id="newpostform" class="form-horizontal">
+    <fieldset>
+      <legend class="mylegend">new</legend>
+
+      <div class="control-group">
+        <label class="control-label mylabel" for="newposttitle">title</label>
+        <div class="controls">
+          <input id="newposttitle" class="input-xxlarge" name="title" type="text">
         </div>
+      </div>
 
-        <div id="newpostform">
-            <input id="newposttitle" type="text" name="new_post_title">
-            <div id="newpostdate"></div>
-            <textarea id="newpostbody" type="text" name="new_post_body"></textarea><br>
-            <input id="newpostsubject" type="text" name="new_post_subject">
-            <input id="newpostsubmit" type="submit" onclick="submitpost()" value="post">
+      <div class="control-group">
+        <label class="control-label mylabel" for="textarea">note</label>
+        <div class="controls">
+          <textarea class="input-xxlarge" id="newpostbody" name="body" rows="8"></textarea>
         </div>
+      </div>
 
-        <div id="randomposts"></div>
+      <div class="control-group">
+        <label class="control-label mylabel" for="newpostsubject">subject</label>
+        <div class="controls">
+          <input id="newpostsubject" class="input-xxlarge" name="subject" type="text">
+        </div>
+      </div>
 
-        <!-- {% if post %} -->
-        <!--     <a id="random_post" href="#"> -->
-        <!--         <div>{{ post.title }}</div> -->
-        <!--         <div>{{ post.updated }}</div> -->
-        <!--         <div>{{ post.body }}</div> -->
-        <!--         <div>{{ post.subject }}</div> -->
-        <!--     </a> -->
-        <!--     <div id="random_edit_form" action="{% url 'journal:edit_post' post.id %}" method="post"> -->
-        <!--         <input id="title_edit" type="text" name="title_edit" value="{{ post.title }}"> -->
-        <!--         <div>{{ post.updated }}</div> -->
-        <!--         <textarea id="body_edit" type="text" name="body_edit">{{ post.body }}</textarea><br> -->
-        <!--         <input id="subject_edit" type="text" name="subject_edit" value="{{ post.subject }}"> -->
-        <!--         <input id="submit_button" type="submit" value="save"> -->
-        <!--     </div> -->
-        <!-- {% else %} -->
-        <!--     <div id="no_post">You don't have any post</div> -->
-        <!-- {% endif %} -->
-    </body>
+      <div class="form-actions">
+        <button id="newpostsubmit" onclick="submitpost()" type="submit" class="btn mylabel">
+            <i class="icon-pencil icon-large"></i>
+            post
+        </button>
+        <button id="cancelnewpost" onclick="cancelnewpost()" class="btn mylabel">
+            <i class="icon-large"></i>
+            cancel
+        </button>
+      </div>
+    </fieldset>
+</div>
+
+<div id="randomposts"></div>
+
+<!-- {% if post %} -->
+<!--     <a id="random_post" href="#"> -->
+<!--         <div>{{ post.title }}</div> -->
+<!--         <div>{{ post.updated }}</div> -->
+<!--         <div>{{ post.body }}</div> -->
+<!--         <div>{{ post.subject }}</div> -->
+<!--     </a> -->
+<!--     <div id="random_edit_form" action="{% url 'journal:edit_post' post.id %}" method="post"> -->
+<!--         <input id="title_edit" type="text" name="title_edit" value="{{ post.title }}"> -->
+<!--         <div>{{ post.updated }}</div> -->
+<!--         <textarea id="body_edit" type="text" name="body_edit">{{ post.body }}</textarea><br> -->
+<!--         <input id="subject_edit" type="text" name="subject_edit" value="{{ post.subject }}"> -->
+<!--         <input id="submit_button" type="submit" value="save"> -->
+<!--     </div> -->
+<!-- {% else %} -->
+<!--     <div id="no_post">You don't have any post</div> -->
+<!-- {% endif %} -->
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+<script src="{{ STATIC_URL }}js/moment.min.js"></script>
+<script src="{{ STATIC_URL }}js/home.js"></script>
+</body>
 </html>

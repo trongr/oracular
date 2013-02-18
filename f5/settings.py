@@ -71,10 +71,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_DIR, "views/css/"),
-    os.path.join(PROJECT_DIR, "views/js/"),
-    "/home/nahn/nt/django/f5/f5/views/css/",
-    "/home/nahn/nt/django/f5/f5/views/js/",
+    os.path.join(PROJECT_DIR, "views/"),
 )
 
 # List of finder classes that know how to find static files in
