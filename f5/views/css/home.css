@@ -119,9 +119,10 @@
 body {
     font-family: helvetica;
     background-color: #000;
-    color: white;
+    color: #fff;
     padding-top: 60px;
-    padding-left: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 input {
@@ -146,7 +147,7 @@ textarea {
     font-weight: bold;
 }
 
-.postbox {
+.randompost {
     margin: 10px;
 }
 
@@ -167,18 +168,20 @@ textarea {
 }
 
 .postsubject {
-    font-size: 1.2em;
+    font-size: 1.5em;
     font-weight: bold;
     font-family: helvetica;
-    color: #545454;
+    text-align: right;
+    color: #888;
     float: right;
-    margin: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 .postdate {
     font-size: 1.3em;
     font-weight: bold;
-    color: #545454;
+    color: #555;
     float: right;
     clear: both;
 }

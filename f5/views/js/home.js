@@ -19,22 +19,26 @@ $(document).ready(function(){
     initrandompostdivs();
 });
 
+// too much dom manipulation makes it slow: generate all divs just
+// once in the beginning
 function initrandompostdivs(){
     var rp = $("#randomposts");
-    // todo. make divs for the remainder
-    for (var i = 0; i < POSTCOUNT / POSTSPERCOL; i++){
+    // <= means there'll be extra divs with no posts: that's ok
+    for (var i = 0; i <= POSTCOUNT / POSTSPERCOL; i++){
         var row = $("<div/>", {
             class: "row-fluid",
-        })
-        rp.append(row);
+        }).appendTo(rp);
         for (var j = 0; j < POSTSPERCOL; j++){
-            var col = $("<div/>", {
-                class: "span" + SPANWIDTH,
-            });
-            row.append(col);
-            col.append($("<div/>", {
-                class: "randompost",
-            }));
+            row.append(
+                "<div class='span" + SPANWIDTH + "'>" +
+                    "<div class='randompost'>" +
+                        "<a><div class='posttitle'></div></a>" +
+                        "<div class='postbody'></div>" +
+                        "<div class='postsubject'></div>" +
+                        "<div class='postdate'></div>" +
+                    "</div>" +
+                "</div>"
+            );
         }
     }
 }
@@ -75,18 +79,14 @@ function mkrandomposts(){
     $.getJSON(HOMEPAGE + "randomposts", {
         postcount: POSTCOUNT
     }, function(json){
-        var rp = $(".randompost");
+        var rps = $(".randompost");
         $.each(json.posts, function(i, post){
-            // $("#randomposts .randompost:nth-child(" + (i + 1) + ")").html(post.title + " " + post.body + " " + post.subject + " " + post.updated);
-            rp.eq(i).html(
-                "<div onclick='editpost(" + post.id + ")' class='postbox'>" +
-                    "<div class='posttitle'><a>" + post.title + "</a></div>" +
-                    "<div class='postbody'>" + post.body +
-                    "<span class='postsubject'>" + post.subject + "</span>" +
-                    "</div>" +
-                    "<div class='postdate'>" + parsedatetime(post.created) + "</div>" +
-                    "</div>"
-            );
+            var rp = rps.eq(i);
+            rp.attr("onclick", "editpost(" + post.id + ")");
+            rp.find(".posttitle").html(post.title);
+            rp.find(".postbody").html(post.body);
+            rp.find(".postsubject").html(post.subject);
+            rp.find(".postdate").html(parsedatetime(post.created));
         });
     });
 }
@@ -133,7 +133,8 @@ function submitpost(){
         },
         success: function(post){
             clearnewpostform();
-            // todo. repopulate randomposts divs. right now you're just adding more divs
+            // todo. repopulate randomposts divs. right now you're
+            // just adding more divs
             mkrandomposts();
         }
     });
