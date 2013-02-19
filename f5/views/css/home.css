@@ -144,6 +144,43 @@ textarea {
     font-weight: bold;
 }
 
+.postbox {
+    margin: 10px;
+}
+
+.posttitle {
+    font-size: 2em;
+    line-height: 1em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.postbody {
+    font-size: 1.5em;
+    font-family: georgia;
+    color: black !important;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    clear: both;
+}
+
+.postsubject {
+    font-size: 1.2em;
+    font-weight: bold;
+    font-family: helvetica;
+    color: #545454;
+    float: right;
+    margin: 10px;
+}
+
+.postdate {
+    font-size: 1.3em;
+    font-weight: bold;
+    float: right;
+    clear: both;
+}
+
 #newpostform {
     display: none;
 }
+

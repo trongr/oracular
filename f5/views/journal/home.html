@@ -72,12 +72,6 @@
 <div id="randomposts"></div>
 
 <!-- {% if post %} -->
-<!--     <a id="random_post" href="#"> -->
-<!--         <div>{{ post.title }}</div> -->
-<!--         <div>{{ post.updated }}</div> -->
-<!--         <div>{{ post.body }}</div> -->
-<!--         <div>{{ post.subject }}</div> -->
-<!--     </a> -->
 <!--     <div id="random_edit_form" action="{% url 'journal:edit_post' post.id %}" method="post"> -->
 <!--         <input id="title_edit" type="text" name="title_edit" value="{{ post.title }}"> -->
 <!--         <div>{{ post.updated }}</div> -->
@@ -85,10 +79,9 @@
 <!--         <input id="subject_edit" type="text" name="subject_edit" value="{{ post.subject }}"> -->
 <!--         <input id="submit_button" type="submit" value="save"> -->
 <!--     </div> -->
-<!-- {% else %} -->
 <!--     <div id="no_post">You don't have any post</div> -->
 <!-- {% endif %} -->
-<script src="http://code.jquery.com/jquery.js"></script>
+<script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
 <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
 <script src="{{ STATIC_URL }}js/moment.min.js"></script>
 <script src="{{ STATIC_URL }}js/home.js"></script>

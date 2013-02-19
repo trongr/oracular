@@ -55,17 +55,7 @@ def edit_post(request, post_id):
 
 def home(request):
     if request.user.is_authenticated():
-        creator = request.user.id
-        count = Post.objects.filter(creator=creator).count()
-        if count > 0:
-            ind = random.randint(0, count - 1)
-            post = Post.objects.filter(creator=creator)[ind]
-        else:
-            post = None
-        return render(request, "journal/home.html", {
-            'username': request.user.username,
-            'post': post,
-        })
+        return render(request, "journal/home.html")
 
 def login(request):
     password = request.POST.get('password', '')
@@ -165,7 +155,7 @@ def randomposts(request):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('id', 'title', 'body', 'subject', 'updated')
+        fields = ('id', 'title', 'body', 'subject', 'created', 'updated')
 
 class JSONResponse(HttpResponse):
     """

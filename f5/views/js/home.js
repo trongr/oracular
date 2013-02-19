@@ -1,6 +1,8 @@
 var HOMEPAGE = "http://localhost:8000/journal/";
 
 var POSTCOUNT = 6;
+var POSTSPERCOL = 3;
+var SPANWIDTH = 12 / POSTSPERCOL;
 
 // keycodes
 var KEYSPACE = 32;
@@ -14,7 +16,28 @@ $(document).ready(function(){
     mkrandomposts();
     newpostformbindenterkeypress();
     $("a").tooltip({'placement': 'bottom'});
+    initrandompostdivs();
 });
+
+function initrandompostdivs(){
+    var rp = $("#randomposts");
+    // todo. make divs for the remainder
+    for (var i = 0; i < POSTCOUNT / POSTSPERCOL; i++){
+        var row = $("<div/>", {
+            class: "row-fluid",
+        })
+        rp.append(row);
+        for (var j = 0; j < POSTSPERCOL; j++){
+            var col = $("<div/>", {
+                class: "span" + SPANWIDTH,
+            });
+            row.append(col);
+            col.append($("<div/>", {
+                class: "randompost",
+            }));
+        }
+    }
+}
 
 // this is a hack to allow enter submit on form input, because for
 // some reason <form/> won't let you ajax csrftoken, so had to switch
@@ -26,7 +49,9 @@ function newpostformbindenterkeypress(){
 function inputkeydownsubmit(e){
     switch (e.which || e.keyCode){
     case KEYENTER:
-        submitpost();
+        if (!e.ctrlKey){
+            submitpost();
+        }
         break;
     }
 }
@@ -50,25 +75,25 @@ function mkrandomposts(){
     $.getJSON(HOMEPAGE + "randomposts", {
         postcount: POSTCOUNT
     }, function(json){
-        var randomposts = $("#randomposts");
-        // todo. init empty randompost divs and remove else
-        if (randomposts.children().length > 0){ // replace html's instead of creating
-            $.each(json.posts, function(i, post){
-                // nth-child is 1-indexed
-                $("#randomposts .randompost:nth-child(" + (i + 1) + ")").html(post.title + " " + post.body + " " + post.subject + " " + post.updated);
-            });
-        } else {
-            $.each(json.posts, function(i, post){
-                randomposts.append(
-                    $("<div/>", {
-                        id: post.id,
-                        class: "randompost",
-                        html: post.title + " " + post.body + " " + post.subject + " " + post.updated,
-                    }).click(function(){editpost(); return false;})
-                );
-            });
-        }
+        var rp = $(".randompost");
+        $.each(json.posts, function(i, post){
+            // $("#randomposts .randompost:nth-child(" + (i + 1) + ")").html(post.title + " " + post.body + " " + post.subject + " " + post.updated);
+            rp.eq(i).html(
+                "<div onclick='editpost(" + post.id + ")' class='postbox'>" +
+                    "<div class='posttitle'><a>" + post.title + "</a></div>" +
+                    "<div class='postbody'>" + post.body +
+                    "<span class='postsubject'>" + post.subject + "</span>" +
+                    "</div>" +
+                    "<div class='postdate'>" + parsedatetime(post.created) + "</div>" +
+                    "</div>"
+            );
+        });
     });
+}
+
+function parsedatetime(t){
+    var m = "2013-02-19T04:11:51-05:00".match(/(\d+|[a-zA-Z])/g);
+    return moment(t).format("h:mm a ddd DD-MM-YYYY"); //.calendar();
 }
 
 function editpost(){
@@ -77,6 +102,7 @@ function editpost(){
 
 function shownewpostform(){
     // $("#newpostdate").html(moment().format("MMM. D, YYYY, h:mm:ss a"));
+    // todo. clear previous note
     $("#newpostform").show();
     $("#newposttitle").focus();
 }
