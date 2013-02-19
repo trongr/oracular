@@ -100,8 +100,8 @@ function editpost(){
     alert("hello");
 }
 
+// todo. do something about window losing focus on form hide
 function shownewpostform(){
-    // $("#newpostdate").html(moment().format("MMM. D, YYYY, h:mm:ss a"));
     // todo. clear previous note
     $("#newpostform").show();
     $("#newposttitle").focus();
