@@ -41,22 +41,39 @@ POSTCOUNT = "postcount"
 def index(request):
     return render(request, 'journal/index.html')
 
+def savepost(request, postid):
+    title = request.POST.get(TITLE, "")
+    body = request.POST.get(BODY, "")
+    subject = request.POST.get(SUBJECT, "")
+    creator = request.user
+    post = Post.objects.get(id=postid)
+    post.title = title
+    post.body = body
+    post.subject = subject
+    post.updated = datetime.now()
+    post.save()
+
 @login_required
-def edit_post(request, post_id):
-    if Post.objects.filter(creator=request.user.id).filter(id=post_id).exists():
-        title = request.POST["title_edit"]
-        body = request.POST["body_edit"]
-        subject = request.POST["subject_edit"]
-        post = Post.objects.get(id=post_id)
-        post.title = title
-        post.body = body
-        post.subject = subject
-        post.updated = datetime.now()
-        post.save()
-        return HttpResponseRedirect(reverse('journal:home'))
-    return render(request, "home.html", {
-        "error_msg": "something's wrong: couldn't edit post"
-    })
+def editpost(request):
+    postid = request.POST.get(POSTID, "")
+    try:
+        if Post.objects.filter(creator=request.user.id).filter(id=int(postid)).exists():
+            savepost(request, postid)
+            return jsonpost(request)
+    except:
+        return jsonerror()
+
+def jsonerror():
+    return HttpResponse(json.dumps({
+        STATUS: 1,
+    }), content_type=JSONTYPE)
+
+def jsonpost(request):
+    return HttpResponse(json.dumps({
+        TITLE: request.POST.get(TITLE, ""),
+        BODY: request.POST.get(BODY, ""),
+        SUBJECT: request.POST.get(SUBJECT, ""),
+    }), content_type=JSONTYPE)
 
 def home(request):
     if request.user.is_authenticated():
@@ -132,15 +149,9 @@ def createpost(request):
     creator = request.user
     try:
         Post.objects.create(title=title, body=body, creator=creator, subject=subject)
-        return HttpResponse(json.dumps({
-            TITLE: title,
-            BODY: body,
-            SUBJECT: subject,
-        }), content_type=JSONTYPE)
+        return jsonpost(request)
     except:
-        return HttpResponse(json.dumps({
-            STATUS: 1,
-        }), content_type=JSONTYPE)
+        return jsonerror()
 
 @login_required
 def randomposts(request):

@@ -9,7 +9,7 @@ urlpatterns = patterns(
     url(r'^registration/$', views.registration, name='registration'),
     url(r'^register/$', views.register, name='register'),
     url(r'^logout/$', views.logout, name='logout'),
-    url(r'^edit_post/(?P<post_id>\d+)/$', views.edit_post, name='edit_post'),
+    url(r'^editpost$', views.editpost, name='editpost'),
     url(r'^createpost$', views.createpost, name='createpost'),
     url(r'^randomposts$', views.randomposts, name='randomposts'),
 )

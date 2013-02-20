@@ -5,28 +5,20 @@
 <!-- <link rel="stylesheet" href="{{ STATIC_URL }}css/global.css"> -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.min.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}awesome/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ STATIC_URL }}css/home.css">
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top">
-  <div class="navbar-inner mytransparent">
+  <div class="navbar-inner mynavbar">
     <div class="container-fluid">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <div class="nav-collapse collapse">
-        <p class="navbar-text pull-right">
-            <a id="logout" class="navbar-link mylabel" href="{% url 'journal:logout' %}">logout <i class="icon-signout"></i></a>
-        </p>
         <ul class="nav">
-            <li><a id="newpostbutton" class="mylabel" href="#" rel="tooltip" title="CTRL + ENTER">new <i class="icon-edit"></i></a></li>
-            <li><a id="reloadbutton" class="mylabel" href="#" rel="tooltip" title="CTRL + SPACE">reload <i class="icon-refresh"></i></a></li>
+            <li><a id="newpostbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + enter">new <i class="icon-edit"></i></a></li>
+            <li><a id="reloadbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + space">reload <i class="icon-refresh"></i></a></li>
         </ul>
-      </div>
+        <p class="navbar-text pull-right">
+            <a id="logout" class="navbar-link mycontrol" href="{% url 'journal:logout' %}">logout <i class="icon-signout"></i></a>
+        </p>
     </div>
   </div>
 </div>
@@ -47,13 +39,14 @@
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label mylabel" for="newpostsubject">subject</label>
+        <label class="control-label mylabel" for="newpostsubject">tags</label>
         <div class="controls">
           <input id="newpostsubject" class="input-xxlarge" name="subject" type="text">
         </div>
       </div>
+      <input id="editpostid" type="hidden">
       <div class="form-actions myformfooter">
-        <button id="newpostsubmit" onclick="submitpost()" type="submit" class="btn btn-inverse mylabel">
+        <button id="newpostsubmit" type="submit" class="btn btn-inverse mylabel">
             post <i class="icon-pencil icon-large"></i>
         </button>
         <button id="cancelnewpost" onclick="cancelnewpost()" class="btn btn-inverse mylabel">

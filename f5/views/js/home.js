@@ -1,6 +1,6 @@
 var HOMEPAGE = "http://localhost:8000/journal/";
 
-var POSTCOUNT = 12;
+var POSTCOUNT = 10;
 var POSTSPERCOL = 3;
 var SPANWIDTH = 12 / POSTSPERCOL;
 
@@ -9,13 +9,25 @@ var KEYSPACE = 32;
 var KEYENTER = 13;
 
 $(document).ready(function(){
+    initrandompostdivs();
+    mkrandomposts();
+
+    $("a").tooltip({'placement': 'bottom'});
+
     $("#newpostbutton").click(function(){shownewpostform(); return false;});
     $("#reloadbutton").click(function(){mkrandomposts(); return false;});
+    $("#newpostsubmit").attr("onclick", "submitpost()");
+
     $(document).bind("keydown", keyboardshortcuts);
-    mkrandomposts();
+
     newpostformbindenterkeypress();
-    $("a").tooltip({'placement': 'bottom'});
-    initrandompostdivs();
+
+    $("input, textarea").focus(function(){$(this).select()});
+
+    $("#newpostform").on("hide", function(){
+        // return focus to window, so you can ctrl + find
+        $("*:focus").blur();
+    });
 });
 
 // too much dom manipulation makes it slow: generate all divs just
@@ -53,12 +65,13 @@ function inputkeydownsubmit(e){
     switch (e.which || e.keyCode){
     case KEYENTER:
         if (!e.ctrlKey){
-            submitpost();
+            $("#newpostsubmit").click();
         }
         break;
     }
 }
 
+// todo. ctrl + n to edit nth box
 function keyboardshortcuts(e){
     switch (e.which || e.keyCode){
     case KEYSPACE:
@@ -81,6 +94,7 @@ function mkrandomposts(){
         var rps = $(".randompost");
         $.each(json.posts, function(i, post){
             var rp = rps.eq(i);
+            rp.attr("id", post.id);
             rp.attr("onclick", "editpost(" + post.id + ")");
             rp.find(".posttitle").html(post.title);
             rp.find(".postbody").html(post.body);
@@ -95,28 +109,51 @@ function parsedatetime(t){
     return moment(t).format("H:mm ddd DD MMM YYYY"); //.calendar();
 }
 
-function editpost(){
-    alert("hello");
+function editpost(postid){
+    shownewpostform();
+    populateeditpost(postid);
 }
 
-// todo. do something about window losing focus on form hide
+// using new post form to edit old posts
+function populateeditpost(postid){
+    var post = $("#" + postid);
+    // input's and textarea's must use .val() instead of .html()
+    $("#editpostid").val(postid);
+    $("#newposttitle").val(post.find(".posttitle").html());
+    $("#newpostbody").val(post.find(".postbody").html());
+    $("#newpostsubject").val(post.find(".postsubject").html());
+    $("#newpostsubmit").attr("onclick", "submiteditpost()");
+}
+
+function submiteditpost(){
+    var id = $("#editpostid").val();
+    var title = $("#newposttitle").val();
+    var body = $("#newpostbody").val();
+    var subject = $("#newpostsubject").val();
+    var token = getCookie('csrftoken');
+    $.ajax({
+        url: HOMEPAGE + "editpost",
+        type: "POST",
+        data: {
+            id: id,
+            title: title,
+            body: body,
+            subject: subject,
+            csrfmiddlewaretoken: token,
+        },
+        success: function(post){ // todo
+            $("#newpostform").hide();
+            mkrandomposts();
+        }
+    });
+    cancelnewpost();
+    // reset new post submit function
+    $("#newpostsubmit").attr("onclick", "submitpost()");
+}
+
 function shownewpostform(){
-    // todo. clear previous note
-    $("#newpostform").modal().on("hide", function(){
-        // return focus to window, so you can ctrl + find
-        $("*:focus").blur();
-    });
+    $("#newpostform").modal();
     $("#newposttitle").focus();
-}
-
-function edit_random_post(){
-    $("#random_post").css({
-        "display": "none",
-    });
-    $("#random_edit_form").css({
-        "display": "block",
-    });
-    $("title_edit").focus();
 }
 
 function submitpost(){
@@ -134,9 +171,7 @@ function submitpost(){
             csrfmiddlewaretoken: token,
         },
         success: function(post){
-            clearnewpostform();
-            // todo. repopulate randomposts divs. right now you're
-            // just adding more divs
+            $("#newpostform").hide();
             mkrandomposts();
         }
     });
@@ -146,12 +181,6 @@ function submitpost(){
 function cancelnewpost(){
     $("*:focus").blur();
     $("#newpostform").modal("hide");
-    // $("#newpostform").hide();
-}
-
-// todo
-function clearnewpostform(){
-    $("#newpostform").hide();
 }
 
 function getCookie(name) {

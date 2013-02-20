@@ -125,8 +125,22 @@ body {
     padding-right: 10px;
 }
 
+.btn {
+    border: 1px solid;
+}
+
+.btn:focus, .btn:hover {
+    background-color: #0088cc;
+}
+
+.mycontrol {
+    font-size: 1.2em;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.2);
+}
+
 .randompost {
-    margin: 10px;
+    margin: 5px;
 }
 
 /* for random posts */
@@ -165,7 +179,7 @@ body {
     clear: both;
 }
 
-.mytransparent {
+.mynavbar {
     background: rgba(0, 0, 0, 0.5) !important; /* transparent !important; */
 }
 
@@ -199,23 +213,31 @@ body {
     background: rgba(0, 0, 0, 0.2);
 }
 
-
 input {
     font-family: georgia;
     font-size: 1.5em !important; /* fixing short input height */
     color: #fff !important;
-    background: rgba(0, 0, 0, 0.2) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
 }
 
 textarea {
     font-family: georgia;
     font-size: 1.5em;
     color: #fff !important;
-    background: rgba(0, 0, 0, 0.2) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* changing selection color */
+*::selection {
+    background: #0088cc;
+}
+
+*::-moz-selection {
+    background: #0088cc;
 }
 
 #newpostform {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.4);
 }
 
 #newposttitle {
