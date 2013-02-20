@@ -33,6 +33,11 @@ POST = "post"
 
 POSTCOUNT = "postcount"
 
+# todo. replace this with home.html. show a sample public app on
+# index.html: the only difference between home.html and index.html
+# would be that one has a login bar and the other doesn't.
+#
+# should we just hide it or create different views?
 def index(request):
     return render(request, 'journal/index.html')
 
@@ -57,6 +62,7 @@ def home(request):
     if request.user.is_authenticated():
         return render(request, "journal/home.html")
 
+# todo. https
 def login(request):
     password = request.POST.get('password', '')
     username = request.POST.get('username', '')

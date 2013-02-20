@@ -125,32 +125,11 @@ body {
     padding-right: 10px;
 }
 
-input {
-    font-family: georgia;
-    font-size: 1.5em !important; /* fixing short input height */
-    color: #000 !important;
-}
-
-textarea {
-    font-family: georgia;
-    font-size: 1.5em;
-    color: #000 !important;
-}
-
-.mylegend {
-    font-size: 3em;
-    font-weight: bolder;
-}
-
-.mylabel {
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
 .randompost {
     margin: 10px;
 }
 
+/* for random posts */
 .posttitle {
     font-size: 2em;
     line-height: 1em;
@@ -186,11 +165,65 @@ textarea {
     clear: both;
 }
 
+.mytransparent {
+    background: rgba(0, 0, 0, 0.5) !important; /* transparent !important; */
+}
+
+.modal {
+    /* overflow-x: auto; */
+    margin-left: -40%;
+    width: 80%;
+}
+
+.modal-backdrop {
+    background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.myformfooter {
+    background: rgba(0, 0, 0, 0.2) !important;
+    float: right;
+    border: none;
+}
+
+.mylegend {
+    font-size: 3em;
+    font-weight: bolder;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.2);
+    border: none;
+}
+
+.mylabel {
+    font-size: 1.5em;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+
+input {
+    font-family: georgia;
+    font-size: 1.5em !important; /* fixing short input height */
+    color: #fff !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+
+textarea {
+    font-family: georgia;
+    font-size: 1.5em;
+    color: #fff !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+
 #newpostform {
-    display: none;
+    background: rgba(0, 0, 0, 0.2);
 }
 
 #newposttitle {
-    font-size: 2em !important;
+    /* font-size: 2em !important; */
+    height: 1.3em !important;
+}
+
+#newpostsubject {
+    /* font-size: 2em !important; */
     height: 1.3em !important;
 }

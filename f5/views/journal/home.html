@@ -5,30 +5,35 @@
 <!-- <link rel="stylesheet" href="{{ STATIC_URL }}css/global.css"> -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.min.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}awesome/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ STATIC_URL }}css/home.css">
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top">
-  <div class="navbar-inner">
+  <div class="navbar-inner mytransparent">
     <div class="container-fluid">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
       <div class="nav-collapse collapse">
         <p class="navbar-text pull-right">
-            <a id="logout" class="navbar-link mylabel" href="{% url 'journal:logout' %}"><i class="icon-signout"></i> logout</a>
+            <a id="logout" class="navbar-link mylabel" href="{% url 'journal:logout' %}">logout <i class="icon-signout"></i></a>
         </p>
         <ul class="nav">
-            <li><a id="newpostbutton" class="mylabel" href="#" rel="tooltip" title="CTRL + ENTER"><i class="icon-edit"></i> new</a></li>
-            <li><a id="reloadbutton" class="mylabel" href="#" rel="tooltip" title="CTRL + SPACE"><i class="icon-refresh"></i> reload</a></li>
+            <li><a id="newpostbutton" class="mylabel" href="#" rel="tooltip" title="CTRL + ENTER">new <i class="icon-edit"></i></a></li>
+            <li><a id="reloadbutton" class="mylabel" href="#" rel="tooltip" title="CTRL + SPACE">reload <i class="icon-refresh"></i></a></li>
         </ul>
       </div>
     </div>
   </div>
 </div>
 
-<div id="newpostform" class="form-horizontal">
+<div id="newpostform" class="form-horizontal modal hide">
     <fieldset>
       <legend class="mylegend">new</legend>
-
       <div class="control-group">
         <label class="control-label mylabel" for="newposttitle">title</label>
         <div class="controls">
@@ -47,14 +52,12 @@
           <input id="newpostsubject" class="input-xxlarge" name="subject" type="text">
         </div>
       </div>
-      <div class="form-actions">
+      <div class="form-actions myformfooter">
         <button id="newpostsubmit" onclick="submitpost()" type="submit" class="btn btn-inverse mylabel">
-            <i class="icon-pencil icon-large"></i>
-            post
+            post <i class="icon-pencil icon-large"></i>
         </button>
         <button id="cancelnewpost" onclick="cancelnewpost()" class="btn btn-inverse mylabel">
-            <i class="icon-large"></i>
-            cancel
+            cancel <i class="icon-large"></i>
         </button>
       </div>
     </fieldset>

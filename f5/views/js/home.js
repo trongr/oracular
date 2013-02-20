@@ -1,6 +1,6 @@
 var HOMEPAGE = "http://localhost:8000/journal/";
 
-var POSTCOUNT = 6;
+var POSTCOUNT = 12;
 var POSTSPERCOL = 3;
 var SPANWIDTH = 12 / POSTSPERCOL;
 
@@ -9,7 +9,6 @@ var KEYSPACE = 32;
 var KEYENTER = 13;
 
 $(document).ready(function(){
-    // $("#newpostform").hide(); // don't do this: you can see it a split second before it hides
     $("#newpostbutton").click(function(){shownewpostform(); return false;});
     $("#reloadbutton").click(function(){mkrandomposts(); return false;});
     $(document).bind("keydown", keyboardshortcuts);
@@ -93,7 +92,7 @@ function mkrandomposts(){
 
 function parsedatetime(t){
     var m = "2013-02-19T04:11:51-05:00".match(/(\d+|[a-zA-Z])/g);
-    return moment(t).format("h:mm a ddd DD-MM-YYYY"); //.calendar();
+    return moment(t).format("H:mm ddd DD MMM YYYY"); //.calendar();
 }
 
 function editpost(){
@@ -103,7 +102,10 @@ function editpost(){
 // todo. do something about window losing focus on form hide
 function shownewpostform(){
     // todo. clear previous note
-    $("#newpostform").show();
+    $("#newpostform").modal().on("hide", function(){
+        // return focus to window, so you can ctrl + find
+        $("*:focus").blur();
+    });
     $("#newposttitle").focus();
 }
 
@@ -138,10 +140,13 @@ function submitpost(){
             mkrandomposts();
         }
     });
+    cancelnewpost();
 }
 
 function cancelnewpost(){
-    $("#newpostform").hide();
+    $("*:focus").blur();
+    $("#newpostform").modal("hide");
+    // $("#newpostform").hide();
 }
 
 // todo
