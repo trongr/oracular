@@ -1,6 +1,6 @@
 var HOMEPAGE = "http://localhost:8000/journal/";
 
-var POSTCOUNT = 10;
+var POSTCOUNT = 11;
 var POSTSPERCOL = 3;
 var SPANWIDTH = 12 / POSTSPERCOL;
 
@@ -37,17 +37,17 @@ function initrandompostdivs(){
     // <= means there'll be extra divs with no posts: that's ok
     for (var i = 0; i <= POSTCOUNT / POSTSPERCOL; i++){
         var row = $("<div/>", {
-            class: "row-fluid",
+            class: "row-fluid myrandomrow",
         }).appendTo(rp);
         for (var j = 0; j < POSTSPERCOL; j++){
             row.append(
                 "<div class='span" + SPANWIDTH + "'>" +
-                    "<div class='randompost'>" +
-                        "<a><div class='posttitle'></div></a>" +
-                        "<div class='postbody'></div>" +
-                        "<div class='postsubject'></div>" +
-                        "<div class='postdate'></div>" +
-                    "</div>" +
+                    "<a href='#' class='randompost'>" +
+                        "<span class='posttitle'></span> " +
+                        "<span class='postbody'></span> " +
+                        "<span class='postsubject'></span> " +
+                        "<span class='postdate'></span>" +
+                    "</a>" +
                 "</div>"
             );
         }
@@ -99,7 +99,7 @@ function mkrandomposts(){
             rp.find(".posttitle").html(post.title);
             rp.find(".postbody").html(post.body);
             rp.find(".postsubject").html(post.subject);
-            rp.find(".postdate").html(parsedatetime(post.created));
+            rp.find(".postdate").html(parsedatetime(post.updated));
         });
     });
 }
@@ -110,8 +110,8 @@ function parsedatetime(t){
 }
 
 function editpost(postid){
-    shownewpostform();
     populateeditpost(postid);
+    shownewpostform();
 }
 
 // using new post form to edit old posts
