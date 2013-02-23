@@ -50,12 +50,15 @@ html, body {
     background-color: whitesmoke;
     color: black;
 }
+
 .controls.text_input::-webkit-input-placeholder {
     color: grey;
 }
+
 .controls.text_input:-moz-placeholder {
     color: grey;
 }
+
 .controls.text_input:-ms-input-placeholder {
     color: grey;
 }

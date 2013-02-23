@@ -16,9 +16,14 @@
             <li><a id="newpostbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + enter">new <i class="icon-edit"></i></a></li>
             <li><a id="reloadbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + space">reload <i class="icon-refresh"></i></a></li>
         </ul>
-        <p class="navbar-text pull-right">
-            <a id="logout" class="navbar-link mycontrol" href="{% url 'journal:logout' %}">logout <i class="icon-signout"></i></a>
-        </p>
+        <div class="navbar-text pull-right">
+            <div id="loginbar">
+                <input id="username" class="input-large placeholder" type="text" placeholder="username" onfocus="removeplaceholder('username')">
+                <input id="password" class="input-large placeholder" type="password" placeholder="password" onfocus="removeplaceholder('password')">
+                <a id="loginbutton" class="navbar-link mycontrol" href="#">login <i class="icon-signin"></i></a>
+            </div>
+            <a id="logout" class="navbar-link mycontrol" href="#">logout <i class="icon-signout"></i></a>
+        </div>
     </div>
   </div>
 </div>

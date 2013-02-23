@@ -76,25 +76,29 @@ def jsonpost(request):
     }), content_type=JSONTYPE)
 
 def home(request):
-    if request.user.is_authenticated():
-        return render(request, "journal/home.html")
+    # if request.user.is_authenticated():
+    return render(request, "journal/home.html")
 
 # todo. https
 def login(request):
-    password = request.POST.get('password', '')
-    username = request.POST.get('username', '')
+    password = request.GET.get('password', '')
+    username = request.GET.get('username', '')
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
-        return HttpResponseRedirect(reverse('journal:home'))
-    return render(request, "journal/index.html", {
-        'error': 'wrong'
+        return JSONResponse({
+            "isloggedin": True
+        })
+    return JSONResponse({
+        "isloggedin": False
     })
 
 @login_required
 def logout(request):
     auth.logout(request)
-    return HttpResponseRedirect(reverse("journal:index"))
+    return JSONResponse({
+        "isloggedin": False
+    })
 
 def registration(request):
     return render(request, 'journal/registration.html')
@@ -153,7 +157,13 @@ def createpost(request):
     except:
         return jsonerror()
 
-@login_required
+def isloggedin(request):
+    if request.user.is_authenticated():
+        return JSONResponse({"isloggedin": True})
+    else:
+        return JSONResponse({"isloggedin": False})
+
+# @login_required
 def randomposts(request):
     if request.user.is_authenticated():
         creator = request.user.id
@@ -166,6 +176,11 @@ def randomposts(request):
                 posts.append(post)
         data = {
             "posts": PostSerializer(posts, many=True).data
+        }
+        return JSONResponse(data)
+    else:
+        # todo. return public posts. default limit 11
+        data = {
         }
         return JSONResponse(data)
 

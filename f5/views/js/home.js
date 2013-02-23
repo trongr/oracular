@@ -9,13 +9,16 @@ var KEYSPACE = 32;
 var KEYENTER = 13;
 
 $(document).ready(function(){
+    loginout();
     initrandompostdivs();
     mkrandomposts();
 
     $("a").tooltip({'placement': 'bottom'});
 
+    $("#loginbutton").click(function(){loginbutton(); return false;});
     $("#newpostbutton").click(function(){shownewpostform(); return false;});
     $("#reloadbutton").click(function(){mkrandomposts(); return false;});
+    $("#logout").click(function(){logout(); return false;});
     $("#newpostsubmit").attr("onclick", "submitpost()");
 
     $(document).bind("keydown", keyboardshortcuts);
@@ -24,11 +27,68 @@ $(document).ready(function(){
 
     $("input, textarea").focus(function(){$(this).select()});
 
-    $("#newpostform").on("hide", function(){
-        // return focus to window, so you can ctrl + find
-        $("*:focus").blur();
-    });
+    // return focus to window after pressing esc on new post form modal
+    $("#newpostform").on("hide", function(){$("*:focus").blur()});
 });
+
+function logout(){
+    $.ajax({
+        url: HOMEPAGE + "logout",
+        type: "GET",
+        success: function(json){
+            showhideloginbar(json.isloggedin);
+        }
+    });
+}
+
+function loginout(){
+    $.ajax({
+        url: HOMEPAGE + "isloggedin",
+        type: "GET",
+        success: function(json){
+            showhideloginbar(json.isloggedin);
+        }
+    });
+}
+
+// hack fix for firefox placeholder cursor invisible when input empty
+function removeplaceholder(id){
+    if (id == "username"){
+        $("#username").removeAttr("placeholder");
+        $("#password").attr("placeholder", "password");
+    } else {
+        $("#password").removeAttr("placeholder");
+        $("#username").attr("placeholder", "username");
+    }
+}
+
+function showhideloginbar(isloggedin){
+    if (isloggedin == true){
+        // have to blur before hide or focus won't be returned
+        $("*:focus").blur();
+        $("#loginbar").hide();
+        $("#logout").show();
+    } else {
+        $("#logout").hide();
+        $("#loginbar").show();
+    }
+}
+
+function loginbutton(){
+    $.ajax({
+        url: HOMEPAGE + "login",
+        type: "GET",
+        data: {
+            username: $("#username").val(),
+            password: $("#password").val()
+        },
+        success: function(json){
+            // todo. get return status and hide login bar
+            showhideloginbar(json.isloggedin);
+            mkrandomposts();
+        }
+    });
+}
 
 // too much dom manipulation makes it slow: generate all divs just
 // once in the beginning
@@ -58,7 +118,8 @@ function initrandompostdivs(){
 // some reason <form/> won't let you ajax csrftoken, so had to switch
 // to div, but then <input/> doesn't submit on enter keydown
 function newpostformbindenterkeypress(){
-    $("input").bind("keydown", inputkeydownsubmit);
+    $("#newposttitle, #newpostsubject").bind("keydown", inputkeydownsubmit);
+    $("#username, #password").bind("keydown", inputkeydownlogin);
 }
 
 function inputkeydownsubmit(e){
@@ -66,6 +127,16 @@ function inputkeydownsubmit(e){
     case KEYENTER:
         if (!e.ctrlKey){
             $("#newpostsubmit").click();
+        }
+        break;
+    }
+}
+
+function inputkeydownlogin(e){
+    switch (e.which || e.keyCode){
+    case KEYENTER:
+        if (!e.ctrlKey){
+            $("#loginbutton").click();
         }
         break;
     }
@@ -142,7 +213,7 @@ function submiteditpost(){
             csrfmiddlewaretoken: token,
         },
         success: function(post){ // todo
-            $("#newpostform").hide();
+            // $("#newpostform").hide();
             mkrandomposts();
         }
     });
@@ -171,7 +242,7 @@ function submitpost(){
             csrfmiddlewaretoken: token,
         },
         success: function(post){
-            $("#newpostform").hide();
+            // $("#newpostform").hide();
             mkrandomposts();
         }
     });

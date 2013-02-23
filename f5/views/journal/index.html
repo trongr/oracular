@@ -17,7 +17,7 @@
         <form id="loginform" action="{% url 'journal:login' %}" method="post">
             {% csrf_token %}
             <input id="username" class="controls text_input" type="text" name="username" placeholder="username">
-            <input class="controls text_input" type="password" name="password" placeholder="password">
+            <input id="password" class="controls text_input" type="password" name="password" placeholder="password">
             <input class="controls button" type="submit" value="login">
         </form>
         <div class="clear"></div>
