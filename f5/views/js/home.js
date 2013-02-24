@@ -1,3 +1,6 @@
+// todo. separate edit post from new post form. right now they share
+// the same modal
+
 var HOMEPAGE = "http://localhost:8000/journal/";
 
 var POSTCOUNT = 11;
@@ -7,6 +10,8 @@ var SPANWIDTH = 12 / POSTSPERCOL;
 // keycodes
 var KEYSPACE = 32;
 var KEYENTER = 13;
+var KEYE = 69;
+var KEYTAB = 9;
 
 $(document).ready(function(){
     loginout();
@@ -15,21 +20,91 @@ $(document).ready(function(){
 
     $("a").tooltip({'placement': 'bottom'});
 
-    $("#loginbutton").click(function(){loginbutton(); return false;});
-    $("#newpostbutton").click(function(){shownewpostform(); return false;});
-    $("#reloadbutton").click(function(){mkrandomposts(); return false;});
-    $("#logout").click(function(){logout(); return false;});
-    $("#newpostsubmit").attr("onclick", "submitpost()");
-
+    clickityclickclick(); // setting button onclicks
     $(document).bind("keydown", keyboardshortcuts);
-
     newpostformbindenterkeypress();
 
     $("input, textarea").focus(function(){$(this).select()});
 
     // return focus to window after pressing esc on new post form modal
     $("#newpostform").on("hide", function(){$("*:focus").blur()});
+
+    // reading tab in newpostform tags input to load posts in bg
+    //
+    // todo. get posts as you type
+    tabtags();
 });
+
+function tabtags(){
+    $("#newpostsubject").keydown(function(e) {
+        switch (e.which || e.keyCode){
+        case KEYTAB:
+            getrelatedposts();
+            break;
+        }
+    });
+}
+
+// getting posts sharing at least one tag with current edit post
+function getrelatedposts(){
+    var tags = $("#newpostsubject").val();
+    $.ajax({
+        url: HOMEPAGE + "relatedposts",
+        type: "GET",
+        data: {
+            tags: tags,
+            // by default, the server loads just one. it's probably
+            // better because people don't have the ability to
+            // simultaneously write something __and__ read more than
+            // one related posts
+            //
+            // postcount: POSTCOUNT,
+        },
+        success: function(json){
+            loadposts(json);
+        }
+    });
+}
+
+// closeallmodals() before opening another one, otw bootstrap too much
+// recursion error
+function clickityclickclick(){
+    $("#newpostbutton").click(function(){shownewpostform(); return false;});
+    $("#reloadbutton").click(function(){mkrandomposts(); return false;});
+
+    $("#logout").click(function(){logout(); return false;});
+    $("#loginbutton").click(function(){loginbutton(); return false;});
+
+    $("#newpostsubmit").attr("onclick", "submitpost()");
+
+    $("#settingsbutton").click(function(){settingsbutton(); return false;});
+    $("#tagsbutton").click(function(){tagsbutton(); return false;});
+}
+
+// considering implementing a dynamic display as you type in post
+// form, so listing tags might not be necessary anymore.
+//
+// todo. get tags list: views.gettags()
+function tagsbutton(){
+    $.ajax({
+        url: HOMEPAGE + "gettags",
+        type: "GET",
+        success: function(json){
+            // todo
+        }
+    });
+}
+
+// todo. show default tab
+function settingsbutton(){
+    closeallmodals();
+    $("#settingsmodal").modal();
+}
+
+function closeallmodals(){
+    $("#settingsmodal").modal("hide");
+    $("#newpostform").modal("hide");
+}
 
 function logout(){
     $.ajax({
@@ -59,6 +134,24 @@ function removeplaceholder(id){
     } else {
         $("#password").removeAttr("placeholder");
         $("#username").attr("placeholder", "username");
+    }
+}
+
+// same hack fix for newpostform. someone needs to write a library for
+// this ff bug
+function removepostplaceholder(id){
+    if (id == "title"){
+        $("#newposttitle").removeAttr("placeholder");
+        $("#newpostsubject").attr("placeholder", "space-separated tags");
+        $("#newpostbody").attr("placeholder", "note");
+    } else if (id == "tags"){
+        $("#newposttitle").attr("placeholder", "title");
+        $("#newpostsubject").removeAttr("placeholder");
+        $("#newpostbody").attr("placeholder", "note");
+    } else {
+        $("#newposttitle").attr("placeholder", "title");
+        $("#newpostsubject").attr("placeholder", "space-separated tags");
+        $("#newpostbody").removeAttr("placeholder");
     }
 }
 
@@ -104,7 +197,7 @@ function initrandompostdivs(){
                 "<div class='span" + SPANWIDTH + "'>" +
                     "<a href='#' class='randompost'>" +
                         "<span class='posttitle'></span> " +
-                        "<span class='postbody'></span> " +
+                        "<span class='postbody'></span>" +
                         "<span class='postsubject'></span> " +
                         "<span class='postdate'></span>" +
                     "</a>" +
@@ -144,17 +237,18 @@ function inputkeydownlogin(e){
 
 // todo. ctrl + n to edit nth box
 function keyboardshortcuts(e){
-    switch (e.which || e.keyCode){
-    case KEYSPACE:
-        if (e.ctrlKey){
+    if (e.ctrlKey){
+        switch (e.which || e.keyCode){
+        case KEYSPACE:
             mkrandomposts();
-        }
-        break;
-    case KEYENTER:
-        if (e.ctrlKey){
+            break;
+        case KEYENTER:
             shownewpostform();
+            break;
+        case KEYE:
+            $("#settingsbutton").click();
+            break;
         }
-        break;
     }
 }
 
@@ -162,16 +256,20 @@ function mkrandomposts(){
     $.getJSON(HOMEPAGE + "randomposts", {
         postcount: POSTCOUNT
     }, function(json){
-        var rps = $(".randompost");
-        $.each(json.posts, function(i, post){
-            var rp = rps.eq(i);
-            rp.attr("id", post.id);
-            rp.attr("onclick", "editpost(" + post.id + ")");
-            rp.find(".posttitle").html(post.title);
-            rp.find(".postbody").html(post.body);
-            rp.find(".postsubject").html(post.subject);
-            rp.find(".postdate").html(parsedatetime(post.updated));
-        });
+        loadposts(json);
+    });
+}
+
+function loadposts(json){
+    var rps = $(".randompost");
+    $.each(json.posts, function(i, post){
+        var rp = rps.eq(i);
+        rp.attr("id", post.id);
+        rp.attr("onclick", "editpost(" + post.id + ")");
+        rp.find(".posttitle").html(post.title);
+        rp.find(".postbody").html(post.body);
+        rp.find(".postsubject").html(post.subject);
+        rp.find(".postdate").html(parsedatetime(post.updated));
     });
 }
 
@@ -213,16 +311,17 @@ function submiteditpost(){
             csrfmiddlewaretoken: token,
         },
         success: function(post){ // todo
-            // $("#newpostform").hide();
-            mkrandomposts();
+            // todo. give user feedback
         }
     });
+    mkrandomposts();
     cancelnewpost();
     // reset new post submit function
     $("#newpostsubmit").attr("onclick", "submitpost()");
 }
 
 function shownewpostform(){
+    closeallmodals();
     $("#newpostform").modal();
     $("#newposttitle").focus();
 }
@@ -241,11 +340,11 @@ function submitpost(){
             subject: subject,
             csrfmiddlewaretoken: token,
         },
-        success: function(post){
-            // $("#newpostform").hide();
-            mkrandomposts();
+        success: function(json){
+            // todo. give user feedback
         }
     });
+    mkrandomposts();
     cancelnewpost();
 }
 

@@ -1,8 +1,6 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-{% load url from future %}
-<!-- <link rel="stylesheet" href="{{ STATIC_URL }}css/global.css"> -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}awesome/css/font-awesome.min.css">
@@ -13,6 +11,20 @@
   <div class="navbar-inner mynavbar">
     <div class="container-fluid">
         <ul class="nav">
+            <li>
+                <a class="dropdown-toggle mycontrol" data-toggle="dropdown" href="#">menu <i class="icon-align-justify"></i></a>
+                <ul class="dropdown-menu mydropdownmenu">
+                    <div class="span3">
+                        <li>
+                            <a id="settingsbutton" class="mydropdownbutton" href="#"><i class="icon-cog"></i> settings
+                            <span class="shortcuttip">ctrl + e</span></a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a class="mydropdownbutton" href="#"><i class="icon-ambulance"></i> help</a></li>
+                        <li><a class="mydropdownbutton" href="#"><i class="icon-user"></i> about</a></li>
+                    </div>
+                </ul>
+            </li>
             <li><a id="newpostbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + enter">new <i class="icon-edit"></i></a></li>
             <li><a id="reloadbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + space">reload <i class="icon-refresh"></i></a></li>
         </ul>
@@ -30,23 +42,24 @@
 
 <div id="newpostform" class="form-horizontal modal hide">
     <fieldset>
-      <legend class="mylegend">new</legend>
+      <!-- <legend class="mylegend"><span class="pull-right">new</span></legend> -->
+      <legend class="mylegend"></legend>
       <div class="control-group">
-        <label class="control-label mylabel" for="newposttitle">title</label>
+        <!-- <label class="control-label mylabel" for="newposttitle">title</label> -->
         <div class="controls">
-          <input id="newposttitle" class="input-xxlarge" name="title" type="text">
+          <input id="newposttitle" class="input-xxlarge placeholder" type="text" placeholder="title" onfocus="removepostplaceholder('title')">
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label mylabel" for="textarea">note</label>
+        <!-- <label class="control-label mylabel" for="newpostsubject">tags</label> -->
         <div class="controls">
-          <textarea class="input-xxlarge" id="newpostbody" name="body" rows="8"></textarea>
+          <input id="newpostsubject" class="input-xxlarge placeholder" type="text" placeholder="space-separated tags" onfocus="removepostplaceholder('tags')">
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label mylabel" for="newpostsubject">tags</label>
+        <!-- <label class="control-label mylabel" for="textarea">note</label> -->
         <div class="controls">
-          <input id="newpostsubject" class="input-xxlarge" name="subject" type="text">
+          <textarea id="newpostbody" class="input-xxlarge placeholder" rows="8" placeholder="note" onfocus="removepostplaceholder('note')"></textarea>
         </div>
       </div>
       <input id="editpostid" type="hidden">
@@ -61,18 +74,25 @@
     </fieldset>
 </div>
 
+<!-- todo. nothing in settings yet. use it for the help and about
+modals -->
+<!-- tabindex -1 to ESCAPE close modal -->
+<div id="settingsmodal" class="modal hide" tabindex="-1">
+    <div class="row-fluid">
+        <div id="settingsmenu" class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li><a id="tagsbutton" class="mydropdownbutton" href="#">tags <i class="icon-chevron-right pull-right"></i></a></li>
+                <li><a id="privacybutton" class="mydropdownbutton" href="#">privacy <i class="icon-chevron-right pull-right"></i></a></li>
+            </ul>
+        </div>
+        <div id="settingscontent" class="span9">
+            <div id="tagslist" class="">i'm working on this :)</div> <!-- class="hide" -->
+        </div>
+    </div>
+</div>
+
 <div id="randomposts"></div>
 
-<!-- {% if post %} -->
-<!--     <div id="random_edit_form" action="{% url 'journal:edit_post' post.id %}" method="post"> -->
-<!--         <input id="title_edit" type="text" name="title_edit" value="{{ post.title }}"> -->
-<!--         <div>{{ post.updated }}</div> -->
-<!--         <textarea id="body_edit" type="text" name="body_edit">{{ post.body }}</textarea><br> -->
-<!--         <input id="subject_edit" type="text" name="subject_edit" value="{{ post.subject }}"> -->
-<!--         <input id="submit_button" type="submit" value="save"> -->
-<!--     </div> -->
-<!--     <div id="no_post">You don't have any post</div> -->
-<!-- {% endif %} -->
 <script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
 <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
 <script src="{{ STATIC_URL }}js/moment.min.js"></script>

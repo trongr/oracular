@@ -1,3 +1,6 @@
+import operator
+from django.db.models import Q
+
 import json
 # from django.core.serializers.json import DjangoJSONEncoder
 # from django.core import serializers
@@ -23,6 +26,7 @@ JSONTYPE = "application/json"
 POSTID = "id"
 TITLE = "title"
 BODY = "body"
+TAGS = "tags"
 SUBJECT = "subject"
 UPDATED = "updated"
 
@@ -53,6 +57,7 @@ def savepost(request, postid):
     post.updated = datetime.now()
     post.save()
 
+# todo. parse and save tags in model
 @login_required
 def editpost(request):
     postid = request.POST.get(POSTID, "")
@@ -145,6 +150,7 @@ def check_registration(username, password, repeat_password, email):
         error_msg = "email already registered"
     return error_msg
 
+# todo. if not logged in create post in public account username password
 @login_required
 def createpost(request):
     title = request.POST.get(TITLE, "")
@@ -165,6 +171,7 @@ def isloggedin(request):
 
 # @login_required
 def randomposts(request):
+    # todo. default limit 20
     if request.user.is_authenticated():
         creator = request.user.id
         postcount = int(request.GET.get(POSTCOUNT, 1))
@@ -179,7 +186,32 @@ def randomposts(request):
         }
         return JSONResponse(data)
     else:
-        # todo. return public posts. default limit 11
+        # todo. return public posts
+        data = {
+        }
+        return JSONResponse(data)
+
+def relatedposts(req):
+    # todo. default limit 20
+    if req.user.is_authenticated():
+        creator = req.user.id
+        tags = req.GET.get(TAGS).split() # todo. 0
+        postcount = int(req.GET.get(POSTCOUNT, 1))
+
+        result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, (Q(subject__icontains=tag) for tag in tags)))
+
+        maximum = result.count()
+        randomlist = random.sample(xrange(maximum), min(maximum, postcount))
+        posts = []
+        for i, post in enumerate(result):
+            if i in randomlist:
+                posts.append(post)
+        data = {
+            "posts": PostSerializer(posts, many=True).data
+        }
+        return JSONResponse(data)
+    else:
+        # todo. return public posts
         data = {
         }
         return JSONResponse(data)
@@ -191,9 +223,31 @@ class PostSerializer(serializers.ModelSerializer):
 
 class JSONResponse(HttpResponse):
     """
-        An HttpResponse that renders it's content into JSON.
+        An HttpResponse that renders its content into JSON.
     """
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
+
+# tags are just subjects split by spaces
+def gettags(req):
+    pass
+    # if request.user.is_authenticated():
+    #     creator = request.user.id
+    #     postcount = int(request.GET.get(POSTCOUNT, 1))
+    #     maximum = Post.objects.filter(creator=creator).count()
+    #     randomlist = random.sample(xrange(maximum), min(maximum, postcount))
+    #     posts = []
+    #     for i, post in enumerate(Post.objects.filter(creator=creator)):
+    #         if i in randomlist:
+    #             posts.append(post)
+    #     data = {
+    #         "posts": PostSerializer(posts, many=True).data
+    #     }
+    #     return JSONResponse(data)
+    # else:
+    #     # todo. return public posts
+    #     data = {
+    #     }
+    #     return JSONResponse(data)
