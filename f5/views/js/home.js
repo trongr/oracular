@@ -12,11 +12,22 @@ var KEYSPACE = 32;
 var KEYENTER = 13;
 var KEYE = 69;
 var KEYTAB = 9;
+var KEYCOMMA = 188;
+var KEYPERIOD = 190;
+var KEYSEMICOLON = 59;
+var KEYONE = 49;                // shift + one = !
+var KEYSLASH = 191;             // shift + slash = ?
+
+var mainpane;                   // div for relatedposts
+var relatedwords = "";
+
+var inputtitle, inputtags;
 
 $(document).ready(function(){
     loginout();
     initrandompostdivs();
     mkrandomposts();
+    cachedivs();
 
     $("a").tooltip({'placement': 'bottom'});
 
@@ -32,27 +43,80 @@ $(document).ready(function(){
     // reading tab in newpostform tags input to load posts in bg
     //
     // todo. get posts as you type
-    tabtags();
+    tabinput();
 });
 
-function tabtags(){
-    $("#newpostsubject").keydown(function(e) {
-        switch (e.which || e.keyCode){
+// caching to save time
+function cachedivs(){
+    mainpane = $(".randompost").eq(0);
+    inputtitle = $("#newposttitle");
+    inputtags = $("#newpostsubject");
+}
+
+function readrelatedwords(key){
+    // js can't read single quote ' from e.which, so hack:
+    if (key == "222"){
+        relatedwords += "'";
+    } else {
+        relatedwords += String.fromCharCode(key);
+    }
+}
+
+function tabinput(){
+    $("#newposttitle").keydown(function(e) {
+        var key = e.which || e.keyCode;
+        switch (key){
         case KEYTAB:
-            getrelatedposts();
+            relatedwords = inputtitle.val();
+            getrelatedposts("title");
             break;
+        default:
+        }
+    });
+    $("#newpostsubject").keydown(function(e) {
+        var key = e.which || e.keyCode;
+        switch (key){
+        case KEYTAB:
+            relatedwords = inputtags.val();
+            getrelatedposts("subject");
+            break;
+        default:
+        }
+    });
+    $("#newpostbody").keydown(function(e) {
+        var key = e.which || e.keyCode;
+        if (e.shiftKey){        // detecting ? and !
+            switch (key){
+            case KEYONE:
+            case KEYSLASH:
+                getrelatedposts("body");
+                break;
+            }
+        }
+        switch (key){
+        case KEYCOMMA:          // detecting , . ;
+        case KEYPERIOD:
+        case KEYSEMICOLON:
+            getrelatedposts("body");
+            break;
+        case KEYSLASH:          // don't want to read / by default
+            break;
+        default:                // reading anything but punctuations
+            readrelatedwords(key);
         }
     });
 }
 
-// getting posts sharing at least one tag with current edit post
-function getrelatedposts(){
-    var tags = $("#newpostsubject").val();
+// getting a post with the same words as what you're writing
+//
+// todo. smarter algorithm to get posts with similar ideas
+function getrelatedposts(where){
     $.ajax({
         url: HOMEPAGE + "relatedposts",
         type: "GET",
         data: {
-            tags: tags,
+            where: where,
+            relatedwords: relatedwordsarray(),
             // by default, the server loads just one. it's probably
             // better because people don't have the ability to
             // simultaneously write something __and__ read more than
@@ -62,8 +126,24 @@ function getrelatedposts(){
         },
         success: function(json){
             loadposts(json);
+            highlightpost();
+        },
+        complete: function(){
+            relatedwords = "";
         }
     });
+}
+
+function relatedwordsarray(){
+    relatedwords = relatedwords.replace(/[^'\w]/g, " ").trim().toLowerCase();
+    return relatedwords.split(" ");
+}
+
+function highlightpost(){
+    var rw = relatedwords.split(" ");
+    for (var i = 0; i < rw.length; i++){
+        mainpane.highlight(rw[i]);
+    }
 }
 
 // closeallmodals() before opening another one, otw bootstrap too much
@@ -142,7 +222,7 @@ function removeplaceholder(id){
 function removepostplaceholder(id){
     if (id == "title"){
         $("#newposttitle").removeAttr("placeholder");
-        $("#newpostsubject").attr("placeholder", "space-separated tags");
+        $("#newpostsubject").attr("placeholder", "tags");
         $("#newpostbody").attr("placeholder", "note");
     } else if (id == "tags"){
         $("#newposttitle").attr("placeholder", "title");
@@ -150,7 +230,7 @@ function removepostplaceholder(id){
         $("#newpostbody").attr("placeholder", "note");
     } else {
         $("#newposttitle").attr("placeholder", "title");
-        $("#newpostsubject").attr("placeholder", "space-separated tags");
+        $("#newpostsubject").attr("placeholder", "tags");
         $("#newpostbody").removeAttr("placeholder");
     }
 }
@@ -184,9 +264,15 @@ function loginbutton(){
 }
 
 // too much dom manipulation makes it slow: generate all divs just
-// once in the beginning
+// once in the beginning.... even better:
+//
+// todo. concat strings before hand and insert into the DOM just once
 function initrandompostdivs(){
     var rp = $("#randomposts");
+
+    // todo. concat strings before hand and insert into the DOM just
+    // once. this for loop is bad:
+
     // <= means there'll be extra divs with no posts: that's ok
     for (var i = 0; i <= POSTCOUNT / POSTSPERCOL; i++){
         var row = $("<div/>", {
@@ -274,7 +360,7 @@ function loadposts(json){
 }
 
 function parsedatetime(t){
-    var m = "2013-02-19T04:11:51-05:00".match(/(\d+|[a-zA-Z])/g);
+    // var m = "2013-02-19T04:11:51-05:00".match(/(\d+|[a-zA-Z])/g);
     return moment(t).format("H:mm ddd DD MMM YYYY"); //.calendar();
 }
 
@@ -323,7 +409,7 @@ function submiteditpost(){
 function shownewpostform(){
     closeallmodals();
     $("#newpostform").modal();
-    $("#newposttitle").focus();
+    $("#newpostsubject").focus();
 }
 
 function submitpost(){

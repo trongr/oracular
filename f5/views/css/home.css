@@ -211,3 +211,8 @@ textarea {
 #settingsmodal {
     padding: 10px;
 }
+
+.highlight {
+    /* background-color: #ff8; */
+    border: 1px dotted #fff;
+}

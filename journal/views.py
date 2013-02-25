@@ -191,21 +191,36 @@ def randomposts(request):
         }
         return JSONResponse(data)
 
+# todo. validate everything
 def relatedposts(req):
-    # todo. default limit 20
     if req.user.is_authenticated():
         creator = req.user.id
-        tags = req.GET.get(TAGS).split() # todo. 0
+        where = req.GET.get("where")
+
+        # todo opt. remove short words. todo opt. do this on client
+        relatedwords = req.GET.getlist("relatedwords[]") # get("relatedwords").split()
+
         postcount = int(req.GET.get(POSTCOUNT, 1))
 
-        result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, (Q(subject__icontains=tag) for tag in tags)))
+        # result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, (Q(subject__icontains=rw) | Q(title__icontains=rw) for rw in relatedwords)))
+        result = None;
+        if where == "title":
+            result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, (Q(title__icontains=rw) for rw in relatedwords)))
+        elif where == "subject":
+            result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, (Q(subject__icontains=rw) for rw in relatedwords)))
+        elif where == "body":
+            # relatedwords = [lword for lword in relatedwords if len(lword) >= 4]
+            # if relatedwords:
+            result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, (Q(body__icontains=rw) for rw in relatedwords)))
 
-        maximum = result.count()
-        randomlist = random.sample(xrange(maximum), min(maximum, postcount))
         posts = []
-        for i, post in enumerate(result):
-            if i in randomlist:
-                posts.append(post)
+        if result:
+            maximum = result.count()
+            ind = random.randint(0, maximum - 1)
+            posts.append(result[ind])
+
+        # same format as randomposts response to make it easy for
+        # home.js/loadposts()
         data = {
             "posts": PostSerializer(posts, many=True).data
         }

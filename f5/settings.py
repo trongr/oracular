@@ -1,3 +1,4 @@
+import sys
 import os.path
 
 # Django settings for f5 project.
@@ -148,6 +149,12 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        # self. this guy lets you print stuff to console
+        'console': {
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'stream': sys.stdout
         }
     },
     'loggers': {
