@@ -17,6 +17,7 @@ var KEYPERIOD = 190;
 var KEYSEMICOLON = 59;
 var KEYONE = 49;                // shift + one = !
 var KEYSLASH = 191;             // shift + slash = ?
+var KEYBACKSPACE = 8;
 
 var mainpane;                   // div for relatedposts
 var relatedwords = "";
@@ -49,6 +50,11 @@ $(document).ready(function(){
 // caching to save time
 function cachedivs(){
     mainpane = $(".randompost").eq(0);
+    mainpane.parent().css({
+        "border": "1px solid #fff",
+        "border-radius": "5px",
+        "padding": "5px",
+    });
     inputtitle = $("#newposttitle");
     inputtags = $("#newpostsubject");
 }
@@ -60,6 +66,10 @@ function readrelatedwords(key){
     } else {
         relatedwords += String.fromCharCode(key);
     }
+}
+
+function rollbackspace(){
+    relatedwords = relatedwords.slice(0, -1);
 }
 
 function tabinput(){
@@ -100,6 +110,9 @@ function tabinput(){
             getrelatedposts("body");
             break;
         case KEYSLASH:          // don't want to read / by default
+            break;
+        case KEYBACKSPACE:
+            rollbackspace();
             break;
         default:                // reading anything but punctuations
             readrelatedwords(key);
