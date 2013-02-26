@@ -295,8 +295,8 @@ function initrandompostdivs(){
             row.append(
                 "<div class='span" + SPANWIDTH + "'>" +
                     "<a href='#' class='randompost'>" +
-                        "<span class='posttitle'></span> " +
-                        "<span class='postbody'></span>" +
+                        "<span class='posttitle'></span> " + // putting spaces after spans let them fill over to new lines
+                        "<span class='postbody'></span> " +
                         "<span class='postsubject'></span> " +
                         "<span class='postdate'></span>" +
                     "</a>" +
@@ -427,7 +427,7 @@ function shownewpostform(){
 
 function submitpost(){
     var title = $("#newposttitle").val();
-    var body = $("#newpostbody").val();
+    var body = $("#newpostbody").val();;
     var subject = $("#newpostsubject").val();
     var token = getCookie('csrftoken');
     $.ajax({
@@ -435,7 +435,7 @@ function submitpost(){
         type: "POST",
         data: {
             title: title,
-            body: body,
+            body: escape(body),
             subject: subject,
             csrfmiddlewaretoken: token,
         },
