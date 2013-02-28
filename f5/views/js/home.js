@@ -3,7 +3,8 @@
 
 var HOMEPAGE = "http://localhost:8000/journal/";
 
-var POSTCOUNT = 11;
+var NUMCELLS = 9;
+var POSTCOUNT = 9;
 var POSTSPERCOL = 3;
 var SPANWIDTH = 12 / POSTSPERCOL;
 
@@ -19,7 +20,9 @@ var KEYONE = 49;                // shift + one = !
 var KEYSLASH = 191;             // shift + slash = ?
 var KEYBACKSPACE = 8;
 
-var mainpane;                   // div for relatedposts
+// var mainpane;                   // div for relatedposts
+var displaypanels;                   // divs for relatedposts
+var whichpanel = 0;                  // which panel to load the next post
 var relatedwords = "";
 
 var inputtitle, inputtags;
@@ -49,12 +52,13 @@ $(document).ready(function(){
 
 // caching to save time
 function cachedivs(){
-    mainpane = $(".randompost").eq(0);
-    mainpane.parent().css({
-        "border": "1px solid #fff",
-        "border-radius": "5px",
-        "padding": "5px",
-    });
+    displaypanels = $(".randompost");
+    // mainpane = $(".randompost").eq(0);
+    // mainpane.parent().css({
+    //     "border": "1px solid #fff",
+    //     "border-radius": "5px",
+    //     "padding": "5px",
+    // });
     inputtitle = $("#newposttitle");
     inputtags = $("#newpostsubject");
 }
@@ -68,6 +72,8 @@ function readrelatedwords(key){
     }
 }
 
+// pressing backspace removes previous character instead of adding
+// space char
 function rollbackspace(){
     relatedwords = relatedwords.slice(0, -1);
 }
@@ -95,24 +101,31 @@ function tabinput(){
     });
     $("#newpostbody").keydown(function(e) {
         var key = e.which || e.keyCode;
-        if (e.shiftKey){        // detecting ? and !
-            switch (key){
-            case KEYONE:
-            case KEYSLASH:
-                getrelatedposts("body");
-                break;
-            }
-        }
+        // if (e.shiftKey){        // detecting ? and !
+        //     switch (key){
+        //     case KEYONE:
+        //     case KEYSLASH:
+        //         getrelatedposts("body");
+        //         break;
+        //     }
+        // }
         switch (key){
-        case KEYCOMMA:          // detecting , . ;
-        case KEYPERIOD:
-        case KEYSEMICOLON:
+        // case KEYCOMMA:          // detecting , . ;
+        // case KEYPERIOD:
+        // case KEYSEMICOLON:
+        //     getrelatedposts("body");
+        //     break;
+        // case KEYSLASH:          // don't want to read / by default
+        //     break;
+        case KEYSPACE:          // querying database on word
             getrelatedposts("body");
             break;
-        case KEYSLASH:          // don't want to read / by default
-            break;
         case KEYBACKSPACE:
-            rollbackspace();
+            if (e.ctrlKey){     // ctrl + backspace deletes last word
+                relatedwords = "";
+            } else {
+                rollbackspace();
+            }
             break;
         default:                // reading anything but punctuations
             readrelatedwords(key);
@@ -124,27 +137,33 @@ function tabinput(){
 //
 // todo. smarter algorithm to get posts with similar ideas
 function getrelatedposts(where){
-    $.ajax({
-        url: HOMEPAGE + "relatedposts",
-        type: "GET",
-        data: {
-            where: where,
-            relatedwords: relatedwordsarray(),
-            // by default, the server loads just one. it's probably
-            // better because people don't have the ability to
-            // simultaneously write something __and__ read more than
-            // one related posts
-            //
-            // postcount: POSTCOUNT,
-        },
-        success: function(json){
-            loadposts(json);
-            highlightpost();
-        },
-        complete: function(){
-            relatedwords = "";
-        }
-    });
+    if (relatedwords.length >= 4){
+        $.ajax({
+            url: HOMEPAGE + "relatedposts",
+            type: "GET",
+            data: {
+                where: where,
+                relatedwords: relatedwordsarray(),
+                // by default, the server loads just one. it's probably
+                // better because people don't have the ability to
+                // simultaneously write something __and__ read more than
+                // one related posts
+                //
+                // postcount: POSTCOUNT,
+            },
+            success: function(json){
+                // whichpanel++;
+                loadrelatedposts(json);
+                highlightpost();
+                whichpanel = (whichpanel + POSTSPERCOL) % NUMCELLS;
+            },
+            complete: function(){
+                relatedwords = "";
+            }
+        });
+    } else {
+        relatedwords = "";
+    }
 }
 
 function relatedwordsarray(){
@@ -155,7 +174,7 @@ function relatedwordsarray(){
 function highlightpost(){
     var rw = relatedwords.split(" ");
     for (var i = 0; i < rw.length; i++){
-        mainpane.highlight(rw[i]);
+        displaypanels.eq(whichpanel).highlight(rw[i]);
     }
 }
 
@@ -360,15 +379,33 @@ function mkrandomposts(){
 }
 
 function loadposts(json){
-    var rps = $(".randompost");
+    // var rps = $(".randompost");
     $.each(json.posts, function(i, post){
-        var rp = rps.eq(i);
+        var rp = displaypanels.eq(i);
         rp.attr("id", post.id);
         rp.attr("onclick", "editpost(" + post.id + ")");
         rp.find(".posttitle").html(post.title);
         rp.find(".postbody").html(post.body);
         rp.find(".postsubject").html(post.subject);
         rp.find(".postdate").html(parsedatetime(post.updated));
+    });
+}
+
+function loadrelatedposts(json){
+    // var rps = $(".randompost");
+    $.each(json.posts, function(i, post){
+        var rp = displaypanels.eq(whichpanel);
+        rp.attr("id", post.id);
+        rp.attr("onclick", "editpost(" + post.id + ")");
+        rp.find(".posttitle").html(post.title);
+        rp.find(".postbody").html(post.body);
+        rp.find(".postsubject").html(post.subject);
+        rp.find(".postdate").html(parsedatetime(post.updated));
+        // rp.parent().css({
+        //     "border": "1px solid #fff",
+        //     "border-radius": "5px",
+        //     "padding": "5px",
+        // });
     });
 }
 
@@ -422,7 +459,7 @@ function submiteditpost(){
 function shownewpostform(){
     closeallmodals();
     $("#newpostform").modal();
-    $("#newpostsubject").focus();
+    $("#newposttitle").focus();
 }
 
 function submitpost(){
@@ -435,7 +472,7 @@ function submitpost(){
         type: "POST",
         data: {
             title: title,
-            body: escape(body),
+            body: body, // todo. escape(body)
             subject: subject,
             csrfmiddlewaretoken: token,
         },
