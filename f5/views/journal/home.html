@@ -29,12 +29,19 @@
             <li><a id="reloadbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + space">reload <i class="icon-refresh"></i></a></li>
         </ul>
         <div class="navbar-text pull-right">
-            <div id="loginbar">
+            <div id="loginbar" class="hide">
                 <input id="username" class="input-large placeholder" type="text" placeholder="username" onfocus="removeplaceholder('username')">
                 <input id="password" class="input-large placeholder" type="password" placeholder="password" onfocus="removeplaceholder('password')">
                 <a id="loginbutton" class="navbar-link mycontrol" href="#">login <i class="icon-signin"></i></a>
+                <a id="signupbutton" class="navbar-link dropdown-toggle mycontrol" data-toggle="dropdown" href="#">signup</a>
+                <ul id="signupform" class="dropdown-menu pull-right">
+                  <li><input id="signupusername" class="placeholder" type="text" placeholder="username" onfocus="removesignupplaceholder('signupusername')"></li>
+                  <li><input id="signuppassword" class="placeholder" type="text" placeholder="password" onfocus="removesignupplaceholder('signuppassword')"></li>
+                  <li><input id="signuprepassword" class="placeholder" type="text" placeholder="repassword" onfocus="removesignupplaceholder('repassword')"></li>
+                  <li><button id="signupbtn" type="submit" class="btn btn-inverse pull-right mylabel">signup</button></li>
+                </ul>
             </div>
-            <a id="logout" class="navbar-link mycontrol" href="#">logout <i class="icon-signout"></i></a>
+            <a id="logout" class="hide navbar-link mycontrol" href="#">logout <i class="icon-signout"></i></a>
         </div>
     </div>
   </div>
@@ -42,35 +49,19 @@
 
 <div id="newpostform" class="form-horizontal modal hide">
     <fieldset>
-      <!-- <legend class="mylegend"><span class="pull-right">new</span></legend> -->
-      <!-- <legend class="mylegend"></legend> -->
-      <!-- <div class="control-group"> -->
-      <!--   <\!-- <label class="control-label mylabel" for="newpostsubject">tags</label> -\-> -->
-      <!--   <div class="controls"> -->
-      <!--     <input id="newpostsubject" class="input-xxlarge placeholder" type="text" placeholder="tags" onfocus="removepostplaceholder('tags')"> -->
-      <!--   </div> -->
-      <!-- </div> -->
       <div class="control-group">
-        <!-- <label class="control-label mylabel" for="newposttitle">title</label> -->
-        <!-- <div class="controls"> -->
           <input id="newposttitle" class="input-xxlarge placeholder" type="text" placeholder="title" onfocus="removepostplaceholder('title')">
-        <!-- </div> -->
       </div>
       <div class="control-group">
-        <!-- <label class="control-label mylabel" for="textarea">note</label> -->
-        <!-- <div class="controls"> -->
           <textarea id="newpostbody" class="input-xxlarge placeholder" rows="18" placeholder="note" onfocus="removepostplaceholder('note')"></textarea>
-        <!-- </div> -->
       </div>
       <input id="editpostid" type="hidden">
-      <!-- <div class="form-actions myformfooter"> -->
         <button id="newpostsubmit" type="submit" class="btn btn-inverse mylabel">
             post <i class="icon-pencil icon-large"></i>
         </button>
         <button id="cancelnewpost" onclick="cancelnewpost()" class="btn btn-inverse mylabel">
             cancel <i class="icon-large"></i>
         </button>
-      <!-- </div> -->
     </fieldset>
 </div>
 

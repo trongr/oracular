@@ -45,20 +45,16 @@ $(document).ready(function(){
     $("#newpostform").on("hide", function(){$("*:focus").blur()});
 
     // reading tab in newpostform tags input to load posts in bg
-    //
-    // todo. get posts as you type
     tabinput();
+
+    $('#signupform').click(function (e) {
+        e.stopPropagation();
+    });
 });
 
 // caching to save time
 function cachedivs(){
     displaypanels = $(".randompost");
-    // mainpane = $(".randompost").eq(0);
-    // mainpane.parent().css({
-    //     "border": "1px solid #fff",
-    //     "border-radius": "5px",
-    //     "padding": "5px",
-    // });
     inputtitle = $("#newposttitle");
     inputtags = $("#newpostsubject");
 }
@@ -189,26 +185,43 @@ function clickityclickclick(){
 
     $("#logout").click(function(){logout(); return false;});
     $("#loginbutton").click(function(){loginbutton(); return false;});
+    $("#signupbtn").click(function(){signup(); return false;});
 
     $("#newpostsubmit").attr("onclick", "submitpost()");
 
     $("#settingsbutton").click(function(){settingsbutton();});
-    $("#tagsbutton").click(function(){tagsbutton(); return false;});
+    // $("#tagsbutton").click(function(){tagsbutton(); return false;});
 }
 
-// considering implementing a dynamic display as you type in post
-// form, so listing tags might not be necessary anymore.
-//
-// todo. get tags list: views.gettags()
-function tagsbutton(){
-    $.ajax({
-        url: HOMEPAGE + "gettags",
-        type: "GET",
-        success: function(json){
-            // todo
-        }
-    });
+function signup(){
+    // $.ajax({
+    //     url: HOMEPAGE + "register",
+    //     type: "POST",
+    //     data: {
+    //         username: $("#username").val(),
+    //         password: $("#password").val()
+    //     },
+    //     success: function(json){
+    //         // todo. get return status and hide login bar
+    //         showhideloginbar(json.isloggedin);
+    //         mkrandomposts();
+    //     }
+    // });
 }
+
+// // considering implementing a dynamic display as you type in post
+// // form, so listing tags might not be necessary anymore.
+// //
+// // todo. get tags list: views.gettags()
+// function tagsbutton(){
+//     $.ajax({
+//         url: HOMEPAGE + "gettags",
+//         type: "GET",
+//         success: function(json){
+//             // todo
+//         }
+//     });
+// }
 
 // todo. show default tab
 function settingsbutton(){
@@ -267,6 +280,24 @@ function removepostplaceholder(id){
         $("#newposttitle").attr("placeholder", "title");
         $("#newpostsubject").attr("placeholder", "tags");
         $("#newpostbody").removeAttr("placeholder");
+    }
+}
+
+// same hack fix for signupform. someone needs to write a library for
+// this ff bug
+function removesignupplaceholder(id){
+    if (id == "signupusername"){
+        $("#signupusername").removeAttr("placeholder");
+        $("#signuppassword").attr("placeholder", "password");
+        $("#signuprepassword").attr("placeholder", "repassword");
+    } else if (id == "signuppassword"){
+        $("#signupusername").attr("placeholder", "username");
+        $("#signuppassword").removeAttr("placeholder");
+        $("#signuprepassword").attr("placeholder", "repassword");
+    } else {
+        $("#signupusername").attr("placeholder", "username");
+        $("#signuppassword").attr("placeholder", "password");
+        $("#signuprepassword").removeAttr("placeholder");
     }
 }
 
@@ -491,7 +522,7 @@ function submitpost(){
         type: "POST",
         data: {
             title: title,
-            body: escape(body),
+            body: body,
             subject: subject,
             csrfmiddlewaretoken: token,
         },

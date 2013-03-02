@@ -105,18 +105,17 @@ def logout(request):
         "isloggedin": False
     })
 
+# todo. remove and in urls.py
 def registration(request):
     return render(request, 'journal/registration.html')
 
 def register(request):
-    first_name = request.POST.get('first_name', '')
-    last_name = request.POST.get('last_name', '')
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
-    repeat_password = request.POST.get('repeat_password', '')
+    repassword = request.POST.get('repassword', '')
     email = request.POST.get("email", "")
 
-    error_msg = check_registration(username, password, repeat_password, email)
+    error_msg = check_registration(username, password, repassword, email)
     if error_msg is not None:
         return render(request, "journal/registration.html", {
             'error_msg': error_msg
@@ -136,7 +135,7 @@ def register(request):
         'error': "something's wrong"
     })
 
-def check_registration(username, password, repeat_password, email):
+def check_registration(username, password, repassword, email):
     error_msg = None
     if not re.match(r'^\w+$', username):
         error_msg = "username can only contain letters or numbers"
@@ -144,7 +143,7 @@ def check_registration(username, password, repeat_password, email):
         error_msg = "username already exists"
     elif len(password) < 6:
         error_msg = "password must have at least 6 characters"
-    elif password != repeat_password:
+    elif password != repassword:
         error_msg = "passwords don't match"
     elif email != "" and User.objects.filter(email=email).exists():
         error_msg = "email already registered"

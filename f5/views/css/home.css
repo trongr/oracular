@@ -114,6 +114,16 @@ a.mydropdownbutton {
     background: rgba(0, 0, 0, 0.1);
 }
 
+#signupform {
+    padding: 10px;
+    margin-right: 10px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#signupbutton {
+    margin-left: 10px;
+}
+
 .modal#settingsmodal {
     /* modal margin-left center screen, so -40% means 10% */
     margin-left: -40%;
