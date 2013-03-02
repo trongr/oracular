@@ -22,7 +22,7 @@ var KEYBACKSPACE = 8;
 
 // var mainpane;                   // div for relatedposts
 var displaypanels;                   // divs for relatedposts
-var whichpanel = 0;                  // which panel to load the next post
+var whichpanel = -POSTSPERCOL;                  // which panel to load the next post
 var relatedwords = "";
 
 var inputtitle, inputtags;
@@ -153,9 +153,9 @@ function getrelatedposts(where){
             },
             success: function(json){
                 // whichpanel++;
+                whichpanel = (whichpanel + POSTSPERCOL) % NUMCELLS;
                 loadrelatedposts(json);
                 highlightpost();
-                whichpanel = (whichpanel + POSTSPERCOL) % NUMCELLS;
             },
             complete: function(){
                 relatedwords = "";
@@ -416,7 +416,7 @@ function parsedatetime(t){
 
 function editpost(postid){
     populateeditpost(postid);
-    shownewpostform();
+    showpostform();
 }
 
 // using new post form to edit old posts
@@ -424,9 +424,12 @@ function populateeditpost(postid){
     var post = $("#" + postid);
     // input's and textarea's must use .val() instead of .html()
     $("#editpostid").val(postid);
-    $("#newposttitle").val(post.find(".posttitle").html());
-    $("#newpostbody").val(post.find(".postbody").html());
-    $("#newpostsubject").val(post.find(".postsubject").html());
+    $("#newposttitle").val(post.find(".posttitle").unhighlight().html());
+    $("#newpostbody").val(post.find(".postbody").unhighlight().html());
+    $("#newpostsubject").val(post.find(".postsubject").unhighlight().html());
+
+    // replacing onclick behaviour. this is bad design: todo: give
+    // each function its own view
     $("#newpostsubmit").attr("onclick", "submiteditpost()");
 }
 
@@ -452,14 +455,27 @@ function submiteditpost(){
     });
     mkrandomposts();
     cancelnewpost();
-    // reset new post submit function
-    $("#newpostsubmit").attr("onclick", "submitpost()");
 }
 
-function shownewpostform(){
+function showpostform(){
     closeallmodals();
     $("#newpostform").modal();
     $("#newposttitle").focus();
+}
+
+function shownewpostform(){
+    prepnewpostform();
+    showpostform();
+}
+
+function prepnewpostform(){
+    // input's and textarea's must use .val() instead of .html()
+    $("#newposttitle").val("");
+    $("#newpostbody").val("");
+    $("#newpostsubject").val("");
+    // replacing onclick behaviour. this is bad design: todo: give
+    // each function its own view
+    $("#newpostsubmit").attr("onclick", "submitpost()");
 }
 
 function submitpost(){

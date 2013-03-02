@@ -97,7 +97,7 @@ a.mydropdownbutton {
 }
 
 .postdate {
-    font-size: 1.3em;
+    font-size: 1.5em;
     font-weight: bold;
     color: #555;
 }
@@ -108,8 +108,8 @@ a.mydropdownbutton {
 
 .modal#newpostform {
     /* modal margin-left center screen, so -40% means 10% */
-    margin-left: -30%;
-    width: 80%;
+    margin-left: -10%;
+    width: 60%;
     background: rgba(0, 0, 0, 0.1);
 }
 
@@ -214,5 +214,7 @@ textarea {
 
 .highlight {
     /* background-color: #ff8; */
-    border: 2px dotted #fff;
+    /* border: 2px dotted #fff; */
+    color: #ff8c00;
 }
+
