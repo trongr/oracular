@@ -82,19 +82,10 @@ function tabinput(){
     $("#newposttitle").keydown(function(e) {
         var key = e.which || e.keyCode;
         switch (key){
+        case KEYSPACE:
         case KEYTAB:
             relatedwords = inputtitle.val();
             getrelatedposts("title");
-            break;
-        default:
-        }
-    });
-    $("#newpostsubject").keydown(function(e) {
-        var key = e.which || e.keyCode;
-        switch (key){
-        case KEYTAB:
-            relatedwords = inputtags.val();
-            getrelatedposts("subject");
             break;
         default:
         }
@@ -131,6 +122,17 @@ function tabinput(){
             readrelatedwords(key);
         }
     });
+    // not storing subject input anymore
+    // $("#newpostsubject").keydown(function(e) {
+    //     var key = e.which || e.keyCode;
+    //     switch (key){
+    //     case KEYTAB:
+    //         relatedwords = inputtags.val();
+    //         getrelatedposts("subject");
+    //         break;
+    //     default:
+    //     }
+    // });
 }
 
 // getting a post with the same words as what you're writing
@@ -167,7 +169,8 @@ function getrelatedposts(where){
 }
 
 function relatedwordsarray(){
-    relatedwords = relatedwords.replace(/[^'\w]/g, " ").trim().toLowerCase();
+    // relatedwords = relatedwords.replace(/[^'\w]/g, " ").trim().toLowerCase();
+    relatedwords = relatedwords.trim().toLowerCase();
     return relatedwords.split(" ");
 }
 
@@ -189,7 +192,7 @@ function clickityclickclick(){
 
     $("#newpostsubmit").attr("onclick", "submitpost()");
 
-    $("#settingsbutton").click(function(){settingsbutton(); return false;});
+    $("#settingsbutton").click(function(){settingsbutton();});
     $("#tagsbutton").click(function(){tagsbutton(); return false;});
 }
 
