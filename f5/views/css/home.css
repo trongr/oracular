@@ -86,6 +86,7 @@ a.mydropdownbutton {
     font-size: 1.5em;
     font-family: georgia;
     margin-right: 10px;
+    white-space: pre-wrap;
 }
 
 .postsubject {

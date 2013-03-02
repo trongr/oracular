@@ -452,8 +452,8 @@ function submiteditpost(){
             subject: subject,
             csrfmiddlewaretoken: token,
         },
-        success: function(post){ // todo
-            // todo. give user feedback
+        success: function(json){
+            // console.log(json.body);
         }
     });
     mkrandomposts();
@@ -483,7 +483,7 @@ function prepnewpostform(){
 
 function submitpost(){
     var title = $("#newposttitle").val();
-    var body = $("#newpostbody").val();;
+    var body = $("#newpostbody").val();
     var subject = $("#newpostsubject").val();
     var token = getCookie('csrftoken');
     $.ajax({
@@ -491,12 +491,12 @@ function submitpost(){
         type: "POST",
         data: {
             title: title,
-            body: body, // todo. escape(body)
+            body: escape(body),
             subject: subject,
             csrfmiddlewaretoken: token,
         },
         success: function(json){
-            // todo. give user feedback
+            // console.log(json.body);
         }
     });
     mkrandomposts();
