@@ -80,6 +80,7 @@ a.mydropdownbutton {
     color: #00BFFF; /* 08c is default bootstrap link color */
     margin-left: -5px; /* spans have a default margin */
     margin-right: 10px;
+    word-wrap: break-word;
 }
 
 .postbody {
@@ -87,6 +88,7 @@ a.mydropdownbutton {
     font-family: georgia;
     margin-right: 10px;
     white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .postsubject {
@@ -227,5 +229,6 @@ textarea {
     /* background-color: #ff8; */
     /* border: 2px dotted #fff; */
     color: #ff8c00;
+    font-size: 1.5em;
 }
 
