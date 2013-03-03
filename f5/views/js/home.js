@@ -84,6 +84,7 @@ function tabinput(){
             getrelatedposts("title");
             break;
         default:
+            readrelatedwords(key);
         }
     });
     $("#newpostbody").keydown(function(e) {
