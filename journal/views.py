@@ -105,48 +105,47 @@ def logout(request):
         "isloggedin": False
     })
 
-# todo. remove and in urls.py
-def registration(request):
-    return render(request, 'journal/registration.html')
-
+# todo. validate inputs
 def register(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
     repassword = request.POST.get('repassword', '')
-    email = request.POST.get("email", "")
+    email = ""
 
     error_msg = check_registration(username, password, repassword, email)
     if error_msg is not None:
-        return render(request, "journal/registration.html", {
-            'error_msg': error_msg
+        return JSONResponse({
+            "error": error_msg
         })
 
     try:
         User.objects.create_user(username, email, password)
     except:
-        return render(request, "journal/registration.html", {
-            'error': "something's wrong"
+        return JSONResponse({
+            "error": "can't create user"
         })
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
-        return HttpResponseRedirect(reverse("journal:home"))
-    return render(request, "journal/index.html", {
-        'error': "something's wrong"
+        return JSONResponse({
+            "isloggedin": True
+        })
+    return JSONResponse({
+        "error": "created user but can't login",
     })
 
 def check_registration(username, password, repassword, email):
     error_msg = None
     if not re.match(r'^\w+$', username):
-        error_msg = "username can only contain letters or numbers"
+        error_msg = "username must contain only letters or numbers"
     elif User.objects.filter(username=username).exists():
         error_msg = "username already exists"
     elif len(password) < 6:
         error_msg = "password must have at least 6 characters"
     elif password != repassword:
         error_msg = "passwords don't match"
-    elif email != "" and User.objects.filter(email=email).exists():
-        error_msg = "email already registered"
+    # elif email != "" and User.objects.filter(email=email).exists():
+    #     error_msg = "email already registered"
     return error_msg
 
 # todo. if not logged in create post in public account username password

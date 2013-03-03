@@ -166,8 +166,8 @@ function getrelatedposts(where){
 }
 
 function relatedwordsarray(){
-    // relatedwords = relatedwords.replace(/[^'\w]/g, " ").trim().toLowerCase();
-    relatedwords = relatedwords.trim().toLowerCase();
+    relatedwords = relatedwords.replace(/[^'\w]/g, " ").trim().toLowerCase();
+    // relatedwords = relatedwords.trim().toLowerCase();
     return relatedwords.split(" ");
 }
 
@@ -194,20 +194,30 @@ function clickityclickclick(){
     // $("#tagsbutton").click(function(){tagsbutton(); return false;});
 }
 
+// todo. validate inputs and user feedback
 function signup(){
-    // $.ajax({
-    //     url: HOMEPAGE + "register",
-    //     type: "POST",
-    //     data: {
-    //         username: $("#username").val(),
-    //         password: $("#password").val()
-    //     },
-    //     success: function(json){
-    //         // todo. get return status and hide login bar
-    //         showhideloginbar(json.isloggedin);
-    //         mkrandomposts();
-    //     }
-    // });
+    var username = $("#signupusername").val();
+    var password = $("#signuppassword").val();
+    var repassword = $("#signuprepassword").val();
+    var token = getCookie('csrftoken');
+    $.ajax({
+        url: HOMEPAGE + "register",
+        type: "POST",
+        data: {
+            username: $("#signupusername").val(),
+            password: $("#signuppassword").val(),
+            repassword: $("#signuprepassword").val(),
+            csrfmiddlewaretoken: token,
+        },
+        success: function(json){
+            if (json.error){
+                alert(json.error);
+            } else {
+                showhideloginbar(json.isloggedin);
+                mkrandomposts();
+            }
+        }
+    });
 }
 
 // // considering implementing a dynamic display as you type in post
