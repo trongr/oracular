@@ -2,7 +2,7 @@
 // the same modal
 
 // var HOMEPAGE = "http://localhost:8000/journal/";
-var HOMEPAGE = "http://ffive.herokuapp.com/journal/";
+var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
 
 var NUMCELLS = 9;
 var POSTCOUNT = 9;
