@@ -35,6 +35,7 @@
                 <a id="loginbutton" class="navbar-link mycontrol" href="#">login <i class="icon-signin"></i></a>
                 <a id="signupbutton" class="navbar-link dropdown-toggle mycontrol" data-toggle="dropdown" href="#">signup</a>
                 <ul id="signupform" class="dropdown-menu pull-right">
+                  <input id="signupcsrf" type="hidden" value="{{ csrf_token }}">
                   <li><input id="signupusername" class="placeholder" type="text" placeholder="username" onfocus="removesignupplaceholder('signupusername')"></li>
                   <li><input id="signuppassword" type="password" class="placeholder" type="text" placeholder="password" onfocus="removesignupplaceholder('signuppassword')"></li>
                   <li><input id="signuprepassword" type="password" class="placeholder" type="text" placeholder="repassword" onfocus="removesignupplaceholder('repassword')"></li>
@@ -49,6 +50,7 @@
 
 <div id="newpostform" class="form-horizontal modal hide">
     <fieldset>
+      <input id="newpostcsrf" type="hidden" value="{{ csrf_token }}">
       <div class="control-group">
           <input id="newposttitle" class="input-xxlarge placeholder" type="text" placeholder="title" onfocus="removepostplaceholder('title')">
       </div>

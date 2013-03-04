@@ -200,7 +200,7 @@ function signup(){
     var username = $("#signupusername").val();
     var password = $("#signuppassword").val();
     var repassword = $("#signuprepassword").val();
-    var token = getCookie('csrftoken');
+    var token = getcsrf("signupcsrf"); // getCookie('csrftoken');
     $.ajax({
         url: HOMEPAGE + "register",
         type: "POST",
@@ -484,7 +484,7 @@ function submiteditpost(){
     var title = $("#newposttitle").val();
     var body = $("#newpostbody").val();
     var subject = $("#newpostsubject").val();
-    var token = getCookie('csrftoken');
+    var token = getcsrf("newpostcsrf"); // getCookie('csrftoken');
     $.ajax({
         url: HOMEPAGE + "editpost",
         type: "POST",
@@ -528,7 +528,7 @@ function submitpost(){
     var title = $("#newposttitle").val();
     var body = $("#newpostbody").val();
     var subject = $("#newpostsubject").val();
-    var token = getCookie('csrftoken');
+    var token = getcsrf("newpostcsrf"); // getCookie('csrftoken');
     $.ajax({
         url: HOMEPAGE + "createpost",
         type: "POST",
@@ -549,6 +549,10 @@ function submitpost(){
 function cancelnewpost(){
     $("*:focus").blur();
     $("#newpostform").modal("hide");
+}
+
+function getcsrf(id){
+    return $("#" + id).val();
 }
 
 function getCookie(name) {
