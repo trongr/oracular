@@ -1,8 +1,8 @@
 // todo. separate edit post from new post form. right now they share
 // the same modal
 
-// var HOMEPAGE = "http://localhost:8000/journal/";
-var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
+var HOMEPAGE = "http://localhost:8000/journal/";
+// var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
 
 var NUMCELLS = 9;
 var POSTCOUNT = 9;
@@ -212,7 +212,7 @@ function signup(){
         },
         success: function(json){
             if (json.error){
-                alert(json.error);
+                $("#signupmsg").html(json.error);
             } else {
                 showhideloginbar(json.isloggedin);
                 mkrandomposts();
@@ -220,20 +220,6 @@ function signup(){
         }
     });
 }
-
-// // considering implementing a dynamic display as you type in post
-// // form, so listing tags might not be necessary anymore.
-// //
-// // todo. get tags list: views.gettags()
-// function tagsbutton(){
-//     $.ajax({
-//         url: HOMEPAGE + "gettags",
-//         type: "GET",
-//         success: function(json){
-//             // todo
-//         }
-//     });
-// }
 
 // todo. show default tab
 function settingsbutton(){

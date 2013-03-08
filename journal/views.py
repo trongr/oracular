@@ -186,6 +186,7 @@ def randomposts(request):
     else:
         # todo. return public posts
         data = {
+            # "posts": "dummy placeholder"
         }
         return JSONResponse(data)
 
@@ -242,25 +243,3 @@ class JSONResponse(HttpResponse):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
-
-# tags are just subjects split by spaces
-def gettags(req):
-    pass
-    # if request.user.is_authenticated():
-    #     creator = request.user.id
-    #     postcount = int(request.GET.get(POSTCOUNT, 1))
-    #     maximum = Post.objects.filter(creator=creator).count()
-    #     randomlist = random.sample(xrange(maximum), min(maximum, postcount))
-    #     posts = []
-    #     for i, post in enumerate(Post.objects.filter(creator=creator)):
-    #         if i in randomlist:
-    #             posts.append(post)
-    #     data = {
-    #         "posts": PostSerializer(posts, many=True).data
-    #     }
-    #     return JSONResponse(data)
-    # else:
-    #     # todo. return public posts
-    #     data = {
-    #     }
-    #     return JSONResponse(data)

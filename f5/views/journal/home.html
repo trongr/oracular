@@ -34,13 +34,14 @@
                 <input id="password" class="input-large placeholder" type="password" placeholder="password" onfocus="removeplaceholder('password')">
                 <a id="loginbutton" class="navbar-link mycontrol" href="#">login <i class="icon-signin"></i></a>
                 <a id="signupbutton" class="navbar-link dropdown-toggle mycontrol" data-toggle="dropdown" href="#">signup</a>
-                <ul id="signupform" class="dropdown-menu pull-right">
+                <div id="signupform" class="dropdown-menu pull-right">
                   <input id="signupcsrf" type="hidden" value="{{ csrf_token }}">
-                  <li><input id="signupusername" class="placeholder" type="text" placeholder="username" onfocus="removesignupplaceholder('signupusername')"></li>
-                  <li><input id="signuppassword" type="password" class="placeholder" type="text" placeholder="password" onfocus="removesignupplaceholder('signuppassword')"></li>
-                  <li><input id="signuprepassword" type="password" class="placeholder" type="text" placeholder="repassword" onfocus="removesignupplaceholder('repassword')"></li>
-                  <li><button id="signupbtn" type="submit" class="btn btn-inverse pull-right mylabel">signup</button></li>
-                </ul>
+                  <input id="signupusername" class="placeholder" type="text" placeholder="username" onfocus="removesignupplaceholder('signupusername')"><br>
+                  <input id="signuppassword" type="password" class="placeholder" type="text" placeholder="password" onfocus="removesignupplaceholder('signuppassword')"><br>
+                  <input id="signuprepassword" type="password" class="placeholder" type="text" placeholder="repassword" onfocus="removesignupplaceholder('repassword')"><br>
+                  <button id="signupbtn" type="submit" class="btn btn-inverse pull-right mylabel">signup</button><br>
+                  <div id="signupmsg" class="input-large"></div>
+                </div>
             </div>
             <a id="logout" class="hide navbar-link mycontrol" href="#">logout <i class="icon-signout"></i></a>
         </div>
