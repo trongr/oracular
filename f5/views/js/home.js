@@ -373,6 +373,18 @@ function initrandompostdivs(){
 function newpostformbindenterkeypress(){
     $("#newposttitle, #newpostsubject").bind("keydown", inputkeydownsubmit);
     $("#username, #password").bind("keydown", inputkeydownlogin);
+    $("#signupusername, #signuppassword, #signuprepassword").bind("keydown", inputkeydownsignup);
+}
+
+// should write a library for this
+function inputkeydownsignup(e){
+    switch (e.which || e.keyCode){
+    case KEYENTER:
+        if (!e.ctrlKey){
+            $("#signupbtn").click();
+        }
+        break;
+    }
 }
 
 function inputkeydownsubmit(e){
