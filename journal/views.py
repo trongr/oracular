@@ -170,26 +170,30 @@ def isloggedin(request):
 
 # @login_required
 def randomposts(request):
-    # todo. default limit 20
+    postcount = int(request.GET.get(POSTCOUNT, 1))
     if request.user.is_authenticated():
         creator = request.user.id
-        postcount = int(request.GET.get(POSTCOUNT, 1))
-        maximum = Post.objects.filter(creator=creator).count()
-        randomlist = random.sample(xrange(maximum), min(maximum, postcount))
-        posts = []
-        for i, post in enumerate(Post.objects.filter(creator=creator)):
-            if i in randomlist:
-                posts.append(post)
-        data = {
-            "posts": PostSerializer(posts, many=True).data
-        }
-        return JSONResponse(data)
+        posts = getrandomposts(creator, postcount)
+        return JSONResponse(posts)
     else:
-        # todo. return public posts
-        data = {
-            # "posts": "dummy placeholder"
-        }
+        data = getrandompublicposts(postcount)
         return JSONResponse(data)
+
+# todo
+def getrandompublicposts(postcount):
+    return {}
+
+def getrandomposts(creator, postcount):
+    limit = 20
+    maximum = Post.objects.filter(creator=creator).count()
+    randomlist = random.sample(xrange(maximum), min(maximum, postcount, limit))
+    posts = []
+    for i, post in enumerate(Post.objects.filter(creator=creator)):
+        if i in randomlist:
+            posts.append(post)
+    return {
+        "posts": PostSerializer(posts, many=True).data
+    }
 
 # todo. validate everything
 def relatedposts(req):

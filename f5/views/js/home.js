@@ -214,10 +214,21 @@ function signup(){
                 $("#signupmsg").html(json.error);
             } else {
                 showhideloginbar(json.isloggedin);
-                mkrandomposts();
+                // mkrandomposts();
+                clearrandomposts();
             }
         }
     });
+}
+
+function clearrandomposts(){
+    for (var i = 0; i < POSTCOUNT; i++){ // todo. now
+        var rp = displaypanels.eq(i);
+        rp.find(".posttitle").html("");
+        rp.find(".postbody").html("");
+        rp.find(".postsubject").html("");
+        rp.find(".postdate").html("");
+    }
 }
 
 // todo. show default tab
@@ -483,7 +494,7 @@ function submiteditpost(){
             showsubmittedpost(json);
         }
     });
-    mkrandomposts();
+    // mkrandomposts();
     cancelnewpost();
 }
 
@@ -536,7 +547,7 @@ function submitpost(){
             showsubmittedpost(json);
         }
     });
-    mkrandomposts();
+    // mkrandomposts();
     cancelnewpost();
 }
 
