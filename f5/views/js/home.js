@@ -152,7 +152,6 @@ function getrelatedposts(where){
                 // postcount: POSTCOUNT,
             },
             success: function(json){
-                // whichpanel++;
                 whichpanel = (whichpanel + POSTSPERCOL) % NUMCELLS;
                 loadrelatedposts(json);
                 highlightpost();
@@ -433,17 +432,16 @@ function loadrelatedposts(json){
         rp.find(".postbody").html(post.body);
         rp.find(".postsubject").html(post.subject);
         rp.find(".postdate").html(parsedatetime(post.updated));
-        // rp.parent().css({
-        //     "border": "1px solid #fff",
-        //     "border-radius": "5px",
-        //     "padding": "5px",
-        // });
     });
 }
 
 function parsedatetime(t){
     // var m = "2013-02-19T04:11:51-05:00".match(/(\d+|[a-zA-Z])/g);
-    return moment(t).format("H:mm ddd DD MMM YYYY"); //.calendar();
+    if (t){
+        return moment(t).format("H:mm ddd DD MMM YYYY"); //.calendar();
+    } else {
+        return moment().format("H:mm ddd DD MMM YYYY"); //.calendar();
+    }
 }
 
 function editpost(postid){
@@ -482,11 +480,21 @@ function submiteditpost(){
             csrfmiddlewaretoken: token,
         },
         success: function(json){
-            // console.log(json.body);
+            showsubmittedpost(json);
         }
     });
     mkrandomposts();
     cancelnewpost();
+}
+
+function showsubmittedpost(post){
+    var rp = displaypanels.eq(0); // always refresh to top left post
+    rp.attr("id", post.id);
+    rp.attr("onclick", "editpost(" + post.id + ")");
+    rp.find(".posttitle").html(post.title);
+    rp.find(".postbody").html(post.body);
+    rp.find(".postsubject").html(post.subject);
+    rp.find(".postdate").html(parsedatetime());
 }
 
 function showpostform(){
@@ -525,7 +533,7 @@ function submitpost(){
             csrfmiddlewaretoken: token,
         },
         success: function(json){
-            // console.log(json.body);
+            showsubmittedpost(json);
         }
     });
     mkrandomposts();

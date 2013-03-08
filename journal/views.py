@@ -73,8 +73,9 @@ def jsonerror():
         STATUS: 1,
     }), content_type=JSONTYPE)
 
-def jsonpost(request):
+def jsonpost(request, postid=None):
     return HttpResponse(json.dumps({
+        POSTID: postid if postid else request.POST.get(POSTID, ""),
         TITLE: request.POST.get(TITLE, ""),
         BODY: request.POST.get(BODY, ""),
         SUBJECT: request.POST.get(SUBJECT, ""),
@@ -156,8 +157,8 @@ def createpost(request):
     subject = request.POST.get(SUBJECT, "")
     creator = request.user
     try:
-        Post.objects.create(title=title, body=body, creator=creator, subject=subject)
-        return jsonpost(request)
+        post = Post.objects.create(title=title, body=body, creator=creator, subject=subject)
+        return jsonpost(request, post.id)
     except:
         return jsonerror()
 
