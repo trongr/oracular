@@ -17,7 +17,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'f5',                      # Or path to database file if using sqlite3.
         'USER': 'nahn',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'PASSWORD': 'nahn',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -166,10 +166,10 @@ LOGGING = {
     }
 }
 
-# # TODO
-# #   hacking it: uncomment this block before pushing to heroku
-# # # Parse database configuration from $DATABASE_URL
-# import dj_database_url
-# DATABASES = {
-#     "default": dj_database_url.config(default="postgres://localhost/f5")
-# }
+# TODO
+#   hacking it: uncomment this block before pushing to heroku
+# # Parse database configuration from $DATABASE_URL
+import dj_database_url
+DATABASES = {
+    "default": dj_database_url.config(default="postgres://localhost/f5")
+}

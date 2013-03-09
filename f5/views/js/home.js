@@ -1,8 +1,8 @@
 // todo. separate edit post from new post form. right now they share
 // the same modal
 
-var HOMEPAGE = "http://localhost:8000/journal/";
-// var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
+// var HOMEPAGE = "http://localhost:8000/journal/";
+var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
 
 var NUMCELLS = 9;
 var POSTCOUNT = 9;
@@ -407,7 +407,7 @@ function inputkeydownlogin(e){
     }
 }
 
-// todo. ctrl + n to edit nth box
+// todo opt. ctrl + n to edit nth box
 function keyboardshortcuts(e){
     if (e.ctrlKey){
         switch (e.which || e.keyCode){
