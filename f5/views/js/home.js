@@ -1,8 +1,8 @@
 // todo. separate edit post from new post form. right now they share
 // the same modal
 
-// var HOMEPAGE = "http://localhost:8000/journal/";
-var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
+var HOMEPAGE = "http://localhost:8000/journal/";
+// var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
 
 var NUMCELLS = 9;
 var POSTCOUNT = 9;
@@ -40,7 +40,8 @@ $(document).ready(function(){
     $(document).bind("keydown", keyboardshortcuts);
     newpostformbindenterkeypress();
 
-    $("input, textarea").focus(function(){$(this).select()});
+    // selects all text on focus
+    // $("input, textarea").focus(function(){$(this).select()});
 
     // return focus to window after pressing esc on new post form modal
     $("#newpostform").on("hide", function(){$("*:focus").blur()});

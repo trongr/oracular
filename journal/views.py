@@ -179,9 +179,12 @@ def randomposts(request):
         data = getrandompublicposts(postcount)
         return JSONResponse(data)
 
-# todo
 def getrandompublicposts(postcount):
-    return {}
+    # password: publicisaspublicdoes
+    posts = Post.objects.filter(creator__username="public")
+    return {
+        "posts": PostSerializer(posts, many=True).data
+    }
 
 def getrandomposts(creator, postcount):
     limit = 20
