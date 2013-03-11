@@ -191,7 +191,9 @@ function clickityclickclick(){
 
     $("#newpostsubmit").attr("onclick", "submitpost()");
 
-    $("#settingsbutton").click(function(){settingsbutton();});
+    // $("#settingsbutton").click(function(){settingsbutton();});
+    $("#aboutbutton").click(function(){aboutbutton();});
+
     // $("#tagsbutton").click(function(){tagsbutton(); return false;});
 }
 
@@ -232,14 +234,18 @@ function clearrandomposts(){
     }
 }
 
-// todo. show default tab
-function settingsbutton(){
+function aboutbutton(){
     closeallmodals();
-    $("#settingsmodal").modal();
+    $("#aboutmodal").modal();
 }
 
+// function settingsbutton(){
+//     closeallmodals();
+//     $("#aboutmodal").modal();
+// }
+
 function closeallmodals(){
-    $("#settingsmodal").modal("hide");
+    $("#aboutmodal").modal("hide");
     $("#newpostform").modal("hide");
 }
 
@@ -316,7 +322,9 @@ function showhideloginbar(isloggedin){
         $("*:focus").blur();
         $("#loginbar").hide();
         $("#logout").show();
+        $("#tools").show();
     } else {
+        $("#tools").hide();
         $("#logout").hide();
         $("#loginbar").show();
     }
@@ -418,9 +426,9 @@ function keyboardshortcuts(e){
         case KEYENTER:
             shownewpostform();
             break;
-        case KEYE:
-            $("#settingsbutton").click();
-            break;
+        // case KEYE:
+        //     $("#settingsbutton").click();
+        //     break;
         }
     }
 }

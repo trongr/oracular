@@ -10,18 +10,17 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner mynavbar">
     <div class="container-fluid">
-        <ul class="nav">
+        <ul id="tools" class="nav">
             <li>
                 <a class="dropdown-toggle mycontrol" data-toggle="dropdown" href="#">more <i class="icon-align-justify"></i></a>
                 <ul class="dropdown-menu mydropdownmenu">
                     <div class="span3">
-                        <li>
-                            <a id="settingsbutton" class="mydropdownbutton" href="#"><i class="icon-cog"></i> settings
-                            <span class="shortcuttip">ctrl + e</span></a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a class="mydropdownbutton" href="#"><i class="icon-ambulance"></i> help</a></li>
-                        <li><a class="mydropdownbutton" href="#"><i class="icon-user"></i> about</a></li>
+                        <!-- <li> -->
+                        <!--     <a id="settingsbutton" class="mydropdownbutton" href="#"><i class="icon-cog"></i> settings -->
+                        <!--     <span class="shortcuttip">ctrl + e</span></a> -->
+                        <!-- </li> -->
+                        <!-- <li class="divider"></li> -->
+                        <li><a id="aboutbutton" class="mydropdownbutton" href="#"><i class="icon-user"></i> about</a></li>
                     </div>
                 </ul>
             </li>
@@ -68,22 +67,42 @@
     </fieldset>
 </div>
 
+<!-- tabindex -1 to ESCAPE close modal -->
+<div id="aboutmodal" class="modal hide" tabindex="-1">
+    <div id="byline">
+        <p>
+            This project's source is on
+            <a href="https://github.com/trongtruong/f5" target="_blank">gith<i class="icon-github-alt"></i>b.</a>
+            If you have any questions, comments, or objections, please send them to me at
+            <span id="email">oracular.app@gmail.com</span>
+        </p>
+        <br>
+        <p>
+            My name is
+            <a href="https://twitter.com/nahnturong" target="_blank">Tr<i class="icon-twitter-sign smallicon"></i>ng.</a>
+
+            I'm studying math, art, and computer science at the
+            University of Toronto, in Canada.
+        </p>
+    </div>
+</div>
+
 <!-- todo. nothing in settings yet. use it for the help and about
 modals -->
 <!-- tabindex -1 to ESCAPE close modal -->
-<div id="settingsmodal" class="modal hide" tabindex="-1">
-    <div class="row-fluid">
-        <div id="settingsmenu" class="span3 bs-docs-sidebar">
-            <ul class="nav nav-list bs-docs-sidenav">
-                <li><a id="tagsbutton" class="mydropdownbutton" href="#">tags <i class="icon-chevron-right pull-right"></i></a></li>
-                <li><a id="privacybutton" class="mydropdownbutton" href="#">privacy <i class="icon-chevron-right pull-right"></i></a></li>
-            </ul>
-        </div>
-        <div id="settingscontent" class="span9">
-            <div id="tagslist" class="mydropdownbutton">under constructibles</div> <!-- class="hide" -->
-        </div>
-    </div>
-</div>
+<!-- <div id="settingsmodal" class="modal hide" tabindex="-1"> -->
+<!--     <div class="row-fluid"> -->
+<!--         <div id="settingsmenu" class="span3 bs-docs-sidebar"> -->
+<!--             <ul class="nav nav-list bs-docs-sidenav"> -->
+<!--                 <li><a id="tagsbutton" class="mydropdownbutton" href="#">tags <i class="icon-chevron-right pull-right"></i></a></li> -->
+<!--                 <li><a id="privacybutton" class="mydropdownbutton" href="#">privacy <i class="icon-chevron-right pull-right"></i></a></li> -->
+<!--             </ul> -->
+<!--         </div> -->
+<!--         <div id="settingscontent" class="span9"> -->
+<!--             <div id="tagslist" class="mydropdownbutton">coming soon</div> <\!-- class="hide" -\-> -->
+<!--         </div> -->
+<!--     </div> -->
+<!-- </div> -->
 
 <div id="randomposts"></div>
 
