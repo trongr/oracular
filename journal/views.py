@@ -180,8 +180,7 @@ def randomposts(request):
         return JSONResponse(data)
 
 def getrandompublicposts(postcount):
-    # password: publicisaspublicdoes
-    posts = Post.objects.filter(creator__username="public")
+    posts = Post.objects.filter(creator__username="public").order_by("id")
     return {
         "posts": PostSerializer(posts, many=True).data
     }

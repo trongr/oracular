@@ -77,7 +77,7 @@ a.mydropdownbutton {
     font-size: 2em;
     line-height: 1em;
     font-weight: bold;
-    color: #00BFFF; /* 08c is default bootstrap link color */
+    color: #00BFFF; /* nice blue. 08c is default bootstrap link color */
     margin-left: -5px; /* spans have a default margin */
     margin-right: 10px;
     word-wrap: break-word;
@@ -113,7 +113,8 @@ a.mydropdownbutton {
     /* modal margin-left center screen, so -40% means 10% */
     margin-left: -10%;
     width: 60%;
-    background: rgba(0, 0, 0, 0.1);
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
 }
 
 #signupform {
@@ -126,11 +127,11 @@ a.mydropdownbutton {
     margin-left: 10px;
 }
 
-.modal#settingsmodal {
+.modal#aboutmodal {
     /* modal margin-left center screen, so -40% means 10% */
     margin-left: -40%;
     width: 80%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.9);
 }
 
 .modal-backdrop {
@@ -185,6 +186,19 @@ textarea {
 #newposttitle {
     /* font-size: 2em !important; */
     height: 1.3em !important;
+    margin: 5px 0 0 5px;
+}
+
+#newpostbody {
+    margin: 0 0 0 5px;
+}
+
+#newpostsubmit {
+    margin: 0 0 5px 5px;
+}
+
+#cancelnewpost {
+    margin: 0 0 5px 0;
 }
 
 .placeholder {
@@ -216,8 +230,35 @@ textarea {
     font-size: 1em;
 }
 
-#settingsmodal {
-    padding: 10px;
+#aboutmodal {
+    background: rgba(0, 0, 0, 0.8) !important;
+    padding: 50px;
+    height: 100%;
+}
+
+#aboutmodal.modal-backdrop {
+    background: rgba(0, 0, 0, 0.5) !important;
+}
+
+#byline {
+    font-family: helvetica;
+    font-size: 2em;
+    font-weight: bolder;
+    line-height: 1em;
+}
+
+#byline a {
+    color: #ff8c00;
+    font-size: 1.4em;
+}
+
+#email {
+    /* color: #ff8c00; */
+    font-size: 1.2em;
+}
+
+.smallicon {
+    font-size: 0.8em;
 }
 
 .highlight {
@@ -234,4 +275,8 @@ textarea {
     font-weight: bold;
     line-height: 1em;
     color: #ff8c00;
+}
+
+#tools {
+    display: none;
 }
