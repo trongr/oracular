@@ -225,7 +225,7 @@ function signup(){
 }
 
 function clearrandomposts(){
-    for (var i = 0; i < POSTCOUNT; i++){ // todo. now
+    for (var i = 0; i < POSTCOUNT; i++){
         var rp = displaypanels.eq(i);
         rp.find(".posttitle").html("");
         rp.find(".postbody").html("");
@@ -524,7 +524,7 @@ function showsubmittedpost(post){
     rp.attr("id", post.id);
     rp.attr("onclick", "editpost(" + post.id + ")");
     rp.find(".posttitle").html(post.title);
-    rp.find(".postbody").html(post.body);
+    rp.find(".postbody").html("<span class='highlight'>" + post.body + "</span>");
     rp.find(".postsubject").html(post.subject);
     rp.find(".postdate").html(parsedatetime());
 }
