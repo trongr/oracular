@@ -23,7 +23,7 @@ var KEYBACKSPACE = 8;
 
 // var mainpane;                   // div for relatedposts
 var displaypanels;                   // divs for relatedposts
-var whichpanel = -POSTSPERCOL;                  // which panel to load the next post
+// var whichpanel = -POSTSPERCOL;                  // which panel to load the next post
 var relatedwords = "";
 
 var inputtitle, inputtags;
@@ -81,6 +81,8 @@ function tabinput(){
         var key = e.which || e.keyCode;
         switch (key){
         case KEYSPACE:
+            getrelatedposts("title");
+            break;
         case KEYTAB:
             relatedwords = inputtitle.val();
             getrelatedposts("title");
@@ -153,7 +155,8 @@ function getrelatedposts(where){
                 // postcount: POSTCOUNT,
             },
             success: function(json){
-                whichpanel = (whichpanel + POSTSPERCOL) % NUMCELLS;
+                // which panel to show load related post in:
+                // whichpanel = (whichpanel + POSTSPERCOL) % NUMCELLS;
                 loadrelatedposts(json);
                 highlightpost();
             },
@@ -175,7 +178,7 @@ function relatedwordsarray(){
 function highlightpost(){
     var rw = relatedwords.split(" ");
     for (var i = 0; i < rw.length; i++){
-        displaypanels.eq(whichpanel).highlight(rw[i]);
+        displaypanels.eq(0).highlight(rw[i]); // .eq(whichpanel)
     }
 }
 
@@ -457,7 +460,7 @@ function loadposts(json){
 function loadrelatedposts(json){
     // var rps = $(".randompost");
     $.each(json.posts, function(i, post){
-        var rp = displaypanels.eq(whichpanel);
+        var rp = displaypanels.eq(0); // .eq(whichpanel);
         rp.attr("id", post.id);
         rp.attr("onclick", "editpost(" + post.id + ")");
         rp.find(".posttitle").html(post.title);
