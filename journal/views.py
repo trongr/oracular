@@ -202,22 +202,13 @@ def relatedposts(req):
     if req.user.is_authenticated():
         creator = req.user.id
         where = req.GET.get("where")
-
-        # todo opt. remove short words. todo opt. do this on client
         relatedwords = req.GET.getlist("relatedwords[]") # get("relatedwords").split()
 
         postcount = int(req.GET.get(POSTCOUNT, 1))
 
-        # result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, (Q(subject__icontains=rw) | Q(title__icontains=rw) for rw in relatedwords)))
         result = None;
-        if where == "title":
-            result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, (Q(title__icontains=rw) for rw in relatedwords)))
-        elif where == "subject":
-            result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, (Q(subject__icontains=rw) for rw in relatedwords)))
-        elif where == "body":
-            # relatedwords = [lword for lword in relatedwords if len(lword) >= 4]
-            # if relatedwords:
-            result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, (Q(body__icontains=rw) for rw in relatedwords)))
+        qlist = (Q(title__icontains=rw) | Q(body__icontains=rw) for rw in relatedwords)
+        result = Post.objects.filter(creator=creator).filter(reduce(operator.or_, qlist))
 
         posts = []
         if result:
@@ -232,7 +223,7 @@ def relatedposts(req):
         }
         return JSONResponse(data)
     else:
-        # todo. return public posts
+        # todo opt. return public posts
         data = {
         }
         return JSONResponse(data)

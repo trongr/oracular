@@ -81,10 +81,7 @@ function tabinput(){
         var key = e.which || e.keyCode;
         switch (key){
         case KEYSPACE:
-            getrelatedposts("title");
-            break;
         case KEYTAB:
-            relatedwords = inputtitle.val();
             getrelatedposts("title");
             break;
         default:
@@ -455,6 +452,7 @@ function loadposts(json){
         rp.find(".postsubject").html(post.subject);
         rp.find(".postdate").html(parsedatetime(post.updated));
     });
+    // MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 }
 
 function loadrelatedposts(json){
@@ -468,6 +466,7 @@ function loadrelatedposts(json){
         rp.find(".postsubject").html(post.subject);
         rp.find(".postdate").html(parsedatetime(post.updated));
     });
+    // MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 }
 
 function parsedatetime(t){
@@ -530,6 +529,7 @@ function showsubmittedpost(post){
     rp.find(".postbody").html("<span class='highlight'>" + post.body + "</span>");
     rp.find(".postsubject").html(post.subject);
     rp.find(".postdate").html(parsedatetime());
+    // MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 }
 
 function showpostform(){
