@@ -365,8 +365,9 @@ function initrandompostdivs(){
             row.append(
                 "<div class='span" + SPANWIDTH + "'>" +
                     "<a href='#' class='randompost'>" +
-                        "<span class='posttitle'></span> " + // putting spaces after spans let them fill over to new lines
+                        "<span class='posttitle tex2jax_ignore'></span> " + // putting spaces after spans let them fill over to new lines
                         "<span class='postbody'></span> " +
+                        "<span class='hiddenbody hide tex2jax_ignore'></span>" +
                         "<span class='postsubject'></span> " +
                         "<span class='postdate'></span>" +
                     "</a>" +
@@ -449,10 +450,11 @@ function loadposts(json){
         rp.attr("onclick", "editpost(" + post.id + ")");
         rp.find(".posttitle").html(post.title);
         rp.find(".postbody").html(post.body);
+        rp.find(".hiddenbody").html(post.body);
         rp.find(".postsubject").html(post.subject);
         rp.find(".postdate").html(parsedatetime(post.updated));
     });
-    // MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    rejax();
 }
 
 function loadrelatedposts(json){
@@ -463,10 +465,11 @@ function loadrelatedposts(json){
         rp.attr("onclick", "editpost(" + post.id + ")");
         rp.find(".posttitle").html(post.title);
         rp.find(".postbody").html(post.body);
+        rp.find(".hiddenbody").html(post.body);
         rp.find(".postsubject").html(post.subject);
         rp.find(".postdate").html(parsedatetime(post.updated));
     });
-    // MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    rejax();
 }
 
 function parsedatetime(t){
@@ -486,10 +489,13 @@ function editpost(postid){
 // using new post form to edit old posts
 function populateeditpost(postid){
     var post = $("#" + postid);
+
     // input's and textarea's must use .val() instead of .html()
     $("#editpostid").val(postid);
     $("#newposttitle").val(post.find(".posttitle").unhighlight().html());
-    $("#newpostbody").val(post.find(".postbody").unhighlight().html());
+    // postbody is just for show, e.g. highlight and mathjax.
+    // hiddenbody is where we store the actual content
+    $("#newpostbody").val(post.find(".hiddenbody").html());
     $("#newpostsubject").val(post.find(".postsubject").unhighlight().html());
 
     // replacing onclick behaviour. this is bad design: todo: give
@@ -527,9 +533,10 @@ function showsubmittedpost(post){
     rp.attr("onclick", "editpost(" + post.id + ")");
     rp.find(".posttitle").html(post.title);
     rp.find(".postbody").html("<span class='highlight'>" + post.body + "</span>");
+    rp.find(".hiddenbody").html(post.body);
     rp.find(".postsubject").html(post.subject);
     rp.find(".postdate").html(parsedatetime());
-    // MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    rejax();
 }
 
 function showpostform(){
@@ -598,4 +605,8 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+function rejax(){
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 }
