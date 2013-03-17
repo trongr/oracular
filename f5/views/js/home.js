@@ -495,7 +495,9 @@ function populateeditpost(postid){
     $("#newposttitle").val(post.find(".posttitle").unhighlight().html());
     // postbody is just for show, e.g. highlight and mathjax.
     // hiddenbody is where we store the actual content
-    $("#newpostbody").val(post.find(".hiddenbody").html());
+    //
+    // NOTE. apparently jquery.highlight.js also highlights hidden divs
+    $("#newpostbody").val(post.find(".hiddenbody").unhighlight().html());
     $("#newpostsubject").val(post.find(".postsubject").unhighlight().html());
 
     // replacing onclick behaviour. this is bad design: todo: give
