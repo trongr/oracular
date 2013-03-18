@@ -341,6 +341,7 @@ function loginbutton(){
         success: function(json){
             // todo. get return status and hide login bar
             showhideloginbar(json.isloggedin);
+            clearrandomposts();
             mkrandomposts();
         }
     });
