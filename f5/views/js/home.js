@@ -1,7 +1,5 @@
 // todo. separate edit post from new post form. right now they share
 // the same modal
-//
-// todo. better keypress readings. redo using modes.
 
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
@@ -14,7 +12,9 @@ var SPANWIDTH = 12 / POSTSPERCOL;
 // todo. use moode as a kind of namespace for shortcuts
 
 // don't need this yet
-var moode = MODE_GLOBAL;        // weird name to avoid nameclashing
+var moode = MODE_GLOBAL;        // weird name to avoid nameclashing.
+                                // should refactor and wrap all this
+                                // in closure
 var MODE_GLOBAL = "MODE_GLOBAL";
 var MODE_EDIT = "MODE_EDIT";
 
@@ -32,8 +32,39 @@ var KEYBACKSPACE = 8;
 
 // var mainpane;                   // div for relatedposts
 var displaypanels;                   // divs for relatedposts
-// var whichpanel = -POSTSPERCOL;                  // which panel to load the next post
 var relatedwords = "";
+var COMMON_WORDS = {"the":true, "or":true, "will":true,
+                    "number":true, "of":true, "one":true,
+                    "up":true, "no":true, "and":true,
+                    "had":true, "other":true, "way":true,
+                    "a":true, "by":true, "about":true,
+                    "could":true, "to":true, "word":true,
+                    "out":true, "people":true, "in":true,
+                    "but":true, "many":true, "my":true,
+                    "is":true, "not":true, "then":true,
+                    "than":true, "you":true, "what":true,
+                    "them":true, "first":true, "it":true,
+                    "were":true, "so":true, "been":true,
+                    "he":true, "we":true, "some":true,
+                    "call":true, "was":true, "when":true,
+                    "her":true, "who":true, "for":true,
+                    "your":true, "would":true, "oil":true,
+                    "on":true, "can":true, "make":true,
+                    "its":true, "are":true, "said":true,
+                    "like":true, "now":true, "as":true,
+                    "there":true, "him":true, "find":true,
+                    "with":true, "use":true, "into":true,
+                    "long":true, "his":true, "an":true,
+                    "time":true, "down":true, "they":true,
+                    "each":true, "has":true, "day":true,
+                    "I":true, "which":true, "look":true,
+                    "did":true, "at":true, "she":true,
+                    "two":true, "get":true, "be":true,
+                    "do":true, "more":true, "come":true,
+                    "this":true, "how":true, "write":true,
+                    "made":true, "have":true, "their":true,
+                    "go":true, "may":true, "from":true,
+                    "if":true, "see":true, "part":true};
 
 var inputtitle, inputtags;
 
@@ -136,7 +167,9 @@ function clearRelatedWords(){
 //
 // todo. smarter algorithm to get posts with similar ideas
 function getrelatedposts(where){
-    if (relatedwords.length >= 4){
+    prepRelatedWords();
+    // if (relatedwords.length >= 4){
+    if (!isCommonWord(relatedwords)){
         $.ajax({
             url: HOMEPAGE + "relatedposts",
             type: "GET",
@@ -151,8 +184,6 @@ function getrelatedposts(where){
                 // postcount: POSTCOUNT,
             },
             success: function(json){
-                // which panel to show load related post in:
-                // whichpanel = (whichpanel + POSTSPERCOL) % NUMCELLS;
                 loadrelatedposts(json);
                 highlightpost();
             },
@@ -165,16 +196,23 @@ function getrelatedposts(where){
     }
 }
 
+function isCommonWord(word){
+    return COMMON_WORDS[word];
+}
+
 function relatedwordsarray(){
     // relatedwords = relatedwords.replace(/[^'\w]/g, " ").trim().toLowerCase();
-    relatedwords = relatedwords.trim().toLowerCase();
     return relatedwords.split(" ");
+}
+
+function prepRelatedWords(){
+    relatedwords = relatedwords.trim().toLowerCase();
 }
 
 function highlightpost(){
     var rw = relatedwords.split(" ");
     for (var i = 0; i < rw.length; i++){
-        displaypanels.eq(0).highlight(rw[i]); // .eq(whichpanel)
+        displaypanels.eq(0).highlight(rw[i]);
     }
 }
 
@@ -438,7 +476,6 @@ function mkrandomposts(){
 }
 
 function loadposts(json){
-    // var rps = $(".randompost");
     $.each(json.posts, function(i, post){
         var rp = displaypanels.eq(i);
         rp.attr("id", post.id);
@@ -453,9 +490,8 @@ function loadposts(json){
 }
 
 function loadrelatedposts(json){
-    // var rps = $(".randompost");
     $.each(json.posts, function(i, post){
-        var rp = displaypanels.eq(0); // .eq(whichpanel);
+        var rp = displaypanels.eq(0);
         rp.attr("id", post.id);
         rp.attr("onclick", "editpost(" + post.id + ")");
         rp.find(".posttitle").html(post.title);
@@ -468,7 +504,6 @@ function loadrelatedposts(json){
 }
 
 function parsedatetime(t){
-    // var m = "2013-02-19T04:11:51-05:00".match(/(\d+|[a-zA-Z])/g);
     if (t){
         return moment(t).format("H:mm ddd DD MMM YYYY"); //.calendar();
     } else {
