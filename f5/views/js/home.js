@@ -64,7 +64,8 @@ var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "this":true, "how":true, "write":true,
                     "made":true, "have":true, "their":true,
                     "go":true, "may":true, "from":true,
-                    "if":true, "see":true, "part":true};
+                    "if":true, "see":true, "part":true,
+                    "that":true};
 
 var inputtitle, inputtags;
 
@@ -101,6 +102,7 @@ function onPostFormHide(){
 }
 
 function onPostFormShow(){
+    clearRelatedWords();
     changeMode(MODE_EDIT);
 }
 
