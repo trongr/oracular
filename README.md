@@ -1,3 +1,5 @@
+todo. readme out of date
+
 f5
 ==
 
