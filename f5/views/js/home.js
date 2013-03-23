@@ -1,5 +1,7 @@
 // todo. separate edit post from new post form. right now they share
 // the same modal
+//
+// todo. better keypress readings. redo using modes.
 
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
@@ -8,6 +10,13 @@ var NUMCELLS = 9;
 var POSTCOUNT = 9;
 var POSTSPERCOL = 3;
 var SPANWIDTH = 12 / POSTSPERCOL;
+
+// todo. use moode as a kind of namespace for shortcuts
+
+// don't need this yet
+var moode = MODE_GLOBAL;        // weird name to avoid nameclashing
+var MODE_GLOBAL = "MODE_GLOBAL";
+var MODE_EDIT = "MODE_EDIT";
 
 // keycodes
 var KEYSPACE = 32;
@@ -44,15 +53,25 @@ $(document).ready(function(){
     // $("input, textarea").focus(function(){$(this).select()});
 
     // return focus to window after pressing esc on new post form modal
-    $("#newpostform").on("hide", function(){$("*:focus").blur()});
+    $("#newpostform").on("hide", onPostFormHide);
+    $("#newpostform").on("show", onPostFormShow);
 
     // reading tab in newpostform tags input to load posts in bg
-    tabinput();
+    readWords();
 
     $('#signupform').click(function (e) {
         e.stopPropagation();
     });
 });
+
+function onPostFormHide(){
+    $("*:focus").blur();
+    changeMode(MODE_GLOBAL);
+}
+
+function onPostFormShow(){
+    changeMode(MODE_EDIT);
+}
 
 // caching to save time
 function cachedivs(){
@@ -61,11 +80,13 @@ function cachedivs(){
     inputtags = $("#newpostsubject");
 }
 
-function readrelatedwords(key){
+function readChar(key){
     // js can't read single quote ' from e.which, so hack:
+    var letter = parseInt(key);
     if (key == "222"){
         relatedwords += "'";
-    } else {
+    } else if ((65 <= letter && letter <= 90) ||
+               (97 <= letter && letter <= 122)) {
         relatedwords += String.fromCharCode(key);
     }
 }
@@ -76,7 +97,7 @@ function rollbackspace(){
     relatedwords = relatedwords.slice(0, -1);
 }
 
-function tabinput(){
+function readWords(){
     $("#newposttitle").keydown(function(e) {
         var key = e.which || e.keyCode;
         switch (key){
@@ -85,52 +106,30 @@ function tabinput(){
             getrelatedposts("title");
             break;
         default:
-            readrelatedwords(key);
+            readChar(key);
         }
     });
     $("#newpostbody").keydown(function(e) {
         var key = e.which || e.keyCode;
-        // if (e.shiftKey){        // detecting ? and !
-        //     switch (key){
-        //     case KEYONE:
-        //     case KEYSLASH:
-        //         getrelatedposts("body");
-        //         break;
-        //     }
-        // }
         switch (key){
-        // case KEYCOMMA:          // detecting , . ;
-        // case KEYPERIOD:
-        // case KEYSEMICOLON:
-        //     getrelatedposts("body");
-        //     break;
-        // case KEYSLASH:          // don't want to read / by default
-        //     break;
         case KEYSPACE:          // querying database on word
             getrelatedposts("body");
             break;
         case KEYBACKSPACE:
             if (e.ctrlKey){     // ctrl + backspace deletes last word
-                relatedwords = "";
+                clearRelatedWords();
             } else {
                 rollbackspace();
             }
             break;
         default:                // reading anything but punctuations
-            readrelatedwords(key);
+            readChar(key);
         }
     });
-    // not storing subject input anymore
-    // $("#newpostsubject").keydown(function(e) {
-    //     var key = e.which || e.keyCode;
-    //     switch (key){
-    //     case KEYTAB:
-    //         relatedwords = inputtags.val();
-    //         getrelatedposts("subject");
-    //         break;
-    //     default:
-    //     }
-    // });
+}
+
+function clearRelatedWords(){
+    relatedwords = "";
 }
 
 // getting a post with the same words as what you're writing
@@ -158,17 +157,17 @@ function getrelatedposts(where){
                 highlightpost();
             },
             complete: function(){
-                relatedwords = "";
+                clearRelatedWords();
             }
         });
     } else {
-        relatedwords = "";
+        clearRelatedWords();
     }
 }
 
 function relatedwordsarray(){
-    relatedwords = relatedwords.replace(/[^'\w]/g, " ").trim().toLowerCase();
-    // relatedwords = relatedwords.trim().toLowerCase();
+    // relatedwords = relatedwords.replace(/[^'\w]/g, " ").trim().toLowerCase();
+    relatedwords = relatedwords.trim().toLowerCase();
     return relatedwords.split(" ");
 }
 
@@ -238,11 +237,6 @@ function aboutbutton(){
     closeallmodals();
     $("#aboutmodal").modal();
 }
-
-// function settingsbutton(){
-//     closeallmodals();
-//     $("#aboutmodal").modal();
-// }
 
 function closeallmodals(){
     $("#aboutmodal").modal("hide");
@@ -524,6 +518,8 @@ function submiteditpost(){
         },
         success: function(json){
             showsubmittedpost(json);
+        },
+        complete: function(){
         }
     });
     // mkrandomposts();
@@ -531,7 +527,7 @@ function submiteditpost(){
 }
 
 function showsubmittedpost(post){
-    var rp = displaypanels.eq(0); // always refresh to top left post
+    var rp = displaypanels.eq(1); // top second-left post
     rp.attr("id", post.id);
     rp.attr("onclick", "editpost(" + post.id + ")");
     rp.find(".posttitle").html(post.title);
@@ -546,6 +542,10 @@ function showpostform(){
     closeallmodals();
     $("#newpostform").modal();
     $("#newposttitle").focus();
+}
+
+function changeMode(newMode){
+    moode = newMode;
 }
 
 function shownewpostform(){
@@ -579,6 +579,8 @@ function submitpost(){
         },
         success: function(json){
             showsubmittedpost(json);
+        },
+        complete: function(){
         }
     });
     // mkrandomposts();
