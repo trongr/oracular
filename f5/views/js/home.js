@@ -12,11 +12,12 @@ var SPANWIDTH = 12 / POSTSPERCOL;
 // todo. use moode as a kind of namespace for shortcuts
 
 // don't need this yet
+
+var MODE_GLOBAL = "MODE_GLOBAL";
+var MODE_EDIT = "MODE_EDIT";
 var moode = MODE_GLOBAL;        // weird name to avoid nameclashing.
                                 // should refactor and wrap all this
                                 // in closure
-var MODE_GLOBAL = "MODE_GLOBAL";
-var MODE_EDIT = "MODE_EDIT";
 
 // keycodes
 var KEYSPACE = 32;

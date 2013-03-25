@@ -12,7 +12,7 @@
     <div class="container-fluid">
         <ul class="nav">
             <li>
-                <a class="dropdown-toggle mycontrol" data-toggle="dropdown" href="#">more <i class="icon-align-justify"></i></a>
+                <a class="dropdown-toggle mycontrol" data-toggle="dropdown" href="#">MOR<i class="icon-align-justify"></i></a>
                 <ul class="dropdown-menu mydropdownmenu">
                     <div class="span3">
                         <!-- <li> -->
@@ -26,15 +26,15 @@
             </li>
         </ul>
         <ul id="tools" class="nav">
-            <li><a id="newpostbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + enter">new <i class="icon-edit"></i></a></li>
-            <li><a id="reloadbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + space">reload <i class="icon-refresh"></i></a></li>
+            <li><a id="newpostbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + enter">N<i class="icon-file"></i>W</a></li>
+            <li><a id="reloadbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + space">REL<i class="icon-refresh"></i>AD</a></li>
         </ul>
         <div class="navbar-text pull-right">
             <div id="loginbar" class="hide">
                 <input id="username" class="input-large placeholder" type="text" placeholder="username" onfocus="removeplaceholder('username')">
                 <input id="password" class="input-large placeholder" type="password" placeholder="password" onfocus="removeplaceholder('password')">
-                <a id="loginbutton" class="navbar-link mycontrol" href="#">login <i class="icon-signin"></i></a>
-                <a id="signupbutton" class="navbar-link dropdown-toggle mycontrol" data-toggle="dropdown" href="#">signup</a>
+                <a id="loginbutton" class="navbar-link mycontrol" href="#">LO<i class="icon-unlock"></i>IN</a>
+                <a id="signupbutton" class="navbar-link dropdown-toggle mycontrol" data-toggle="dropdown" href="#">SIG<i class="icon-key"></i>UP</a>
                 <div id="signupform" class="dropdown-menu pull-right">
                   <input id="signupcsrf" type="hidden" value="{{ csrf_token }}">
                   <input id="signupusername" class="placeholder" type="text" placeholder="username" onfocus="removesignupplaceholder('signupusername')"><br>
@@ -44,7 +44,7 @@
                   <div id="signupmsg" class="input-large"></div>
                 </div>
             </div>
-            <a id="logout" class="hide navbar-link mycontrol" href="#">logout <i class="icon-signout"></i></a>
+            <a id="logout" class="hide navbar-link mycontrol" href="#">LO<i class="icon-lock"></i>OUT</a>
         </div>
     </div>
   </div>
@@ -86,7 +86,7 @@
             My name is
             <a href="https://twitter.com/nahnturong" target="_blank">Tr<i class="icon-twitter-sign smallicon"></i>ng.</a>
 
-            I'm studying math, art, and computer science at the
+            I'm studying Math, Visual Art, and Computer Science at the
             University of Toronto, in Canada. I love making simple
             tools that do big things.
         </p>
@@ -112,7 +112,7 @@ modals -->
 
 <div id="randomposts"></div>
 
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="{{ STATIC_URL }}mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
 <script src="{{ STATIC_URL }}js/jquery.highlight.js"></script>
 <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
