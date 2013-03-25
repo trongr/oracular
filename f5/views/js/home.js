@@ -30,6 +30,7 @@ var KEYSEMICOLON = 59;
 var KEYONE = 49;                // shift + one = !
 var KEYSLASH = 191;             // shift + slash = ?
 var KEYBACKSPACE = 8;
+var KEY_M = 77;
 
 // var mainpane;                   // div for relatedposts
 var displaypanels;                   // divs for relatedposts
@@ -68,16 +69,19 @@ var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "if":true, "see":true, "part":true,
                     "that":true};
 
-var inputtitle, inputtags;
+var newposttitle, newpostbody;
 
 $(document).ready(function(){
     loginout();
     initrandompostdivs();
     mkrandomposts();
     cachedivs();
-
+    registerBindings();
     $("a").tooltip({'placement': 'bottom'});
+    readWords();
+});
 
+function registerBindings(){
     clickityclickclick(); // setting button onclicks
     $(document).bind("keydown", keyboardshortcuts);
     newpostformbindenterkeypress();
@@ -89,13 +93,13 @@ $(document).ready(function(){
     $("#newpostform").on("hide", onPostFormHide);
     $("#newpostform").on("show", onPostFormShow);
 
-    // reading tab in newpostform tags input to load posts in bg
-    readWords();
-
+    // fixing bug making register box closing when clicking on input
     $('#signupform').click(function (e) {
         e.stopPropagation();
     });
-});
+
+    // $("newpostbody").keydown(insertMathBrackets); // todo. remove now
+}
 
 function onPostFormHide(){
     $("*:focus").blur();
@@ -110,8 +114,6 @@ function onPostFormShow(){
 // caching to save time
 function cachedivs(){
     displaypanels = $(".randompost");
-    inputtitle = $("#newposttitle");
-    inputtags = $("#newpostsubject");
 }
 
 function readChar(key){
@@ -159,6 +161,7 @@ function readWords(){
         default:                // reading anything but punctuations
             readChar(key);
         }
+        insertMathBrackets(e);
     });
 }
 
@@ -653,3 +656,38 @@ function getCookie(name) {
 function rejax(){
     MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 }
+
+function insertMathBrackets(e){
+    var key = e.which || e.keyCode;
+    if (e.ctrlKey && key === KEY_M){
+        $("#newpostbody").insertAtCaret("\\(\\)");
+    }
+};
+
+// todo. use this to make a macro library
+jQuery.fn.extend({
+    insertAtCaret: function(myValue){
+        return this.each(function(i) {
+            if (document.selection) {
+                //For browsers like Internet Explorer
+                this.focus();
+                sel = document.selection.createRange();
+                sel.text = myValue;
+                this.focus();
+            } else if (this.selectionStart || this.selectionStart == '0') {
+                //For browsers like Firefox and Webkit based
+                var startPos = this.selectionStart;
+                var endPos = this.selectionEnd;
+                var scrollTop = this.scrollTop;
+                this.value = this.value.substring(0, startPos)+myValue+this.value.substring(endPos,this.value.length);
+                this.focus();
+                this.selectionStart = startPos + myValue.length - 2; // todo. change this
+                this.selectionEnd = startPos + myValue.length - 2;
+                this.scrollTop = scrollTop;
+            } else {
+                this.value += myValue;
+                this.focus();
+            }
+        });
+    }
+});
