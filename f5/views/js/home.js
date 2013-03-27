@@ -4,15 +4,11 @@
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
 
-var NUMCELLS = 9;
-var POSTCOUNT = 9;
-var POSTSPERCOL = 3;
-var SPANWIDTH = 12 / POSTSPERCOL;
-
+// todo. use moode as a kind of namespace for shortcuts
+// todo. use moode as a kind of namespace for shortcuts
 // todo. use moode as a kind of namespace for shortcuts
 
 // don't need this yet
-
 var MODE_GLOBAL = "MODE_GLOBAL";
 var MODE_EDIT = "MODE_EDIT";
 var moode = MODE_GLOBAL;        // weird name to avoid nameclashing.
@@ -32,8 +28,15 @@ var KEYSLASH = 191;             // shift + slash = ?
 var KEYBACKSPACE = 8;
 var KEY_M = 77;
 
-// var mainpane;                   // div for relatedposts
-var displaypanels;                   // divs for relatedposts
+var NUMCELLS = 9;
+var POSTCOUNT = 9;
+var POSTSPERCOL = 3;
+var SPANWIDTH = 12 / POSTSPERCOL;
+
+var recentpanels;               // divs for newly submitted posts
+var recentpostpos = 0;           // where to insert the next recent post
+
+var displaypanels;              // divs for relatedposts
 var relatedwords = "";
 var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "number":true, "of":true, "one":true,
@@ -59,7 +62,7 @@ var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "long":true, "his":true, "an":true,
                     "time":true, "down":true, "they":true,
                     "each":true, "has":true, "day":true,
-                    "I":true, "which":true, "look":true,
+                    "i":true, "which":true, "look":true,
                     "did":true, "at":true, "she":true,
                     "two":true, "get":true, "be":true,
                     "do":true, "more":true, "come":true,
@@ -97,8 +100,6 @@ function registerBindings(){
     $('#signupform').click(function (e) {
         e.stopPropagation();
     });
-
-    // $("newpostbody").keydown(insertMathBrackets); // todo. remove now
 }
 
 function onPostFormHide(){
@@ -114,6 +115,7 @@ function onPostFormShow(){
 // caching to save time
 function cachedivs(){
     displaypanels = $(".randompost");
+    recentpanels = $(".recentpost");
 }
 
 function readChar(key){
@@ -272,7 +274,6 @@ function clearrandomposts(){
         var rp = displaypanels.eq(i);
         rp.find(".posttitle").html("");
         rp.find(".postbody").html("");
-        rp.find(".postsubject").html("");
         rp.find(".postdate").html("");
     }
 }
@@ -323,15 +324,9 @@ function removeplaceholder(id){
 function removepostplaceholder(id){
     if (id == "title"){
         $("#newposttitle").removeAttr("placeholder");
-        $("#newpostsubject").attr("placeholder", "tags");
         $("#newpostbody").attr("placeholder", "note");
-    } else if (id == "tags"){
+    } else if (id == "body") {
         $("#newposttitle").attr("placeholder", "title");
-        $("#newpostsubject").removeAttr("placeholder");
-        $("#newpostbody").attr("placeholder", "note");
-    } else {
-        $("#newposttitle").attr("placeholder", "title");
-        $("#newpostsubject").attr("placeholder", "tags");
         $("#newpostbody").removeAttr("placeholder");
     }
 }
@@ -392,15 +387,14 @@ function loginbutton(){
 function initPostDivs(){
     var rp = $("#randomposts");
     var stuff = "";
-    for (var i = 0; i <= POSTCOUNT / POSTSPERCOL; i++){ // <= means there'll be extra divs with no posts: that's ok
+    for (var i = 0; i < POSTCOUNT / POSTSPERCOL; i++){
         stuff += "<div class='row-fluid myrandomrow'>";
         for (var j = 0; j < POSTSPERCOL; j++){
             stuff += "<div class='span" + SPANWIDTH + "'>" +
-                "<a href='#' class='randompost'>" +
+                "<a href='#' class='randompost" + (j===0 && i===0 ? "" : " recentpost") + "'>" +
                 "<span class='posttitle tex2jax_ignore'></span> " + // putting spaces after spans let them fill over to new lines
                 "<span class='postbody'></span> " +
                 "<span class='hiddenbody hide tex2jax_ignore'></span>" +
-                "<span class='postsubject'></span> " +
                 "<span class='postdate'></span>" +
                 "</a>" +
                 "</div>"
@@ -414,7 +408,7 @@ function initPostDivs(){
 // some reason <form/> won't let you ajax csrftoken, so had to switch
 // to div, but then <input/> doesn't submit on enter keydown
 function newpostformbindenterkeypress(){
-    $("#newposttitle, #newpostsubject").bind("keydown", inputkeydownsubmit);
+    $("#newposttitle").bind("keydown", inputkeydownsubmit);
     $("#username, #password").bind("keydown", inputkeydownlogin);
     $("#signupusername, #signuppassword, #signuprepassword").bind("keydown", inputkeydownsignup);
 }
@@ -483,7 +477,6 @@ function loadposts(json){
         rp.find(".posttitle").html(post.title);
         rp.find(".postbody").html(post.body);
         rp.find(".hiddenbody").html(post.body);
-        rp.find(".postsubject").html(post.subject);
         rp.find(".postdate").html(parsedatetime(post.updated));
     });
     rejax();
@@ -497,7 +490,6 @@ function loadrelatedposts(json){
         rp.find(".posttitle").html(post.title);
         rp.find(".postbody").html(post.body);
         rp.find(".hiddenbody").html(post.body);
-        rp.find(".postsubject").html(post.subject);
         rp.find(".postdate").html(parsedatetime(post.updated));
     });
     rejax();
@@ -528,7 +520,6 @@ function populateeditpost(postid){
     //
     // NOTE. apparently jquery.highlight.js also highlights hidden divs
     $("#newpostbody").val(post.find(".hiddenbody").unhighlight().html());
-    $("#newpostsubject").val(post.find(".postsubject").unhighlight().html());
 
     // replacing onclick behaviour. this is bad design: todo: give
     // each function its own view
@@ -539,7 +530,9 @@ function submiteditpost(){
     var id = $("#editpostid").val();
     var title = $("#newposttitle").val();
     var body = $("#newpostbody").val();
-    var subject = $("#newpostsubject").val();
+    var subject = "";                   // todo. remove subject from
+                                        // views and models.py, same
+                                        // for submitpost
     var token = getcsrf("newpostcsrf"); // getCookie('csrftoken');
     $.ajax({
         url: HOMEPAGE + "editpost",
@@ -562,14 +555,16 @@ function submiteditpost(){
 }
 
 function showsubmittedpost(post){
-    var rp = displaypanels.eq(1); // top second-left post
+    var rp = recentpanels.eq(recentpostpos);
+    recentpostpos = (recentpostpos + 1) % recentpanels.length;
+
     rp.attr("id", post.id);
     rp.attr("onclick", "editpost(" + post.id + ")");
     rp.find(".posttitle").html(post.title);
     rp.find(".postbody").html("<span class='highlight'>" + post.body + "</span>");
     rp.find(".hiddenbody").html(post.body);
-    rp.find(".postsubject").html(post.subject);
     rp.find(".postdate").html(parsedatetime());
+
     rejax();
 }
 
@@ -592,7 +587,6 @@ function prepnewpostform(){
     // input's and textarea's must use .val() instead of .html()
     $("#newposttitle").val("");
     $("#newpostbody").val("");
-    $("#newpostsubject").val("");
     // replacing onclick behaviour. this is bad design: todo: give
     // each function its own view
     $("#newpostsubmit").attr("onclick", "submitpost()");
@@ -601,7 +595,7 @@ function prepnewpostform(){
 function submitpost(){
     var title = $("#newposttitle").val();
     var body = $("#newpostbody").val();
-    var subject = $("#newpostsubject").val();
+    var subject = "";
     var token = getcsrf("newpostcsrf"); // getCookie('csrftoken');
     $.ajax({
         url: HOMEPAGE + "createpost",
