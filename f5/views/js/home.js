@@ -73,7 +73,7 @@ var newposttitle, newpostbody;
 
 $(document).ready(function(){
     loginout();
-    initrandompostdivs();
+    initPostDivs();
     mkrandomposts();
     cachedivs();
     registerBindings();
@@ -389,31 +389,25 @@ function loginbutton(){
 // once in the beginning.... even better:
 //
 // todo. concat strings before hand and insert into the DOM just once
-function initrandompostdivs(){
+function initPostDivs(){
     var rp = $("#randomposts");
-
-    // todo. concat strings before hand and insert into the DOM just
-    // once. this for loop is bad:
-
-    // <= means there'll be extra divs with no posts: that's ok
-    for (var i = 0; i <= POSTCOUNT / POSTSPERCOL; i++){
-        var row = $("<div/>", {
-            class: "row-fluid myrandomrow",
-        }).appendTo(rp);
+    var stuff = "";
+    for (var i = 0; i <= POSTCOUNT / POSTSPERCOL; i++){ // <= means there'll be extra divs with no posts: that's ok
+        stuff += "<div class='row-fluid myrandomrow'>";
         for (var j = 0; j < POSTSPERCOL; j++){
-            row.append(
-                "<div class='span" + SPANWIDTH + "'>" +
-                    "<a href='#' class='randompost'>" +
-                        "<span class='posttitle tex2jax_ignore'></span> " + // putting spaces after spans let them fill over to new lines
-                        "<span class='postbody'></span> " +
-                        "<span class='hiddenbody hide tex2jax_ignore'></span>" +
-                        "<span class='postsubject'></span> " +
-                        "<span class='postdate'></span>" +
-                    "</a>" +
+            stuff += "<div class='span" + SPANWIDTH + "'>" +
+                "<a href='#' class='randompost'>" +
+                "<span class='posttitle tex2jax_ignore'></span> " + // putting spaces after spans let them fill over to new lines
+                "<span class='postbody'></span> " +
+                "<span class='hiddenbody hide tex2jax_ignore'></span>" +
+                "<span class='postsubject'></span> " +
+                "<span class='postdate'></span>" +
+                "</a>" +
                 "</div>"
-            );
         }
+        stuff += "</div>";
     }
+    rp.html(stuff);
 }
 
 // this is a hack to allow enter submit on form input, because for
