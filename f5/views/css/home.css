@@ -266,6 +266,14 @@ textarea {
     /* border: 2px dotted #fff; */
     color: #ff8c00;
     font-size: 1.5em;
+    font-family: times;
+}
+
+.recentbody {
+    /* background-color: #ff8; */
+    /* border: 2px dotted #fff; */
+    color: #ff8c00;
+    font-size: 1.1em;
 }
 
 #signupmsg {

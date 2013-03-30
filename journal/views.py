@@ -201,7 +201,6 @@ def getrandomposts(creator, postcount):
 def relatedposts(req):
     if req.user.is_authenticated():
         creator = req.user.id
-        where = req.GET.get("where")
         relatedwords = req.GET.getlist("relatedwords[]") # get("relatedwords").split()
 
         postcount = int(req.GET.get(POSTCOUNT, 1))

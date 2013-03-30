@@ -70,7 +70,7 @@ var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "made":true, "have":true, "their":true,
                     "go":true, "may":true, "from":true,
                     "if":true, "see":true, "part":true,
-                    "that":true};
+                    "that":true, "thing":true};
 
 var newposttitle, newpostbody;
 
@@ -81,7 +81,6 @@ $(document).ready(function(){
     cachedivs();
     registerBindings();
     $("a").tooltip({'placement': 'bottom'});
-    readWords();
 });
 
 function registerBindings(){
@@ -89,17 +88,18 @@ function registerBindings(){
     $(document).bind("keydown", keyboardshortcuts);
     newpostformbindenterkeypress();
 
-    // selects all text on focus
-    // $("input, textarea").focus(function(){$(this).select()});
-
     // return focus to window after pressing esc on new post form modal
     $("#newpostform").on("hide", onPostFormHide);
     $("#newpostform").on("show", onPostFormShow);
 
     // fixing bug making register box closing when clicking on input
-    $('#signupform').click(function (e) {
-        e.stopPropagation();
-    });
+    $('#signupform').click(function (e) {e.stopPropagation();});
+
+    $("#newposttitle").keydown(onEditKeydown);
+    $("#newpostbody").keydown(onEditKeydown);
+
+    // todo now
+    $(".randompost").on("click", editPost);
 }
 
 function onPostFormHide(){
@@ -135,36 +135,24 @@ function rollbackspace(){
     relatedwords = relatedwords.slice(0, -1);
 }
 
-function readWords(){
-    $("#newposttitle").keydown(function(e) {
-        var key = e.which || e.keyCode;
-        switch (key){
-        case KEYSPACE:
-        case KEYTAB:
-            getrelatedposts("title");
-            break;
-        default:
-            readChar(key);
+function onEditKeydown(e) {
+    var key = e.which || e.keyCode;
+    switch (key){
+    case KEYTAB:
+    case KEYSPACE:          // querying database on word
+        getrelatedposts();
+        break;
+    case KEYBACKSPACE:
+        if (e.ctrlKey){     // ctrl + backspace deletes last word
+            clearRelatedWords();
+        } else {
+            rollbackspace();
         }
-    });
-    $("#newpostbody").keydown(function(e) {
-        var key = e.which || e.keyCode;
-        switch (key){
-        case KEYSPACE:          // querying database on word
-            getrelatedposts("body");
-            break;
-        case KEYBACKSPACE:
-            if (e.ctrlKey){     // ctrl + backspace deletes last word
-                clearRelatedWords();
-            } else {
-                rollbackspace();
-            }
-            break;
-        default:                // reading anything but punctuations
-            readChar(key);
-        }
-        insertMathBrackets(e);
-    });
+        break;
+    default:                // reading anything but punctuations
+        readChar(key);
+    }
+    insertMathBrackets(e);
 }
 
 function clearRelatedWords(){
@@ -174,7 +162,7 @@ function clearRelatedWords(){
 // getting a post with the same words as what you're writing
 //
 // todo. smarter algorithm to get posts with similar ideas
-function getrelatedposts(where){
+function getrelatedposts(){
     prepRelatedWords();
     // if (relatedwords.length >= 4){
     if (!isCommonWord(relatedwords)){
@@ -182,7 +170,6 @@ function getrelatedposts(where){
             url: HOMEPAGE + "relatedposts",
             type: "GET",
             data: {
-                where: where,
                 relatedwords: relatedwordsarray(),
                 // by default, the server loads just one. it's probably
                 // better because people don't have the ability to
@@ -325,7 +312,7 @@ function removepostplaceholder(id){
     if (id == "title"){
         $("#newposttitle").removeAttr("placeholder");
         $("#newpostbody").attr("placeholder", "note");
-    } else if (id == "body") {
+    } else if (id == "note") {
         $("#newposttitle").attr("placeholder", "title");
         $("#newpostbody").removeAttr("placeholder");
     }
@@ -466,6 +453,7 @@ function mkrandomposts(){
         postcount: POSTCOUNT
     }, function(json){
         loadposts(json);
+        recentpostpos = 0;      // reset to top
     });
 }
 
@@ -473,7 +461,6 @@ function loadposts(json){
     $.each(json.posts, function(i, post){
         var rp = displaypanels.eq(i);
         rp.attr("id", post.id);
-        rp.attr("onclick", "editpost(" + post.id + ")");
         rp.find(".posttitle").html(post.title);
         rp.find(".postbody").html(post.body);
         rp.find(".hiddenbody").html(post.body);
@@ -486,7 +473,6 @@ function loadrelatedposts(json){
     $.each(json.posts, function(i, post){
         var rp = displaypanels.eq(0);
         rp.attr("id", post.id);
-        rp.attr("onclick", "editpost(" + post.id + ")");
         rp.find(".posttitle").html(post.title);
         rp.find(".postbody").html(post.body);
         rp.find(".hiddenbody").html(post.body);
@@ -503,17 +489,15 @@ function parsedatetime(t){
     }
 }
 
-function editpost(postid){
-    populateeditpost(postid);
+function editPost(){
+    populateeditpost($(this));
     showpostform();
 }
 
 // using new post form to edit old posts
-function populateeditpost(postid){
-    var post = $("#" + postid);
-
+function populateeditpost(post){
     // input's and textarea's must use .val() instead of .html()
-    $("#editpostid").val(postid);
+    $("#editpostid").val(post.attr("id"));
     $("#newposttitle").val(post.find(".posttitle").unhighlight().html());
     // postbody is just for show, e.g. highlight and mathjax.
     // hiddenbody is where we store the actual content
@@ -559,9 +543,8 @@ function showsubmittedpost(post){
     recentpostpos = (recentpostpos + 1) % recentpanels.length;
 
     rp.attr("id", post.id);
-    rp.attr("onclick", "editpost(" + post.id + ")");
     rp.find(".posttitle").html(post.title);
-    rp.find(".postbody").html("<span class='highlight'>" + post.body + "</span>");
+    rp.find(".postbody").html("<span class='recentbody'>" + post.body + "</span>");
     rp.find(".hiddenbody").html(post.body);
     rp.find(".postdate").html(parsedatetime());
 
