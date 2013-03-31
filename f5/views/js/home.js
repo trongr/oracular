@@ -104,8 +104,12 @@ function registerBindings(){
     $("#newposttitle").keydown(onEditKeydown);
     $("#newpostbody").keydown(onEditKeydown);
 
-    // todo now
     $(".randompost").on("click", editPost);
+    $(".instagram").on("click", openInstagramSrc);
+}
+
+function openInstagramSrc(){
+    window.open($(this).attr("data-src"));
 }
 
 function onPostFormHide(){
@@ -173,9 +177,41 @@ function getrelatedposts(){
     prepRelatedWords();
     if (!isCommonWord(relatedwords)){
         getOwnPosts(relatedwordsarray());
-        getInstagramPics(relatedwordsarray()[0]);
+        getFlickrPics(relatedwordsarray()[0]);
+        // getInstagramPics(relatedwordsarray()[0]);
     }
     clearRelatedWords();
+}
+
+function getFlickrPics(relatedWord){
+    $.ajax({
+        url: "https://secure.flickr.com/services/rest",
+        type: "GET",
+        data: {
+            method: "flickr.photos.search",
+            api_key: "4a3005acb063ad3234d2f7da3ab1f801", // flickr key
+            format: "json",
+            tags: relatedWord,
+            per_page: 1,
+        },
+        dataType: "jsonp",
+    });
+}
+
+// flickr's api is not intuitive at all
+function jsonFlickrApi(json){
+    if (!json.photos || !json.photos.photo[0]){
+        throw "home.js:getFlickrPics:" + JSON.stringify(json, 0, 2)
+    } else {
+        var item = json.photos.photo[0];
+        var basePic = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret;
+        var thumbPic = basePic + '_q.jpg';
+        var medPic = basePic + ".jpg";
+        instagrams.eq(instapos)
+            .attr("src", thumbPic)
+            .attr("data-src", medPic);
+        instapos = (instapos + 1) % INSTAROW_SIZE;
+    }
 }
 
 function getInstagramPics(relatedWord){
@@ -191,7 +227,9 @@ function getInstagramPics(relatedWord){
             if (!json.data || !json.data[0]){
                 throw "home.js:getInstagramPics:" + JSON.stringify(json, 0, 2);
             } else {
-                instagrams.eq(instapos).attr("src", json.data[0].images.thumbnail.url);
+                instagrams.eq(instapos)
+                    .attr("src", json.data[0].images.thumbnail.url)
+                    .attr("data-src", json.data[0].link);
                 instapos = (instapos + 1) % INSTAROW_SIZE;
             }
         },
@@ -392,7 +430,7 @@ function initRelatedPicDivs(){
     var stuff = "<div class='row-fluid myrandomrow'>";
     for (var i = 0; i < INSTAROW_SIZE; i++){
         stuff += "<div class='span" + INSTA_SPANWIDTH + "'>" +
-            '<img class="instagram">' +
+            '<img src="" data-src="" class="instagram">' +
             "</div>"
     }
     stuff += "</div>";
