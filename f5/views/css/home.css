@@ -58,6 +58,10 @@ body {
     margin-bottom: 20px;
 }
 
+.instagram {
+    width: 100%;
+}
+
 .randompost {
     margin: 5px;
 }
@@ -111,7 +115,7 @@ a.mydropdownbutton {
 
 .modal#newpostform {
     /* modal margin-left center screen, so -40% means 10% */
-    margin-left: -10%;
+    margin: 10% 0 0 -10%;
     width: 60%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);

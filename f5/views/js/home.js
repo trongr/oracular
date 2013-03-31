@@ -33,8 +33,13 @@ var POSTCOUNT = 9;
 var POSTSPERCOL = 3;
 var SPANWIDTH = 12 / POSTSPERCOL;
 
-var recentpanels;               // divs for newly submitted posts
-var recentpostpos = 0;           // where to insert the next recent post
+var instagrams;
+var instapos = 0;
+var INSTAROW_SIZE = 6;         // number of pics in instagram row
+var INSTA_SPANWIDTH = 12 / INSTAROW_SIZE;
+
+var recentpanels;              // divs for newly submitted posts
+var recentpostpos = 0;         // where to insert the next recent post
 
 var displaypanels;              // divs for relatedposts
 var relatedwords = "";
@@ -70,12 +75,13 @@ var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "made":true, "have":true, "their":true,
                     "go":true, "may":true, "from":true,
                     "if":true, "see":true, "part":true,
-                    "that":true, "thing":true};
+                    "that":true, "that's":true, "thing":true};
 
 var newposttitle, newpostbody;
 
 $(document).ready(function(){
     loginout();
+    initRelatedPicDivs();
     initPostDivs();
     mkrandomposts();
     cachedivs();
@@ -116,6 +122,7 @@ function onPostFormShow(){
 function cachedivs(){
     displaypanels = $(".randompost");
     recentpanels = $(".recentpost");
+    instagrams = $(".instagram");
 }
 
 function readChar(key){
@@ -164,31 +171,45 @@ function clearRelatedWords(){
 // todo. smarter algorithm to get posts with similar ideas
 function getrelatedposts(){
     prepRelatedWords();
-    // if (relatedwords.length >= 4){
     if (!isCommonWord(relatedwords)){
-        $.ajax({
-            url: HOMEPAGE + "relatedposts",
-            type: "GET",
-            data: {
-                relatedwords: relatedwordsarray(),
-                // by default, the server loads just one. it's probably
-                // better because people don't have the ability to
-                // simultaneously write something __and__ read more than
-                // one related posts
-                //
-                // postcount: POSTCOUNT,
-            },
-            success: function(json){
-                loadrelatedposts(json);
-                highlightpost();
-            },
-            complete: function(){
-                clearRelatedWords();
-            }
-        });
-    } else {
-        clearRelatedWords();
+        getOwnPosts(relatedwordsarray());
+        getInstagramPics(relatedwordsarray()[0]);
     }
+    clearRelatedWords();
+}
+
+function getInstagramPics(relatedWord){
+    $.ajax({
+        url: "https://api.instagram.com/v1/tags/" + relatedWord + "/media/recent",
+        type: "GET",
+        data: {
+            client_id: "d4d42f8e08c04b90a44f9c762e266642", // instagram client id
+            count: 1
+        },
+        dataType: "jsonp",
+        success: function(json){
+            if (!json.data || !json.data[0]){
+                throw "home.js:getInstagramPics:" + JSON.stringify(json, 0, 2);
+            } else {
+                instagrams.eq(instapos).attr("src", json.data[0].images.thumbnail.url);
+                instapos = (instapos + 1) % INSTAROW_SIZE;
+            }
+        },
+    });
+}
+
+function getOwnPosts(relatedWordsArray){
+    $.ajax({
+        url: HOMEPAGE + "relatedposts",
+        type: "GET",
+        data: {
+            relatedwords: relatedWordsArray,
+        },
+        success: function(json){
+            loadrelatedposts(json);
+            highlightpost(relatedWordsArray);
+        },
+    });
 }
 
 function isCommonWord(word){
@@ -204,8 +225,7 @@ function prepRelatedWords(){
     relatedwords = relatedwords.trim().toLowerCase();
 }
 
-function highlightpost(){
-    var rw = relatedwords.split(" ");
+function highlightpost(rw){
     for (var i = 0; i < rw.length; i++){
         displaypanels.eq(0).highlight(rw[i]);
     }
@@ -367,10 +387,18 @@ function loginbutton(){
     });
 }
 
-// too much dom manipulation makes it slow: generate all divs just
-// once in the beginning.... even better:
-//
-// todo. concat strings before hand and insert into the DOM just once
+function initRelatedPicDivs(){
+    var rp = $("#relatedpics");
+    var stuff = "<div class='row-fluid myrandomrow'>";
+    for (var i = 0; i < INSTAROW_SIZE; i++){
+        stuff += "<div class='span" + INSTA_SPANWIDTH + "'>" +
+            '<img class="instagram">' +
+            "</div>"
+    }
+    stuff += "</div>";
+    rp.html(stuff);
+}
+
 function initPostDivs(){
     var rp = $("#randomposts");
     var stuff = "";
