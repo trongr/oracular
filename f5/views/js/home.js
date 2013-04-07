@@ -35,7 +35,7 @@ var SPANWIDTH = 12 / POSTSPERCOL;
 
 var instagrams;
 var instapos = 0;
-var INSTAROW_SIZE = 6;         // number of pics in instagram row
+var INSTAROW_SIZE = 4;         // number of pics in instagram row
 var INSTA_SPANWIDTH = 12 / INSTAROW_SIZE;
 
 var recentpanels;              // divs for newly submitted posts
@@ -52,7 +52,8 @@ var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "out":true, "people":true, "in":true,
                     "but":true, "many":true, "my":true,
                     "is":true, "not":true, "then":true,
-                    "than":true, "you":true, "what":true,
+                    "than":true, "you":true, "you're": true,
+                    "what":true,
                     "them":true, "first":true, "it":true,
                     "were":true, "so":true, "been":true,
                     "he":true, "we":true, "some":true,
@@ -67,7 +68,8 @@ var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "long":true, "his":true, "an":true,
                     "time":true, "down":true, "they":true,
                     "each":true, "has":true, "day":true,
-                    "i":true, "which":true, "look":true,
+                    "i":true, "i'm":true, "which":true,
+                    "look":true,
                     "did":true, "at":true, "she":true,
                     "two":true, "get":true, "be":true,
                     "do":true, "more":true, "come":true,
@@ -206,10 +208,12 @@ function jsonFlickrApi(json){
         var item = json.photos.photo[0];
         var basePic = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret;
         var thumbPic = basePic + '_q.jpg';
-        var medPic = basePic + ".jpg";
+        // var medPic = basePic + ".jpg";
+        var largePic = basePic + "_b.jpg";
         instagrams.eq(instapos)
             .attr("src", thumbPic)
-            .attr("data-src", medPic);
+            // .attr("data-src", medPic);
+            .attr("data-src", largePic);
         instapos = (instapos + 1) % INSTAROW_SIZE;
     }
 }
@@ -605,16 +609,23 @@ function submiteditpost(){
 }
 
 function showsubmittedpost(post){
+    clearPreviousSubmittedPostStyle();
+
     var rp = recentpanels.eq(recentpostpos);
     recentpostpos = (recentpostpos + 1) % recentpanels.length;
 
     rp.attr("id", post.id);
     rp.find(".posttitle").html(post.title);
-    rp.find(".postbody").html("<span class='recentbody'>" + post.body + "</span>");
+    rp.find(".postbody").html(post.body).addClass("recentbody");
     rp.find(".hiddenbody").html(post.body);
     rp.find(".postdate").html(parsedatetime());
 
     rejax();
+}
+
+function clearPreviousSubmittedPostStyle(){
+    recentpanels.eq((recentpostpos - 1 + recentpanels.length) % recentpanels.length)
+        .find(".postbody").removeClass("recentbody");
 }
 
 function showpostform(){
