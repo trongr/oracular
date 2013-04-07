@@ -600,6 +600,7 @@ function submiteditpost(){
         },
         success: function(json){
             showsubmittedpost(json);
+            showFeedback(json.title + " <span id='saved'>saved</span>");
         },
         complete: function(){
         }
@@ -668,12 +669,17 @@ function submitpost(){
         },
         success: function(json){
             showsubmittedpost(json);
+            showFeedback(json.title + " saved");
         },
         complete: function(){
         }
     });
     // mkrandomposts();
     cancelnewpost();
+}
+
+function showFeedback(msg){
+    $("#feedback").html(msg);
 }
 
 function cancelnewpost(){

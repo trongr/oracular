@@ -26,6 +26,20 @@ body {
     background: rgba(0, 0, 0, 0.2);
 }
 
+#feedback {
+    font-size: 1.2em;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.2);
+    color: #00BFFF; /* nice blue. 08c is default bootstrap link color */
+}
+
+#saved {
+    font-size: 1em;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.2);
+    color: #999;
+}
+
 .mycontrol:hover, .mycontrol:focus {
     text-shadow: -1px -1px 2px #ff8c00, 1px 1px 2px #ff8c00 !important; /* makes text glow */
 }
@@ -277,7 +291,8 @@ textarea {
     /* background-color: #ff8; */
     /* border: 2px dotted #fff; */
     color: #ff8c00;
-    font-size: 1.5em;
+    font-size: 2em;
+    font-family: times;
 }
 
 #signupmsg {
