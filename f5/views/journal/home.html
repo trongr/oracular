@@ -54,25 +54,6 @@
   </div>
 </div>
 
-<div id="newpostform" class="form-horizontal modal hide">
-    <fieldset>
-      <input id="newpostcsrf" type="hidden" value="{{ csrf_token }}">
-      <div class="control-group">
-          <input id="newposttitle" class="input-xxlarge placeholder" type="text" placeholder="title" onfocus="removepostplaceholder('title')">
-      </div>
-      <div class="control-group">
-          <textarea id="newpostbody" class="input-xxlarge placeholder" rows="9" placeholder="note" onfocus="removepostplaceholder('note')"></textarea>
-      </div>
-      <input id="editpostid" type="hidden">
-        <button id="newpostsubmit" type="submit" class="btn btn-inverse mylabel">
-            post <i class="icon-pencil icon-large"></i>
-        </button>
-        <button id="cancelnewpost" onclick="cancelnewpost()" class="btn btn-inverse mylabel">
-            cancel <i class="icon-large"></i>
-        </button>
-    </fieldset>
-</div>
-
 <!-- tabindex -1 to ESCAPE close modal -->
 <div id="aboutmodal" class="modal hide" tabindex="-1">
     <div id="byline">
@@ -116,7 +97,7 @@ modals -->
 
 <div id="relatedpics"></div>
 <div class="row-fluid">
-    <div class="span5">
+    <div class="span7">
         <div id="relatedBox">
             <a href="#" class="relatedpost">
                 <span class="posttitle tex2jax_ignore"></span>
@@ -126,8 +107,34 @@ modals -->
             </a>
         </div>
     </div>
-    <div class="span7">
-        testing span
+    <div class="span5">
+        <div id="newPostForm" class="form-horizontal">
+            <fieldset>
+                <input id="newPostCSRF" type="hidden" value="{{ csrf_token }}">
+                <input id="newPostTitle" class="postInput" type="text">
+                <textarea id="newPostBody" class="postInput" rows="12"></textarea>
+                <button id="newPostSubmit" type="submit" class="btn btn-inverse mylabel">
+                  new <i class="icon-pencil icon-large"></i>
+                </button>
+            </fieldset>
+        </div>
+        <div id="editPostForm" class="form-horizontal hide">
+            <fieldset>
+                <input id="editPostCSRF" type="hidden" value="{{ csrf_token }}">
+                <input id="editPostTitle" class="postInput" type="text">
+                <textarea id="editPostBody" class="postInput" rows="12"></textarea>
+                <!-- todo. use attr data-id instead -->
+                <div id="editPostButtons">
+                    <button id="editPostSubmit" type="submit" class="btn btn-inverse mylabel">
+                        save <i class="icon-pencil icon-large"></i>
+                    </button>
+                    <button id="editPostCancel" class="btn btn-inverse mylabel">
+                        cancel <i class="icon-large"></i>
+                    </button>
+                </div>
+                <input id="editPostID" type="hidden">
+            </fieldset>
+        </div>
     </div>
 </div>
 <div id="randomposts"></div>

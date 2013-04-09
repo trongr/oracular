@@ -80,10 +80,6 @@ body {
     margin: 5px;
 }
 
-#relatedBox {
-    margin: 10px 10px 10px 20px;
-}
-
 a.randompost, a.relatedpost {
     color: #fff;
     text-decoration: none;
@@ -208,22 +204,22 @@ textarea {
     background: #08c;
 }
 
-#newposttitle {
-    /* font-size: 2em !important; */
-    height: 1.3em !important;
-    margin: 5px 0 0 5px;
+#relatedBox {
+    margin: 10px 10px 10px 20px;
 }
 
-#newpostbody {
-    margin: 0 0 0 5px;
+#newPostForm, #editPostForm {
+    margin: 0px 20px 0px 0px;
 }
 
-#newpostsubmit {
-    margin: 0 0 5px 5px;
+.postInput {
+    width: 100%;
+    margin: 0px 0px 15px 0px !important;
+    float: left;
 }
 
-#cancelnewpost {
-    margin: 0 0 5px 0;
+#newPostSubmit, #editPostButtons {
+    float: right;
 }
 
 .placeholder {

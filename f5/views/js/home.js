@@ -1,5 +1,3 @@
-// todo. new layout: don't use modal, put inputs on the page
-
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
 
@@ -132,38 +130,16 @@ function loadInterestingness(json){
     }
 }
 
-// todo now
 function registerBindings(){
     clickityclickclick(); // setting button onclicks
     $(document).bind("keydown", keyboardshortcuts);
-    newpostformbindenterkeypress();
-
-    // return focus to window after pressing esc on new post form modal
-    $("#newpostform").on("hide", onPostFormHide);
-    $("#newpostform").on("show", onPostFormShow);
-
-    // fixing bug making register box closing when clicking on input
-    $('#signupform').click(function (e) {e.stopPropagation();});
-
-    $("#newposttitle").keydown(onEditKeydown);
-    $("#newpostbody").keydown(onEditKeydown);
-
-    $(".randompost, .relatedpost").on("click", editPost);
-    $(".instagram").on("click", openInstagramSrc);
+    inputEnterKeypress();
+    $("#newPostTitle, #newPostBody, #editPostTitle, #editPostBody")
+        .keydown(onEditKeydown);
 }
 
 function openInstagramSrc(){
     window.open($(this).attr("data-src"));
-}
-
-function onPostFormHide(){
-    $("*:focus").blur();
-    changeMode(MODE_GLOBAL);
-}
-
-function onPostFormShow(){
-    clearRelatedWords();
-    changeMode(MODE_EDIT);
 }
 
 // caching to save time
@@ -347,19 +323,32 @@ function highlightpost(rw){
 // closeallmodals() before opening another one, otw bootstrap too much
 // recursion error
 function clickityclickclick(){
-    $("#newpostbutton").click(function(){shownewpostform(); return false;});
+    $("#newpostbutton").click(function(){newPost(); return false;});
     $("#reloadbutton").click(function(){mkrandomposts(); return false;});
+
+    $(".randompost, .relatedpost").on("click", editPost);
+
+    $("#newPostSubmit").on("click", submitNewPost);
+    $("#editPostSubmit").on("click", submitEditPost);
+    $("#editPostCancel").on("click", cancelEditPost);
+
+    // fixing bug making register box closing when clicking on input
+    $('#signupform').click(function (e) {e.stopPropagation();});
 
     $("#logout").click(function(){logout(); return false;});
     $("#loginbutton").click(function(){loginbutton(); return false;});
     $("#signupbtn").click(function(){signup(); return false;});
 
-    $("#newpostsubmit").attr("onclick", "submitpost()");
-
-    // $("#settingsbutton").click(function(){settingsbutton();});
+    // $("#settingsbutton").click(function(){settingsbutton()});
     $("#aboutbutton").click(function(){aboutbutton();});
 
-    // $("#tagsbutton").click(function(){tagsbutton(); return false;});
+    $(".instagram").on("click", openInstagramSrc);
+}
+
+function cancelEditPost(){
+    $("#editPostForm").hide();
+    clearNewPostForm();
+    $("#newPostForm").show();
 }
 
 // todo. validate inputs and user feedback
@@ -367,7 +356,7 @@ function signup(){
     var username = $("#signupusername").val();
     var password = $("#signuppassword").val();
     var repassword = $("#signuprepassword").val();
-    var token = getcsrf("signupcsrf"); // getCookie('csrftoken');
+    var token = getCSRF("signupcsrf"); // getCookie('csrftoken');
     $.ajax({
         url: HOMEPAGE + "register",
         type: "POST",
@@ -405,7 +394,6 @@ function aboutbutton(){
 
 function closeallmodals(){
     $("#aboutmodal").modal("hide");
-    $("#newpostform").modal("hide");
 }
 
 function logout(){
@@ -436,18 +424,6 @@ function removeplaceholder(id){
     } else {
         $("#password").removeAttr("placeholder");
         $("#username").attr("placeholder", "username");
-    }
-}
-
-// same hack fix for newpostform. someone needs to write a library for
-// this ff bug
-function removepostplaceholder(id){
-    if (id == "title"){
-        $("#newposttitle").removeAttr("placeholder");
-        $("#newpostbody").attr("placeholder", "note");
-    } else if (id == "note") {
-        $("#newposttitle").attr("placeholder", "title");
-        $("#newpostbody").removeAttr("placeholder");
     }
 }
 
@@ -518,30 +494,13 @@ function initRelatedPicDivs(){
 
 function magicallyCalculateBootstrapDimensions(){
     var size = $(window).width() / FLICKR_WIDTH;
-    if (size >= 1){
-        INSTAROW_SIZE = 1;
-        INSTA_SPANWIDTH = 12;
+    var divisors = [1, 2, 3, 4, 6, 12];
+    for (var i = 0; i < divisors.length; i++){
+        if (size >= divisors[i]){
+            INSTAROW_SIZE = divisors[i];
+        }
     }
-    if (size >= 2){
-        INSTAROW_SIZE = 2;
-        INSTA_SPANWIDTH = 6;
-    }
-    if (size >= 3){
-        INSTAROW_SIZE = 3;
-        INSTA_SPANWIDTH = 4;
-    }
-    if (size >= 4){
-        INSTAROW_SIZE = 4;
-        INSTA_SPANWIDTH = 3;
-    }
-    if (size >= 6){
-        INSTAROW_SIZE = 6;
-        INSTA_SPANWIDTH = 2;
-    }
-    if (size >= 12){
-        INSTAROW_SIZE = 12;
-        INSTA_SPANWIDTH = 1;
-    }
+    INSTA_SPANWIDTH = 12 / INSTAROW_SIZE;
 }
 
 function initPostDivs(){
@@ -567,8 +526,7 @@ function initPostDivs(){
 // this is a hack to allow enter submit on form input, because for
 // some reason <form/> won't let you ajax csrftoken, so had to switch
 // to div, but then <input/> doesn't submit on enter keydown
-function newpostformbindenterkeypress(){
-    $("#newposttitle").bind("keydown", inputkeydownsubmit);
+function inputEnterKeypress(){
     $("#username, #password").bind("keydown", inputkeydownlogin);
     $("#signupusername, #signuppassword, #signuprepassword").bind("keydown", inputkeydownsignup);
 }
@@ -579,16 +537,6 @@ function inputkeydownsignup(e){
     case KEYENTER:
         if (!e.ctrlKey){
             $("#signupbtn").click();
-        }
-        break;
-    }
-}
-
-function inputkeydownsubmit(e){
-    switch (e.which || e.keyCode){
-    case KEYENTER:
-        if (!e.ctrlKey){
-            $("#newpostsubmit").click();
         }
         break;
     }
@@ -612,11 +560,8 @@ function keyboardshortcuts(e){
             mkrandomposts();
             break;
         case KEYENTER:
-            shownewpostform();  // todo now
+            newPost();
             break;
-        // case KEYE:
-        //     $("#settingsbutton").click();
-        //     break;
         }
     }
 }
@@ -662,56 +607,49 @@ function parsedatetime(t){
 }
 
 function editPost(){
-    populateeditpost($(this));
-    showpostform();
+    populateEditPost($(this));
+    $("#newPostForm").hide();
+    $("#editPostForm").show();
+    $("#editPostTitle").focus();
 }
 
-// using new post form to edit old posts
-function populateeditpost(post){
-    // input's and textarea's must use .val() instead of .html()
-    $("#editpostid").val(post.attr("id"));
-    $("#newposttitle").val(post.find(".posttitle").unhighlight().html());
+function populateEditPost(post){
+    $("#editPostID").val(post.attr("id"));
+    $("#editPostTitle").val(post.find(".posttitle").unhighlight().html());
     // postbody is just for show, e.g. highlight and mathjax.
     // hiddenbody is where we store the actual content
     //
     // NOTE. apparently jquery.highlight.js also highlights hidden divs
-    $("#newpostbody").val(post.find(".hiddenbody").unhighlight().html());
-
-    // replacing onclick behaviour. this is bad design: todo: give
-    // each function its own view
-    $("#newpostsubmit").attr("onclick", "submiteditpost()");
+    $("#editPostBody").val(post.find(".hiddenbody").unhighlight().html());
 }
 
-function submiteditpost(){
-    var id = $("#editpostid").val();
-    var title = $("#newposttitle").val();
-    var body = $("#newpostbody").val();
-    var subject = "";                   // todo. remove subject from
-                                        // views and models.py, same
-                                        // for submitpost
-    var token = getcsrf("newpostcsrf"); // getCookie('csrftoken');
+function submitEditPost(){
     $.ajax({
         url: HOMEPAGE + "editpost",
         type: "POST",
         data: {
-            id: id,
-            title: title,
-            body: body,
-            subject: subject,
-            csrfmiddlewaretoken: token,
+            id: $("#editPostID").val(),
+            title: $("#editPostTitle").val(),
+            body: $("#editPostBody").val(),
+            subject: "",
+            csrfmiddlewaretoken: getCSRF("editPostCSRF"),
         },
         success: function(json){
-            showsubmittedpost(json);
+            showSubmittedPost(json);
             showFeedback(json.title + " SAVED");
         },
-        complete: function(){
-        }
+        // complete: function(){
+        // }
     });
-    // mkrandomposts();
-    cancelnewpost();
+    cancelEditPost();
 }
 
-function showsubmittedpost(post){
+function clearEditPostForm(){
+    $("#editPostTitle").val("");
+    $("#editPostBody").val("");
+}
+
+function showSubmittedPost(post){
     clearPreviousSubmittedPostStyle();
 
     var rp = recentpanels.eq(recentpostpos);
@@ -731,65 +669,48 @@ function clearPreviousSubmittedPostStyle(){
         .find(".postbody").removeClass("recentbody");
 }
 
-function showpostform(){
-    closeallmodals();
-    $("#newpostform").modal();
-    $("#newposttitle").focus();
-}
-
 function changeMode(newMode){
     moode = newMode;
 }
 
-function shownewpostform(){
-    prepnewpostform();
-    showpostform();
+function newPost(){
+    clearNewPostForm();
+    $("#editPostForm").hide();
+    $("#newPostForm").show();
+    $("#newPostTitle").focus();
 }
 
-function prepnewpostform(){
-    // input's and textarea's must use .val() instead of .html()
-    $("#newposttitle").val("");
-    $("#newpostbody").val("");
-    // replacing onclick behaviour. this is bad design: todo: give
-    // each function its own view
-    $("#newpostsubmit").attr("onclick", "submitpost()");
-}
-
-function submitpost(){
-    var title = $("#newposttitle").val();
-    var body = $("#newpostbody").val();
-    var subject = "";
-    var token = getcsrf("newpostcsrf"); // getCookie('csrftoken');
+function submitNewPost(){
     $.ajax({
         url: HOMEPAGE + "createpost",
         type: "POST",
         data: {
-            title: title,
-            body: body,
-            subject: subject,
-            csrfmiddlewaretoken: token,
+            title: $("#newPostTitle").val(),
+            body: $("#newPostBody").val(),
+            subject: "",
+            csrfmiddlewaretoken: getCSRF("newPostCSRF"),
         },
         success: function(json){
-            showsubmittedpost(json);
-            showFeedback(json.title + " saved");
+            showSubmittedPost(json);
+            showFeedback(json.title + " CREATED"); // todo. put a span in here and in SAVED
         },
-        complete: function(){
-        }
+        // complete: function(){
+        // }
     });
-    // mkrandomposts();
-    cancelnewpost();
+    clearNewPostForm();
+    $("*:focus").blur();        // onfocusing submit button, cause it glows
+}
+
+function clearNewPostForm(){
+    $("#newPostTitle").val("");
+    $("#newPostBody").val("");
 }
 
 function showFeedback(msg){
     $("#feedback").html(msg);
 }
 
-function cancelnewpost(){
-    $("*:focus").blur();
-    $("#newpostform").modal("hide");
-}
-
-function getcsrf(id){
+function getCSRF(id){
     return $("#" + id).val();
 }
 
@@ -816,7 +737,7 @@ function rejax(){
 function insertMathBrackets(e){
     var key = e.which || e.keyCode;
     if (e.ctrlKey && key === KEY_M){
-        $("#newpostbody").insertAtCaret("\\(\\)");
+        $(this).insertAtCaret("\\(\\)");
     }
 };
 
