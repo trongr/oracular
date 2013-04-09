@@ -1,11 +1,17 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+<title>oracular</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}awesome/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ STATIC_URL }}css/home.css">
-<title>oracular</title>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["\\(","\\)"]]},
+        "HTML-CSS": {linebreaks: {automatic: true, width: "container"}}
+    });
+</script>
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top">
@@ -17,15 +23,15 @@
                 <ul class="dropdown-menu mydropdownmenu">
                     <div class="span4">
                         <li>
-                            <a id="newpostbutton" class="mydropdownbutton" href="#">n<i class="icon-file"></i>w
+                            <a id="newpostbutton" class="mydropdownbutton" href="#">N<i class="icon-file"></i>W
                             <span class="shortcuttip">CTRL + ENTER</span></a>
                         </li>
                         <li>
-                            <a id="reloadbutton" class="mydropdownbutton" href="#">rel<i class="icon-refresh"></i>ad
+                            <a id="reloadbutton" class="mydropdownbutton" href="#">REL<i class="icon-refresh"></i>AD
                             <span class="shortcuttip">CTRL + SPACE</span></a>
                         </li>
                         <li class="divider"></li>
-                        <li><a id="aboutbutton" class="mydropdownbutton" href="#"><i class="icon-user"></i>bout</a></li>
+                        <li><a id="aboutbutton" class="mydropdownbutton" href="#"><i class="icon-user"></i>BOUT</a></li>
                     </div>
                 </ul>
             </li>
@@ -113,8 +119,8 @@ modals -->
                 <input id="newPostCSRF" type="hidden" value="{{ csrf_token }}">
                 <input id="newPostTitle" class="postInput" type="text">
                 <textarea id="newPostBody" class="postInput" rows="12"></textarea>
-                <button id="newPostSubmit" type="submit" class="btn btn-inverse mylabel">
-                  new <i class="icon-pencil icon-large"></i>
+                <button id="newPostSubmit" class="postInput" type="submit">
+                  CRE<i class="icon-plus"></i>TE
                 </button>
             </fieldset>
         </div>
@@ -123,15 +129,13 @@ modals -->
                 <input id="editPostCSRF" type="hidden" value="{{ csrf_token }}">
                 <input id="editPostTitle" class="postInput" type="text">
                 <textarea id="editPostBody" class="postInput" rows="12"></textarea>
+                <button id="editPostSubmit" class="postInput" type="submit">
+                    S<i class="icon-plus"></i>VE
+                </button>
+                <button id="editPostCancel" class="postInput">
+                    C<i class="icon-remove"></i>NCEL
+                </button>
                 <!-- todo. use attr data-id instead -->
-                <div id="editPostButtons">
-                    <button id="editPostSubmit" type="submit" class="btn btn-inverse mylabel">
-                        save <i class="icon-pencil icon-large"></i>
-                    </button>
-                    <button id="editPostCancel" class="btn btn-inverse mylabel">
-                        cancel <i class="icon-large"></i>
-                    </button>
-                </div>
                 <input id="editPostID" type="hidden">
             </fieldset>
         </div>

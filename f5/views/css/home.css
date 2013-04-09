@@ -1,8 +1,8 @@
 /* use !important to override bootstrap settings */
 
 body {
-    font-family: helvetica;
-    background-color: #000;
+    font-family: helvetica, arial;
+    background-color: #111;
     color: #fff;
     padding-top: 40px;
     padding-left: 10px;
@@ -16,7 +16,8 @@ body {
 
 .btn:focus, .btn:hover {
     /* background-color: #08c; */
-    background-color: rgba(0, 0, 0, 0.8);
+    /* background-color: rgba(0, 0, 0, 0.8); */
+    background-color: #000;
     text-shadow: -1px -1px 2px #ff8c00, 1px 1px 2px #ff8c00; /* makes text glow. ff8c00 is orange */
 }
 
@@ -53,7 +54,6 @@ body {
     display: inline-block;
     width: 100%;
     color: #fff !important;
-    font-family: helvetica;
     font-weight: bold !important;
     font-size: 1.3em;
 }
@@ -115,7 +115,6 @@ a.mydropdownbutton {
 .postsubject {
     font-size: 1.7em;
     font-weight: bold;
-    font-family: helvetica;
     color: #888;
     margin-right: 10px;
 }
@@ -212,13 +211,55 @@ textarea {
     margin: 0px 20px 0px 0px;
 }
 
-.postInput {
+input.postInput, textarea.postInput {
     width: 100%;
     margin: 0px 0px 15px 0px !important;
     float: left;
+    border: none !important;
+    box-shadow: none !important;
+    background: #222 !important;
+    border-radius: 2px !important;
+    /* color: #fff !important; */
 }
 
-#newPostSubmit, #editPostButtons {
+textarea.postInput:focus,
+input.postInput:focus {
+    background: #000 !important;
+}
+
+button.postInput {
+    padding: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 2px;
+    background: #222;
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+#newPostSubmit, #editPostSubmit {
+    font-size: 2em;
+    padding: 20px 30px 20px 30px;
+}
+
+#newPostSubmit:focus,
+#editPostSubmit:focus,
+#newPostSubmit:hover,
+#editPostSubmit:hover {
+    text-shadow: -1px -1px 2px #ff8c00, 1px 1px 2px #ff8c00; /* makes text glow */
+    background: #000;
+}
+
+#editPostCancel:focus,
+#editPostCancel:hover {
+    text-shadow: -1px -1px 2px #00BFFF, 1px 1px 2px #00BFFF; /* makes text glow */
+    background: #000;
+}
+
+/* #newPostSubmit, #editPostButtons { */
+#newPostSubmit, #editPostSubmit, #editPostCancel {
     float: right;
 }
 
@@ -244,7 +285,9 @@ textarea {
 
 .shortcuttip {
     float: right;
-    margin-right: 5px;
+    margin-right: 20px;
+    font-family: monospace;
+    font-size: 0.7em;
 }
 
 .tooltip {
@@ -263,7 +306,6 @@ textarea {
 }
 
 #byline {
-    font-family: helvetica;
     font-size: 2em;
     font-weight: bolder;
     line-height: 1em;
@@ -302,12 +344,8 @@ textarea {
 #signupmsg {
     margin-top: 10px;
     font-size: 1.5em;
-    font-family: helvetica;
     font-weight: bold;
     line-height: 1em;
     color: #ff8c00;
 }
 
-#tools {
-    display: none;
-}

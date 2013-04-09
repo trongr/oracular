@@ -1,3 +1,6 @@
+// todo. put related word below flickr picture. then put thesaurus
+// entries
+
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
 
@@ -184,7 +187,7 @@ function onEditKeydown(e) {
     default:                // reading anything but punctuations
         readChar(key);
     }
-    insertMathBrackets(e);
+    insertMathBrackets(e, $(this));
 }
 
 function clearRelatedWords(){
@@ -226,7 +229,7 @@ function getFlickrPics(relatedWord){
 // flickr's api is not intuitive at all
 function jsonFlickrApi(json){
     if (!json.photos || !json.photos.photo[0]){
-        throw "home.js:getFlickrPics:" + JSON.stringify(json, 0, 2)
+        // throw "home.js:getFlickrPics:" + JSON.stringify(json, 0, 2)
     } else {
         var item = json.photos.photo[0];
         var basePic = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret;
@@ -734,10 +737,10 @@ function rejax(){
     MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 }
 
-function insertMathBrackets(e){
+function insertMathBrackets(e, editor){
     var key = e.which || e.keyCode;
     if (e.ctrlKey && key === KEY_M){
-        $(this).insertAtCaret("\\(\\)");
+        editor.insertAtCaret("\\(\\)");
     }
 };
 
