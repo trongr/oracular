@@ -1,12 +1,9 @@
-// todo. separate edit post from new post form. right now they share
-// the same modal
+// todo. new layout: don't use modal, put inputs on the page
+
+// todo. load random pictures from flickr on page ready
 
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
-
-// todo. use moode as a kind of namespace for shortcuts
-// todo. use moode as a kind of namespace for shortcuts
-// todo. use moode as a kind of namespace for shortcuts
 
 // don't need this yet
 var MODE_GLOBAL = "MODE_GLOBAL";
@@ -28,15 +25,18 @@ var KEYSLASH = 191;             // shift + slash = ?
 var KEYBACKSPACE = 8;
 var KEY_M = 77;
 
+var BOOTSTRAP_GRID = 12;
+
 var NUMCELLS = 9;
 var POSTCOUNT = 9;
 var POSTSPERCOL = 3;
-var SPANWIDTH = 12 / POSTSPERCOL;
+var SPANWIDTH = BOOTSTRAP_GRID / POSTSPERCOL;
 
 var instagrams;
 var instapos = 0;
 var INSTAROW_SIZE = 4;         // number of pics in instagram row
-var INSTA_SPANWIDTH = 12 / INSTAROW_SIZE;
+var INSTA_SPANWIDTH = BOOTSTRAP_GRID / INSTAROW_SIZE;
+var FLICKR_WIDTH = 150;
 
 var recentpanels;              // divs for newly submitted posts
 var recentpostpos = 0;         // where to insert the next recent post
@@ -53,7 +53,7 @@ var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "but":true, "many":true, "my":true,
                     "is":true, "not":true, "then":true,
                     "than":true, "you":true, "you're": true,
-                    "what":true,
+                    "you've":true, "what":true,
                     "them":true, "first":true, "it":true,
                     "were":true, "so":true, "been":true,
                     "he":true, "we":true, "some":true,
@@ -63,16 +63,18 @@ var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "on":true, "can":true, "make":true,
                     "its":true, "are":true, "said":true,
                     "like":true, "now":true, "as":true,
-                    "there":true, "him":true, "find":true,
+                    "there":true, "there're":true,
+                    "him":true, "find":true,
                     "with":true, "use":true, "into":true,
                     "long":true, "his":true, "an":true,
                     "time":true, "down":true, "they":true,
                     "each":true, "has":true, "day":true,
                     "i":true, "i'm":true, "which":true,
-                    "look":true,
+                    "look":true, "very":true,
                     "did":true, "at":true, "she":true,
                     "two":true, "get":true, "be":true,
-                    "do":true, "more":true, "come":true,
+                    "do":true, "does":true,
+                    "more":true, "come":true,
                     "this":true, "how":true, "write":true,
                     "made":true, "have":true, "their":true,
                     "go":true, "may":true, "from":true,
@@ -179,6 +181,7 @@ function getrelatedposts(){
     prepRelatedWords();
     if (!isCommonWord(relatedwords)){
         getOwnPosts(relatedwordsarray());
+        // getImgurPics(relatedwordsarray()[0]); // todo today
         getFlickrPics(relatedwordsarray()[0]);
         // getInstagramPics(relatedwordsarray()[0]);
     }
@@ -236,6 +239,30 @@ function getInstagramPics(relatedWord){
                     .attr("data-src", json.data[0].link);
                 instapos = (instapos + 1) % INSTAROW_SIZE;
             }
+        },
+    });
+}
+
+// todo today. wait for google group reply
+function getImgurPics(relatedWord){
+    $.ajax({
+        url: "https://api.imgur.com/3/gallery/search.json",
+        type: "GET",
+        data: {
+            client_id: "eb3d9689067c943",
+            q: relatedWord,
+        },
+        dataType: "json",
+        success: function(json){
+            console.log(JSON.stringify(json, 0, 2));
+            // if (!json.data || !json.data[0]){
+            //     throw "home.js:getInstagramPics:" + JSON.stringify(json, 0, 2);
+            // } else {
+            //     instagrams.eq(instapos)
+            //         .attr("src", json.data[0].images.thumbnail.url)
+            //         .attr("data-src", json.data[0].link);
+            //     instapos = (instapos + 1) % INSTAROW_SIZE;
+            // }
         },
     });
 }
@@ -430,7 +457,8 @@ function loginbutton(){
 }
 
 function initRelatedPicDivs(){
-    var rp = $("#relatedpics");
+    INSTAROW_SIZE = parseInt($(window).width() / FLICKR_WIDTH);
+    INSTA_SPANWIDTH = BOOTSTRAP_GRID / INSTAROW_SIZE;
     var stuff = "<div class='row-fluid myrandomrow'>";
     for (var i = 0; i < INSTAROW_SIZE; i++){
         stuff += "<div class='span" + INSTA_SPANWIDTH + "'>" +
@@ -438,7 +466,7 @@ function initRelatedPicDivs(){
             "</div>"
     }
     stuff += "</div>";
-    rp.html(stuff);
+    $("#relatedpics").html(stuff);
 }
 
 function initPostDivs(){
@@ -600,7 +628,7 @@ function submiteditpost(){
         },
         success: function(json){
             showsubmittedpost(json);
-            showFeedback(json.title + " <span id='saved'>saved</span>");
+            showFeedback(json.title + " SAVED");
         },
         complete: function(){
         }

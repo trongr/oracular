@@ -27,14 +27,14 @@ body {
 }
 
 #feedback {
-    font-size: 1.2em;
+    font-size: 1.5em;
     font-weight: bold;
     background: rgba(0, 0, 0, 0.2);
     color: #00BFFF; /* nice blue. 08c is default bootstrap link color */
 }
 
 #saved {
-    font-size: 1em;
+    font-size: 0.5em;
     font-weight: bold;
     background: rgba(0, 0, 0, 0.2);
     color: #999;
