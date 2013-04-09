@@ -85,13 +85,56 @@ var newposttitle, newpostbody;
 
 $(document).ready(function(){
     loginout();
+
     initRelatedPicDivs();
+    loadInterestingFlickrPics();
+
     initPostDivs();
     mkrandomposts();
+
     cachedivs();
+
     registerBindings();
+
     $("a").tooltip({'placement': 'bottom'});
 });
+
+function loadInterestingFlickrPics(){
+    $.ajax({
+        url: "https://secure.flickr.com/services/rest?jsoncallback=?",
+        type: "GET",
+        data: {
+            method: "flickr.interestingness.getList",
+            api_key: "4a3005acb063ad3234d2f7da3ab1f801", // flickr key
+            format: "json",
+            per_page: INSTAROW_SIZE,
+        },
+        dataType: "jsonp",
+        success: function(json){
+            loadInterestingness(json);
+        }
+    });
+}
+
+// todo now
+function loadInterestingness(json){
+    if (!json.photos || !json.photos.photo){
+        throw "home.js:loadInterestingness:" + JSON.stringify(json, 0, 2)
+    } else {
+        for (var i = 0; i < INSTAROW_SIZE; i++){
+            var item = json.photos.photo[i];
+            var basePic = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret;
+            var thumbPic = basePic + '_q.jpg';
+            // var medPic = basePic + ".jpg";
+            var largePic = basePic + "_b.jpg";
+            instagrams.eq(instapos)
+                .attr("src", thumbPic)
+            // .attr("data-src", medPic);
+                .attr("data-src", largePic);
+            instapos = (instapos + 1) % INSTAROW_SIZE;
+        }
+    }
+}
 
 function registerBindings(){
     clickityclickclick(); // setting button onclicks
@@ -213,11 +256,10 @@ function jsonFlickrApi(json){
         var thumbPic = basePic + '_q.jpg';
         // var medPic = basePic + ".jpg";
         var largePic = basePic + "_b.jpg";
-        instagrams.eq(instapos)
+        instagrams.eq(i)
             .attr("src", thumbPic)
             // .attr("data-src", medPic);
             .attr("data-src", largePic);
-        instapos = (instapos + 1) % INSTAROW_SIZE;
     }
 }
 
