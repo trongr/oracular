@@ -1,7 +1,5 @@
 // todo. new layout: don't use modal, put inputs on the page
 
-// todo. load random pictures from flickr on page ready
-
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
 
@@ -116,7 +114,6 @@ function loadInterestingFlickrPics(){
     });
 }
 
-// todo now
 function loadInterestingness(json){
     if (!json.photos || !json.photos.photo){
         throw "home.js:loadInterestingness:" + JSON.stringify(json, 0, 2)
@@ -127,11 +124,10 @@ function loadInterestingness(json){
             var thumbPic = basePic + '_q.jpg';
             // var medPic = basePic + ".jpg";
             var largePic = basePic + "_b.jpg";
-            instagrams.eq(instapos)
+            instagrams.eq(i)
                 .attr("src", thumbPic)
             // .attr("data-src", medPic);
                 .attr("data-src", largePic);
-            instapos = (instapos + 1) % INSTAROW_SIZE;
         }
     }
 }
@@ -233,7 +229,7 @@ function getrelatedposts(){
 
 function getFlickrPics(relatedWord){
     $.ajax({
-        url: "https://secure.flickr.com/services/rest",
+        url: "https://secure.flickr.com/services/rest?jsoncallback=?",
         type: "GET",
         data: {
             method: "flickr.photos.search",
@@ -243,6 +239,9 @@ function getFlickrPics(relatedWord){
             per_page: 1,
         },
         dataType: "jsonp",
+        success: function(json){
+            jsonFlickrApi(json);
+        }
     });
 }
 
@@ -256,10 +255,11 @@ function jsonFlickrApi(json){
         var thumbPic = basePic + '_q.jpg';
         // var medPic = basePic + ".jpg";
         var largePic = basePic + "_b.jpg";
-        instagrams.eq(i)
+        instagrams.eq(instapos)
             .attr("src", thumbPic)
             // .attr("data-src", medPic);
             .attr("data-src", largePic);
+        instapos = (instapos + 1) % INSTAROW_SIZE;
     }
 }
 
@@ -473,9 +473,13 @@ function showhideloginbar(isloggedin){
         $("*:focus").blur();
         $("#loginbar").hide();
         $("#logout").show();
-        $("#tools").show();
+        $("#feedback").show();
+        $("#newpostbutton").show();
+        $("#reloadbutton").show();
     } else {
-        $("#tools").hide();
+        $("#feedback").hide();
+        $("#newpostbutton").hide();
+        $("#reloadbutton").hide();
         $("#logout").hide();
         $("#loginbar").show();
     }
