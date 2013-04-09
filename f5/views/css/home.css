@@ -80,7 +80,11 @@ body {
     margin: 5px;
 }
 
-a.randompost {
+#relatedBox {
+    margin: 10px 10px 10px 20px;
+}
+
+a.randompost, a.relatedpost {
     color: #fff;
     text-decoration: none;
 }
@@ -91,12 +95,15 @@ a.mydropdownbutton {
 
 /* for random posts */
 
+.randompost .posttitle {
+    margin-left: -5px; /* spans have a default margin */
+}
+
 .posttitle {
     font-size: 2em;
     line-height: 1em;
     font-weight: bold;
     color: #00BFFF; /* nice blue. 08c is default bootstrap link color */
-    margin-left: -5px; /* spans have a default margin */
     margin-right: 10px;
     word-wrap: break-word;
 }

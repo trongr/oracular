@@ -39,7 +39,9 @@ var FLICKR_WIDTH = 150;
 var recentpanels;              // divs for newly submitted posts
 var recentpostpos = 0;         // where to insert the next recent post
 
-var displaypanels;              // divs for relatedposts
+var relatedPost;                // div for related post
+
+var displaypanels;              // divs for random posts
 var relatedwords = "";
 var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "number":true, "of":true, "one":true,
@@ -78,8 +80,6 @@ var COMMON_WORDS = {"the":true, "or":true, "will":true,
                     "go":true, "may":true, "from":true,
                     "if":true, "see":true, "part":true,
                     "that":true, "that's":true, "thing":true};
-
-var newposttitle, newpostbody;
 
 $(document).ready(function(){
     loginout();
@@ -132,6 +132,7 @@ function loadInterestingness(json){
     }
 }
 
+// todo now
 function registerBindings(){
     clickityclickclick(); // setting button onclicks
     $(document).bind("keydown", keyboardshortcuts);
@@ -147,7 +148,7 @@ function registerBindings(){
     $("#newposttitle").keydown(onEditKeydown);
     $("#newpostbody").keydown(onEditKeydown);
 
-    $(".randompost").on("click", editPost);
+    $(".randompost, .relatedpost").on("click", editPost);
     $(".instagram").on("click", openInstagramSrc);
 }
 
@@ -167,6 +168,7 @@ function onPostFormShow(){
 
 // caching to save time
 function cachedivs(){
+    relatedPost = $(".relatedpost");
     displaypanels = $(".randompost");
     recentpanels = $(".recentpost");
     instagrams = $(".instagram");
@@ -338,7 +340,7 @@ function prepRelatedWords(){
 
 function highlightpost(rw){
     for (var i = 0; i < rw.length; i++){
-        displaypanels.eq(0).highlight(rw[i]);
+        relatedPost.highlight(rw[i]);
     }
 }
 
@@ -494,7 +496,7 @@ function loginbutton(){
             password: $("#password").val()
         },
         success: function(json){
-            // todo. get return status and hide login bar
+            // todo. check return status
             showhideloginbar(json.isloggedin);
             clearrandomposts();
             mkrandomposts();
@@ -503,8 +505,7 @@ function loginbutton(){
 }
 
 function initRelatedPicDivs(){
-    INSTAROW_SIZE = parseInt($(window).width() / FLICKR_WIDTH);
-    INSTA_SPANWIDTH = BOOTSTRAP_GRID / INSTAROW_SIZE;
+    magicallyCalculateBootstrapDimensions();
     var stuff = "<div class='row-fluid myrandomrow'>";
     for (var i = 0; i < INSTAROW_SIZE; i++){
         stuff += "<div class='span" + INSTA_SPANWIDTH + "'>" +
@@ -515,6 +516,34 @@ function initRelatedPicDivs(){
     $("#relatedpics").html(stuff);
 }
 
+function magicallyCalculateBootstrapDimensions(){
+    var size = $(window).width() / FLICKR_WIDTH;
+    if (size >= 1){
+        INSTAROW_SIZE = 1;
+        INSTA_SPANWIDTH = 12;
+    }
+    if (size >= 2){
+        INSTAROW_SIZE = 2;
+        INSTA_SPANWIDTH = 6;
+    }
+    if (size >= 3){
+        INSTAROW_SIZE = 3;
+        INSTA_SPANWIDTH = 4;
+    }
+    if (size >= 4){
+        INSTAROW_SIZE = 4;
+        INSTA_SPANWIDTH = 3;
+    }
+    if (size >= 6){
+        INSTAROW_SIZE = 6;
+        INSTA_SPANWIDTH = 2;
+    }
+    if (size >= 12){
+        INSTAROW_SIZE = 12;
+        INSTA_SPANWIDTH = 1;
+    }
+}
+
 function initPostDivs(){
     var rp = $("#randomposts");
     var stuff = "";
@@ -522,10 +551,10 @@ function initPostDivs(){
         stuff += "<div class='row-fluid myrandomrow'>";
         for (var j = 0; j < POSTSPERCOL; j++){
             stuff += "<div class='span" + SPANWIDTH + "'>" +
-                "<a href='#' class='randompost" + (j===0 && i===0 ? "" : " recentpost") + "'>" +
+                "<a href='#' class='randompost recentpost'>" +
                 "<span class='posttitle tex2jax_ignore'></span> " + // putting spaces after spans let them fill over to new lines
                 "<span class='postbody'></span> " +
-                "<span class='hiddenbody hide tex2jax_ignore'></span>" +
+                "<span class='hiddenbody hide tex2jax_ignore'></span> " +
                 "<span class='postdate'></span>" +
                 "</a>" +
                 "</div>"
@@ -583,7 +612,7 @@ function keyboardshortcuts(e){
             mkrandomposts();
             break;
         case KEYENTER:
-            shownewpostform();
+            shownewpostform();  // todo now
             break;
         // case KEYE:
         //     $("#settingsbutton").click();
@@ -615,12 +644,11 @@ function loadposts(json){
 
 function loadrelatedposts(json){
     $.each(json.posts, function(i, post){
-        var rp = displaypanels.eq(0);
-        rp.attr("id", post.id);
-        rp.find(".posttitle").html(post.title);
-        rp.find(".postbody").html(post.body);
-        rp.find(".hiddenbody").html(post.body);
-        rp.find(".postdate").html(parsedatetime(post.updated));
+        relatedPost.attr("id", post.id);
+        relatedPost.find(".posttitle").html(post.title);
+        relatedPost.find(".postbody").html(post.body);
+        relatedPost.find(".hiddenbody").html(post.body);
+        relatedPost.find(".postdate").html(parsedatetime(post.updated));
     });
     rejax();
 }
