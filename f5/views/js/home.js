@@ -85,7 +85,7 @@ var COMMON_WORDS = {
     "things":true
 };
 
-var feedbackSignal, feedbackMsg;
+var feedback, feedbackSignal, feedbackMsg;
 
 $(document).ready(function(){
     loginout();
@@ -156,6 +156,7 @@ function cachedivs(){
     displaypanels = $(".randompost");
     recentpanels = $(".recentpost");
     instagrams = $(".instagram");
+    feedback = $("#feedback");
     feedbackSignal = $("#feedbackSignal");
     feedbackMsg = $("#feedbackMsg");
 }
@@ -184,6 +185,7 @@ function onEditKeydown(e) {
     switch (key){
     case KEYTAB:
     case KEYSPACE:          // querying database on word
+    case KEYENTER:
         getrelatedposts();
         break;
     case KEYBACKSPACE:
@@ -523,7 +525,8 @@ function initPostDivs(){
         for (var j = 0; j < POSTSPERCOL; j++){
             stuff += "<div class='span" + SPANWIDTH + "'>" +
                 "<a href='#' class='randompost recentpost'>" +
-                "<span class='posttitle tex2jax_ignore'></span> " + // putting spaces after spans let them fill over to new lines
+                "<span class='posttitle'></span> " + // putting spaces after spans let them fill over to new lines
+                "<span class='hiddentitle hide tex2jax_ignore'></span> " + // putting spaces after spans let them fill over to new lines
                 "<span class='postbody'></span> " +
                 "<span class='hiddenbody hide tex2jax_ignore'></span> " +
                 "<span class='postdate'></span>" +
@@ -592,6 +595,7 @@ function loadposts(json){
         var rp = displaypanels.eq(i);
         rp.attr("id", post.id);
         rp.find(".posttitle").html(post.title);
+        rp.find(".hiddentitle").html(post.title);
         rp.find(".postbody").html(post.body);
         rp.find(".hiddenbody").html(post.body);
         rp.find(".postdate").html(parsedatetime(post.updated));
@@ -603,6 +607,7 @@ function loadrelatedposts(json){
     $.each(json.posts, function(i, post){
         relatedPost.attr("id", post.id);
         relatedPost.find(".posttitle").html(post.title);
+        relatedPost.find(".hiddentitle").html(post.title);
         relatedPost.find(".postbody").html(post.body);
         relatedPost.find(".hiddenbody").html(post.body);
         relatedPost.find(".postdate").html(parsedatetime(post.updated));
@@ -627,11 +632,7 @@ function editPost(){
 
 function populateEditPost(post){
     $("#editPostID").val(post.attr("id"));
-    $("#editPostTitle").val(post.find(".posttitle").unhighlight().html());
-    // postbody is just for show, e.g. highlight and mathjax.
-    // hiddenbody is where we store the actual content
-    //
-    // NOTE. apparently jquery.highlight.js also highlights hidden divs
+    $("#editPostTitle").val(post.find(".hiddentitle").unhighlight().html());
     $("#editPostBody").val(post.find(".hiddenbody").unhighlight().html());
 }
 
@@ -647,8 +648,8 @@ function submitEditPost(){
             csrfmiddlewaretoken: getCSRF("editPostCSRF"),
         },
         success: function(json){
+            showFeedback("SAVED", json.title, json.id);
             showSubmittedPost(json);
-            showFeedback("SAVED", json.title);
         },
         // complete: function(){
         // }
@@ -669,6 +670,7 @@ function showSubmittedPost(post){
 
     rp.attr("id", post.id);
     rp.find(".posttitle").html(post.title);
+    rp.find(".hiddentitle").html(post.title);
     rp.find(".postbody").html(post.body).addClass("recentbody");
     rp.find(".hiddenbody").html(post.body);
     rp.find(".postdate").html(parsedatetime());
@@ -703,8 +705,8 @@ function submitNewPost(){
             csrfmiddlewaretoken: getCSRF("newPostCSRF"),
         },
         success: function(json){
+            showFeedback("CREATED", json.title, json.id); // todo. put a span in here and in SAVED
             showSubmittedPost(json);
-            showFeedback("CREATED", json.title); // todo. put a span in here and in SAVED
         },
         // complete: function(){
         // }
@@ -718,7 +720,8 @@ function clearNewPostForm(){
     $("#newPostBody").val("");
 }
 
-function showFeedback(signal, msg){
+function showFeedback(signal, msg, hrefID){
+    feedback.attr("href", "#" + (hrefID ? hrefID : ""));
     feedbackSignal.html(signal);
     feedbackMsg.html(msg);
 }
