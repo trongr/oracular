@@ -181,14 +181,14 @@ function readChar(key){
                (97 <= letter && letter <= 122)) {
         relatedwords += String.fromCharCode(key);
     }
-    showFeedback("READING", relatedwords);
+    showFeedback("TYPING", relatedwords);
 }
 
 // pressing backspace removes previous character instead of adding
 // space char
 function rollbackspace(){
     relatedwords = relatedwords.slice(0, -1);
-    showFeedback("READING", relatedwords);
+    showFeedback("TYPING", relatedwords);
 }
 
 function onEditKeydown(e) {
@@ -476,11 +476,9 @@ function showhideloginbar(isloggedin){
         $("*:focus").blur();
         $("#loginbar").hide();
         $("#logout").show();
-        $("#feedback").show();
         $("#newpostbutton").show();
         $("#reloadbutton").show();
     } else {
-        $("#feedback").hide();
         $("#newpostbutton").hide();
         $("#reloadbutton").hide();
         $("#logout").hide();
