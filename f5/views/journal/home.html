@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}awesome/css/font-awesome.min.css">
+<!-- <link href='http://fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'> -->
+<link href='http://fonts.googleapis.com/css?family=IM+Fell+English:400,400italic' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{{ STATIC_URL }}css/home.css">
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -35,7 +37,12 @@
                     </div>
                 </ul>
             </li>
-            <li><a id="feedback"></a></li>
+            <li>
+                <a id="feedback">
+                    <span id="feedbackSignal"></span>
+                    <span id="feedbackMsg"></span>
+                </a>
+            </li>
             <!-- fyi. how to make a tooltip -->
             <!-- <li><a id="newpostbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + enter">N<i class="icon-file"></i>W</a></li> -->
         </ul>

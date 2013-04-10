@@ -44,43 +44,48 @@ var relatedPost;                // div for related post
 
 var displaypanels;              // divs for random posts
 var relatedwords = "";
-var COMMON_WORDS = {"the":true, "or":true, "will":true,
-                    "number":true, "of":true, "one":true,
-                    "up":true, "no":true, "and":true,
-                    "had":true, "other":true, "way":true,
-                    "a":true, "by":true, "about":true,
-                    "could":true, "to":true, "word":true,
-                    "out":true, "people":true, "in":true,
-                    "but":true, "many":true, "my":true,
-                    "is":true, "not":true, "then":true,
-                    "than":true, "you":true, "you're": true,
-                    "you've":true, "what":true,
-                    "them":true, "first":true, "it":true,
-                    "were":true, "so":true, "been":true,
-                    "he":true, "we":true, "some":true,
-                    "call":true, "was":true, "when":true,
-                    "her":true, "who":true, "for":true,
-                    "your":true, "would":true, "oil":true,
-                    "on":true, "can":true, "make":true,
-                    "its":true, "are":true, "said":true,
-                    "like":true, "now":true, "as":true,
-                    "there":true, "there're":true,
-                    "him":true, "find":true,
-                    "with":true, "use":true, "into":true,
-                    "long":true, "his":true, "an":true,
-                    "time":true, "down":true, "they":true,
-                    "each":true, "has":true, "day":true,
-                    "i":true, "i'm":true, "which":true,
-                    "look":true, "very":true,
-                    "did":true, "at":true, "she":true,
-                    "two":true, "get":true, "be":true,
-                    "do":true, "does":true,
-                    "more":true, "come":true,
-                    "this":true, "how":true, "write":true,
-                    "made":true, "have":true, "their":true,
-                    "go":true, "may":true, "from":true,
-                    "if":true, "see":true, "part":true,
-                    "that":true, "that's":true, "thing":true};
+var COMMON_WORDS = {
+    "the":true, "or":true, "will":true,
+    "number":true, "of":true, "one":true,
+    "up":true, "no":true, "and":true,
+    "had":true, "other":true, "way":true,
+    "a":true, "by":true, "about":true,
+    "could":true, "to":true, "word":true,
+    "out":true, "people":true, "in":true,
+    "but":true, "many":true, "my":true,
+    "is":true, "not":true, "then":true,
+    "than":true, "you":true, "you're": true,
+    "you've":true, "what":true,
+    "them":true, "first":true, "it":true,
+    "were":true, "so":true, "been":true,
+    "he":true, "we":true, "some":true,
+    "call":true, "was":true, "when":true,
+    "her":true, "who":true, "for":true,
+    "your":true, "would":true, "oil":true,
+    "on":true, "can":true, "make":true,
+    "its":true, "are":true, "said":true,
+    "like":true, "now":true, "as":true,
+    "here":true, "here's":true, "there":true,
+    "there're":true, "him":true, "find":true,
+    "with":true, "use":true, "into":true,
+    "long":true, "his":true, "an":true,
+    "time":true, "down":true, "they":true,
+    "each":true, "has":true, "day":true,
+    "i":true, "i'm":true, "which":true,
+    "look":true, "very":true,
+    "did":true, "at":true, "she":true,
+    "two":true, "get":true, "be":true,
+    "do":true, "does":true,
+    "more":true, "come":true,
+    "this":true, "how":true, "write":true,
+    "made":true, "have":true, "their":true,
+    "go":true, "may":true, "from":true,
+    "if":true, "see":true, "part":true,
+    "that":true, "that's":true, "thing":true,
+    "things":true
+};
+
+var feedbackSignal, feedbackMsg;
 
 $(document).ready(function(){
     loginout();
@@ -151,6 +156,8 @@ function cachedivs(){
     displaypanels = $(".randompost");
     recentpanels = $(".recentpost");
     instagrams = $(".instagram");
+    feedbackSignal = $("#feedbackSignal");
+    feedbackMsg = $("#feedbackMsg");
 }
 
 function readChar(key){
@@ -162,12 +169,14 @@ function readChar(key){
                (97 <= letter && letter <= 122)) {
         relatedwords += String.fromCharCode(key);
     }
+    showFeedback("READING", relatedwords);
 }
 
 // pressing backspace removes previous character instead of adding
 // space char
 function rollbackspace(){
     relatedwords = relatedwords.slice(0, -1);
+    showFeedback("READING", relatedwords);
 }
 
 function onEditKeydown(e) {
@@ -639,7 +648,7 @@ function submitEditPost(){
         },
         success: function(json){
             showSubmittedPost(json);
-            showFeedback(json.title + " SAVED");
+            showFeedback("SAVED", json.title);
         },
         // complete: function(){
         // }
@@ -695,7 +704,7 @@ function submitNewPost(){
         },
         success: function(json){
             showSubmittedPost(json);
-            showFeedback(json.title + " CREATED"); // todo. put a span in here and in SAVED
+            showFeedback("CREATED", json.title); // todo. put a span in here and in SAVED
         },
         // complete: function(){
         // }
@@ -709,8 +718,9 @@ function clearNewPostForm(){
     $("#newPostBody").val("");
 }
 
-function showFeedback(msg){
-    $("#feedback").html(msg);
+function showFeedback(signal, msg){
+    feedbackSignal.html(signal);
+    feedbackMsg.html(msg);
 }
 
 function getCSRF(id){
