@@ -96,7 +96,7 @@ $(document).ready(function(){
     loadInterestingFlickrPics();
 
     initPostDivs();
-    mkrandomposts();
+    mkrandomposts(true);
 
     cachedivs();
 
@@ -500,7 +500,7 @@ function loginbutton(){
             // todo. check return status
             showhideloginbar(json.isloggedin);
             clearrandomposts();
-            mkrandomposts();
+            mkrandomposts(true);
         }
     });
 }
@@ -583,7 +583,7 @@ function keyboardshortcuts(e){
     if (e.ctrlKey){
         switch (e.which || e.keyCode){
         case KEYSPACE:
-            mkrandomposts();
+            $("#reloadbutton").click();
             break;
         case KEYENTER:
             newPost();
@@ -592,12 +592,15 @@ function keyboardshortcuts(e){
     }
 }
 
-function mkrandomposts(){
+function mkrandomposts(firstTime){
     $.getJSON(HOMEPAGE + "randomposts", {
         postcount: POSTCOUNT
     }, function(json){
         loadposts(json);
         recentpostpos = 0;      // reset to top
+        if (!firstTime){
+            window.location = "#randomposts";
+        }
     });
 }
 
@@ -609,7 +612,7 @@ function loadposts(json){
         rp.find(".hiddentitle").html(post.title);
         rp.find(".postbody").html(post.body);
         rp.find(".hiddenbody").html(post.body);
-        rp.find(".postdate").html(parsedatetime(post.updated));
+        rp.find(".postdate").html(parsedatetime(post.created));
     });
     rejax();
 }
@@ -621,7 +624,7 @@ function loadrelatedposts(json){
         relatedPost.find(".hiddentitle").html(post.title);
         relatedPost.find(".postbody").html(post.body);
         relatedPost.find(".hiddenbody").html(post.body);
-        relatedPost.find(".postdate").html(parsedatetime(post.updated));
+        relatedPost.find(".postdate").html(parsedatetime(post.created));
     });
     rejax();
 }
@@ -696,7 +699,7 @@ function showSubmittedPost(post){
     rp.find(".hiddentitle").html(post.title);
     rp.find(".postbody").html(post.body).addClass("recentbody");
     rp.find(".hiddenbody").html(post.body);
-    rp.find(".postdate").html(parsedatetime());
+    rp.find(".postdate").html(parsedatetime(post.created));
 
     rejax();
 }
@@ -728,7 +731,7 @@ function submitNewPost(){
             csrfmiddlewaretoken: getCSRF("newPostCSRF"),
         },
         success: function(json){
-            showFeedback("CREATED", json.title, json.id); // todo. put a span in here and in SAVED
+            showFeedback("CREATED", json.title, json.id); // todo. check response status
             showSubmittedPost(json);
         },
         // complete: function(){

@@ -29,6 +29,7 @@ BODY = "body"
 TAGS = "tags"
 SUBJECT = "subject"
 UPDATED = "updated"
+CREATED = "created"
 
 STATUS = "status"
 
@@ -56,6 +57,7 @@ def savepost(request, postid):
     post.subject = subject
     post.updated = datetime.now()
     post.save()
+    return post
 
 # todo. parse and save tags in model
 @login_required
@@ -63,8 +65,8 @@ def editpost(request):
     postid = request.POST.get(POSTID, "")
     try:
         if Post.objects.filter(creator=request.user.id).filter(id=int(postid)).exists():
-            savepost(request, postid)
-            return jsonpost(request)
+            post = savepost(request, postid)
+            return JSONResponse(PostSerializer(post).data)
     except:
         return jsonerror()
 

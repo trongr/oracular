@@ -9,6 +9,14 @@ body {
     padding-right: 10px;
 }
 
+img {
+    opacity: 0.95;
+}
+
+img:hover {
+    opacity: 1;
+}
+
 .btn {
     border: 1px solid;
     background: rgba(0, 0, 0, 0.5);
@@ -24,6 +32,7 @@ body {
 .mycontrol {
     font-size: 1.2em;
     font-weight: bold;
+    font-family: times;
     background: rgba(0, 0, 0, 0.2);
 }
 
@@ -57,6 +66,7 @@ body {
 
 .mydropdownmenu {
     background: rgba(0, 0, 0, 0.8);
+    font-family: times;
 }
 
 .mydropdownbutton {
@@ -76,6 +86,7 @@ body {
 
 #randomposts {
     margin: 10px;
+    padding-top: 40px;
 }
 
 .myrandomrow {
@@ -185,6 +196,7 @@ a.mydropdownbutton {
 .mylabel {
     font-size: 1.5em;
     font-weight: bold;
+    font-family: times;
     /* background: rgba(0, 0, 0, 0.5); */
 }
 
@@ -369,7 +381,7 @@ button.postInput {
     /* border: 2px dotted #fff; */
     color: #ff8c00;
     /* font-size: 2em; */
-    font-family: times;
+    font-family: georgia;
 }
 
 #signupmsg {
