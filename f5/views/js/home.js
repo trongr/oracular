@@ -90,6 +90,8 @@ var feedback, feedbackSignal, feedbackMsg;
 $(document).ready(function(){
     loginout();
 
+    clearNewPostForm();
+
     initRelatedPicDivs();
     loadInterestingFlickrPics();
 
@@ -143,7 +145,16 @@ function registerBindings(){
     $(document).bind("keydown", keyboardshortcuts);
     inputEnterKeypress();
     $("#newPostTitle, #newPostBody, #editPostTitle, #editPostBody")
-        .keydown(onEditKeydown);
+        .keydown(onEditKeydown)
+        .on("blur", onPostInputBlur);
+}
+
+function onPostInputBlur(){
+    if ($(this).val() != ""){
+        $(this).removeClass("postInputGrey").addClass("postInputBlack");
+    } else {
+        $(this).removeClass("postInputBlack").addClass("postInputGrey");
+    }
 }
 
 function openInstagramSrc(){
@@ -631,9 +642,21 @@ function editPost(){
 }
 
 function populateEditPost(post){
+    var title = post.find(".hiddentitle").unhighlight().html();
+    var body = post.find(".hiddenbody").unhighlight().html();
     $("#editPostID").val(post.attr("id"));
-    $("#editPostTitle").val(post.find(".hiddentitle").unhighlight().html());
-    $("#editPostBody").val(post.find(".hiddenbody").unhighlight().html());
+    $("#editPostTitle").val(title);
+    $("#editPostBody").val(body);
+    if (title != ""){
+        $("#editPostTitle").removeClass("postInputGrey").addClass("postInputBlack");
+    } else {
+        $("#editPostTitle").removeClass("postInputBlack").addClass("postInputGrey");
+    }
+    if (body != ""){
+        $("#editPostBody").removeClass("postInputGrey").addClass("postInputBlack");
+    } else {
+        $("#editPostBody").removeClass("postInputBlack").addClass("postInputGrey");
+    }
 }
 
 function submitEditPost(){
@@ -716,8 +739,8 @@ function submitNewPost(){
 }
 
 function clearNewPostForm(){
-    $("#newPostTitle").val("");
-    $("#newPostBody").val("");
+    $("#newPostTitle").val("").removeClass("postInputBlack").addClass("postInputGrey");
+    $("#newPostBody").val("").removeClass("postInputBlack").addClass("postInputGrey");
 }
 
 function showFeedback(signal, msg, hrefID){

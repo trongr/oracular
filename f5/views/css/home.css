@@ -28,7 +28,7 @@ body {
 }
 
 #feedbackSignal {
-    color: #888;
+    color: #ff8c00;
     font-size: 1.5em;
     font-weight: bold;
     font-family: georgia;
@@ -227,14 +227,24 @@ input.postInput, textarea.postInput {
     float: left;
     border: none !important;
     box-shadow: none !important;
-    background: #222 !important;
-    color: #bbb !important;
     border-radius: 2px !important;
-    /* color: #fff !important; */
 }
 
 textarea.postInput:focus,
 input.postInput:focus {
+    background: #000 !important;
+    color: #fff !important;
+}
+
+/* make it look like there's a grey flap on the inputs. TODO. write
+a library for this */
+
+.postInputGrey {
+    background: #222 !important;
+    color: #222 !important;
+}
+
+.postInputBlack {
     background: #000 !important;
     color: #fff !important;
 }
@@ -251,28 +261,36 @@ button.postInput {
     font-weight: bold;
 }
 
+#newPostSubmit, #editPostSubmit, #editPostCancel {
+    float: right;
+}
+
 #newPostSubmit, #editPostSubmit {
     font-size: 2em;
     padding: 20px 30px 20px 30px;
+    /* color: #00BFFF; */
+}
+
+#editPostCancel {
+    /* color: #ff8c00; */
 }
 
 #newPostSubmit:focus,
 #editPostSubmit:focus,
 #newPostSubmit:hover,
 #editPostSubmit:hover {
-    text-shadow: -1px -1px 2px #ff8c00, 1px 1px 2px #ff8c00; /* makes text glow */
-    background: #000;
+    /* text-shadow: -1px -1px 2px #ff8c00, 1px 1px 2px #ff8c00; /\* makes text glow orange *\/ */
+    /* background: #000; */
+    background: #ff8c00;
+    color: #00bfff;
 }
 
 #editPostCancel:focus,
 #editPostCancel:hover {
-    text-shadow: -1px -1px 2px #00BFFF, 1px 1px 2px #00BFFF; /* makes text glow */
-    background: #000;
-}
-
-/* #newPostSubmit, #editPostButtons { */
-#newPostSubmit, #editPostSubmit, #editPostCancel {
-    float: right;
+    /* text-shadow: -1px -1px 2px #00BFFF, 1px 1px 2px #00BFFF; /\* makes text glow blue *\/ */
+    /* background: #000; */
+    background: #00BFFF;
+    color: #ff8c00;
 }
 
 .placeholder {
@@ -350,7 +368,7 @@ button.postInput {
     /* background-color: #ff8; */
     /* border: 2px dotted #fff; */
     color: #ff8c00;
-    font-size: 2em;
+    /* font-size: 2em; */
     font-family: times;
 }
 
