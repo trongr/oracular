@@ -103,25 +103,24 @@ modals -->
 <!-- </div> -->
 
 <div id="relatedpics"></div>
-
-<div id="pairPanel" class="row-fluid">
-    <div id="relatedBox">
-        <div id="relatedPostBox">
+<div class="row-fluid">
+    <div class="span7">
+        <div id="relatedBox">
             <a href="#" class="relatedpost">
                 <span class="posttitle"><span style="line-height: 1em; font-size: 1.5em;">Try typing something on the right</span></span>
                 <span class="hiddentitle hide tex2jax_ignore"></span>
-                <span class="postbody"><span style="line-height: 1em; font-size: 1.5em;">Oracular is like Google Instant Search, but instead of a search bar it has an editor, so you can do some neat things with it. For example, for the first time in internet if not human history, you can truly procrastinate while doing serious work.</span></span>
+                <span class="postbody"><span style="line-height: 1em; font-size: 1.5em;">For example, &ldquo;Oracular is like Google Instant Search, but instead of a search bar, it has an editor.&rdquo;</span></span>
                 <span class="hiddenbody hide tex2jax_ignore"></span>
                 <span class="postdate"></span>
             </a>
         </div>
     </div>
-    <div id="postFormBox">
+    <div class="span5">
         <div id="newPostForm" class="form-horizontal">
             <fieldset>
                 <input id="newPostCSRF" type="hidden" value="{{ csrf_token }}">
                 <input id="newPostTitle" class="postInput" type="text">
-                <textarea id="newPostBody" class="postInput"></textarea>
+                <textarea id="newPostBody" class="postInput" rows="12"></textarea>
                 <button id="newPostSubmit" class="postInput" type="submit">
                   CRE<i class="icon-plus"></i>TE
                 </button>
@@ -131,27 +130,19 @@ modals -->
             <fieldset>
                 <input id="editPostCSRF" type="hidden" value="{{ csrf_token }}">
                 <input id="editPostTitle" class="postInput" type="text">
-                <textarea id="editPostBody" class="postInput"></textarea>
-                <div id="editPostButtons">
-                    <button id="editPostSubmit" class="postInput">
-                        S<i class="icon-plus"></i>VE
-                    </button>
-                    <button id="editPostCancel" class="postInput" rel="tooltip" title="CANCEL">
-                        <i class="icon-remove"></i>
-                    </button>
-                    <button id="editPostDelete" class="postInput" rel="tooltip" title="DELETE">
-                        <i class="icon-trash"></i>
-                    </button>
-                </div>
-                <!-- todo today. implement delete -->
-
+                <textarea id="editPostBody" class="postInput" rows="12"></textarea>
+                <button id="editPostSubmit" class="postInput" type="submit">
+                    S<i class="icon-plus"></i>VE
+                </button>
+                <button id="editPostCancel" class="postInput">
+                    C<i class="icon-remove"></i>NCEL
+                </button>
                 <!-- todo. use attr data-id instead -->
                 <input id="editPostID" type="hidden">
             </fieldset>
         </div>
     </div>
 </div>
-
 <div id="randomposts"></div>
 
 <script src="{{ STATIC_URL }}mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>

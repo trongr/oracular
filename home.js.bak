@@ -1,19 +1,6 @@
 // todo. put related word below flickr picture. then put thesaurus
 // entries
 
-// todo. search and list notes by modified time: first step to a
-// proper editing environment: files.
-
-// todo. save files by mere virtue of modifying them, without having
-// to click save.... aw that means we're losing the red and blue pill
-// buttons.......... MAYBE NOT. IT'S NOT INTUITIVE
-
-// todo. don't save or create empty notes
-
-// todo. oracular could be used as a mass crowd-sourcing mechanism
-
-// todo opt. autoresize textarea height
-
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
 
@@ -47,7 +34,8 @@ var SPANWIDTH = BOOTSTRAP_GRID / POSTSPERCOL;
 var instagrams;
 var instapos = 0;
 var INSTAROW_SIZE = 4;         // number of pics in instagram row
-var FLICKR_WIDTH = 200;         // size of img.instagram
+var INSTA_SPANWIDTH = BOOTSTRAP_GRID / INSTAROW_SIZE;
+var FLICKR_WIDTH = 150;
 
 var recentpanels;              // divs for newly submitted posts
 var recentpostpos = 0;         // where to insert the next recent post
@@ -73,7 +61,7 @@ var COMMON_WORDS = {
     "he":true, "we":true, "some":true,
     "call":true, "was":true, "when":true,
     "her":true, "who":true, "for":true,
-    "your":true, "would":true,
+    "your":true, "would":true, "oil":true,
     "on":true, "can":true, "make":true,
     "its":true, "are":true, "said":true,
     "like":true, "now":true, "as":true,
@@ -114,13 +102,8 @@ $(document).ready(function(){
 
     registerBindings();
 
-    tooltips();
-});
-
-function tooltips(){
     $("a").tooltip({'placement': 'bottom'});
-    $("button").tooltip({'placement': 'top'});
-}
+});
 
 function loadInterestingFlickrPics(){
     $.ajax({
@@ -146,12 +129,12 @@ function loadInterestingness(json){
         for (var i = 0; i < INSTAROW_SIZE; i++){
             var item = json.photos.photo[i];
             var basePic = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret;
-            // var thumbPic = basePic + '_q.jpg';
-            var medPic = basePic + ".jpg";
+            var thumbPic = basePic + '_q.jpg';
+            // var medPic = basePic + ".jpg";
             var largePic = basePic + "_b.jpg";
             instagrams.eq(i)
-            // .attr("src", thumbPic)
-                .attr("src", medPic)
+                .attr("src", thumbPic)
+            // .attr("data-src", medPic);
                 .attr("data-src", largePic);
         }
     }
@@ -240,8 +223,8 @@ function getrelatedposts(){
     prepRelatedWords();
     if (!isCommonWord(relatedwords)){
         getOwnPosts(relatedwordsarray());
-        getImgurPics(relatedwordsarray()[0]);
-        // getFlickrPics(relatedwordsarray()[0]);
+        // getImgurPics(relatedwordsarray()[0]); // todo today
+        getFlickrPics(relatedwordsarray()[0]);
         // getInstagramPics(relatedwordsarray()[0]);
     }
     clearRelatedWords();
@@ -305,29 +288,26 @@ function getInstagramPics(relatedWord){
     });
 }
 
+// todo today. wait for google group reply
 function getImgurPics(relatedWord){
     $.ajax({
         url: "https://api.imgur.com/3/gallery/search.json",
         type: "GET",
-        headers: {
-            Authorization: 'Client-ID eb3d9689067c943',
-        },
         data: {
+            client_id: "eb3d9689067c943",
             q: relatedWord,
-            page: 1,
-            sort: "time",        // top | time
-            window: "week"       // day | week | month | year | all
         },
         dataType: "json",
         success: function(json){
-            if (!json.data || !json.data[0]){
-                throw "home.js:getImgurPics:" + JSON.stringify(json, 0, 2);
-            } else {
-                instagrams.eq(instapos)
-                    .attr("src", json.data[0].link)
-                    .attr("data-src", json.data[0].link);
-                instapos = (instapos + 1) % INSTAROW_SIZE;
-            }
+            console.log(JSON.stringify(json, 0, 2));
+            // if (!json.data || !json.data[0]){
+            //     throw "home.js:getInstagramPics:" + JSON.stringify(json, 0, 2);
+            // } else {
+            //     instagrams.eq(instapos)
+            //         .attr("src", json.data[0].images.thumbnail.url)
+            //         .attr("data-src", json.data[0].link);
+            //     instapos = (instapos + 1) % INSTAROW_SIZE;
+            // }
         },
     });
 }
@@ -392,7 +372,7 @@ function clickityclickclick(){
 
 function cancelEditPost(){
     $("#editPostForm").hide();
-    // clearNewPostForm();
+    clearNewPostForm();
     $("#newPostForm").show();
 }
 
@@ -457,7 +437,6 @@ function loginout(){
         type: "GET",
         success: function(json){
             showhideloginbar(json.isloggedin);
-            getrelatedposts();
         }
     });
 }
@@ -520,17 +499,15 @@ function loginbutton(){
             showhideloginbar(json.isloggedin);
             clearrandomposts();
             mkrandomposts(true);
-            getrelatedposts();
         }
     });
 }
 
-// todo now
 function initRelatedPicDivs(){
-    // magicallyCalculateBootstrapDimensions();
-    var stuff = "<div class='instaRow'>";
+    magicallyCalculateBootstrapDimensions();
+    var stuff = "<div class='row-fluid myrandomrow'>";
     for (var i = 0; i < INSTAROW_SIZE; i++){
-        stuff += "<div class='instaCell'>" +
+        stuff += "<div class='span" + INSTA_SPANWIDTH + "'>" +
             '<img src="" data-src="" class="instagram">' +
             "</div>"
     }
@@ -538,15 +515,16 @@ function initRelatedPicDivs(){
     $("#relatedpics").html(stuff);
 }
 
-// function magicallyCalculateBootstrapDimensions(){
-//     var size = $(window).width() / FLICKR_WIDTH;
-//     var divisors = [1, 2, 3, 4, 6, 12];
-//     for (var i = 0; i < divisors.length; i++){
-//         if (size >= divisors[i]){
-//             INSTAROW_SIZE = divisors[i];
-//         }
-//     }
-// }
+function magicallyCalculateBootstrapDimensions(){
+    var size = $(window).width() / FLICKR_WIDTH;
+    var divisors = [1, 2, 3, 4, 6, 12];
+    for (var i = 0; i < divisors.length; i++){
+        if (size >= divisors[i]){
+            INSTAROW_SIZE = divisors[i];
+        }
+    }
+    INSTA_SPANWIDTH = 12 / INSTAROW_SIZE;
+}
 
 function initPostDivs(){
     var rp = $("#randomposts");
@@ -617,6 +595,7 @@ function mkrandomposts(firstTime){
         postcount: POSTCOUNT
     }, function(json){
         loadposts(json);
+        recentpostpos = 0;      // reset to top
         if (!firstTime){
             window.location = "#randomposts";
         }
@@ -667,17 +646,17 @@ function populateEditPost(post){
     var title = post.find(".hiddentitle").unhighlight().html();
     var body = post.find(".hiddenbody").unhighlight().html();
     $("#editPostID").val(post.attr("id"));
-    var postTitle = $("#editPostTitle").val(title);
-    var postBody = $("#editPostBody").val(body);
+    $("#editPostTitle").val(title);
+    $("#editPostBody").val(body);
     if (title != ""){
-        postTitle.removeClass("postInputGrey").addClass("postInputBlack");
+        $("#editPostTitle").removeClass("postInputGrey").addClass("postInputBlack");
     } else {
-        postTitle.removeClass("postInputBlack").addClass("postInputGrey");
+        $("#editPostTitle").removeClass("postInputBlack").addClass("postInputGrey");
     }
     if (body != ""){
-        postBody.removeClass("postInputGrey").addClass("postInputBlack");
+        $("#editPostBody").removeClass("postInputGrey").addClass("postInputBlack");
     } else {
-        postBody.removeClass("postInputBlack").addClass("postInputGrey");
+        $("#editPostBody").removeClass("postInputBlack").addClass("postInputGrey");
     }
 }
 
@@ -692,7 +671,7 @@ function submitEditPost(){
             subject: "",
             csrfmiddlewaretoken: getCSRF("editPostCSRF"),
         },
-        success: function(json){ // todo. check json status
+        success: function(json){
             showFeedback("SAVED", json.title, json.id);
             showSubmittedPost(json);
         },
@@ -733,8 +712,8 @@ function changeMode(newMode){
 }
 
 function newPost(){
+    clearNewPostForm();
     $("#editPostForm").hide();
-    // clearNewPostForm();
     $("#newPostForm").show();
     $("#newPostTitle").focus();
 }
