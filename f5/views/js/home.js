@@ -1,6 +1,8 @@
 // todo. put related word below flickr picture. then put thesaurus
 // entries
 
+// todo. restart gifs, cause they stop on resize
+
 // todo. search and list notes by modified time: first step to a
 // proper editing environment: files.
 
@@ -11,6 +13,10 @@
 // todo. don't save or create empty notes
 
 // todo. oracular could be used as a mass crowd-sourcing mechanism
+
+// todo opt. remove some of the common words: you want to maximize the
+// number of imgur requests and results. maybe let user choose which
+// words to not request.
 
 // todo opt. autoresize textarea height
 
@@ -52,49 +58,48 @@ var FLICKR_WIDTH = 200;         // size of img.instagram
 var recentpanels;              // divs for newly submitted posts
 var recentpostpos = 0;         // where to insert the next recent post
 
-var relatedPost;                // div for related post
-
 var displaypanels;              // divs for random posts
+
+var relatedPost;                // div for related post
 var relatedwords = "";
 var COMMON_WORDS = {
     "the":true, "or":true, "will":true,
-    "number":true, "of":true, "one":true,
-    "up":true, "no":true, "and":true,
-    "had":true, "other":true, "way":true,
+    "of":true, "just": true,
+    "no":true, "and":true,
+    "had":true,
     "a":true, "by":true, "about":true,
     "could":true, "to":true, "word":true,
-    "out":true, "people":true, "in":true,
-    "but":true, "many":true, "my":true,
+    "out":true, "in":true,
+    "but":true, "my":true,
     "is":true, "not":true, "then":true,
     "than":true, "you":true, "you're": true,
-    "you've":true, "what":true,
-    "them":true, "first":true, "it":true,
+    "you've":true,
+    "them":true, "it":true,
     "were":true, "so":true, "been":true,
     "he":true, "we":true, "some":true,
     "call":true, "was":true, "when":true,
     "her":true, "who":true, "for":true,
     "your":true, "would":true,
-    "on":true, "can":true, "make":true,
+    "on":true, "can":true,
     "its":true, "are":true, "said":true,
     "like":true, "now":true, "as":true,
     "here":true, "here's":true, "there":true,
     "there're":true, "him":true, "find":true,
     "with":true, "use":true, "into":true,
-    "long":true, "his":true, "an":true,
-    "time":true, "down":true, "they":true,
-    "each":true, "has":true, "day":true,
+    "his":true, "an":true,
+    "they":true,
+    "has":true,
     "i":true, "i'm":true, "which":true,
-    "look":true, "very":true,
+    "very":true,
     "did":true, "at":true, "she":true,
-    "two":true, "get":true, "be":true,
+    "get":true, "be":true,
     "do":true, "does":true,
-    "more":true, "come":true,
-    "this":true, "how":true, "write":true,
-    "made":true, "have":true, "their":true,
-    "go":true, "may":true, "from":true,
-    "if":true, "see":true, "part":true,
-    "that":true, "that's":true, "thing":true,
-    "things":true
+    "come":true,
+    "this":true, "how":true,
+    "have":true, "their":true,
+    "may":true, "from":true,
+    "if":true,
+    "that":true, "that's":true,
 };
 
 var feedback, feedbackSignal, feedbackMsg;
@@ -119,6 +124,7 @@ $(document).ready(function(){
 
 function tooltips(){
     $("a").tooltip({'placement': 'bottom'});
+    $("img").tooltip({'placement': 'bottom'});
     $("button").tooltip({'placement': 'top'});
 }
 
@@ -149,9 +155,9 @@ function loadInterestingness(json){
             // var thumbPic = basePic + '_q.jpg';
             var medPic = basePic + ".jpg";
             var largePic = basePic + "_b.jpg";
-            instagrams.eq(i)
-            // .attr("src", thumbPic)
+            instagrams.eq(i).find(".instagram")
                 .attr("src", medPic)
+            // .attr("src", thumbPic)
                 .attr("data-src", largePic);
         }
     }
@@ -183,7 +189,7 @@ function cachedivs(){
     relatedPost = $(".relatedpost");
     displaypanels = $(".randompost");
     recentpanels = $(".recentpost");
-    instagrams = $(".instagram");
+    instagrams = $(".instaCell");
     feedback = $("#feedback");
     feedbackSignal = $("#feedbackSignal");
     feedbackMsg = $("#feedbackMsg");
@@ -314,22 +320,62 @@ function getImgurPics(relatedWord){
         },
         data: {
             q: relatedWord,
+            // todo. random page, for variety: need to know how many total for each keyword
             page: 1,
-            sort: "time",        // top | time
-            window: "week"       // day | week | month | year | all
+            sort: "time",       // top | time
+            window: "all"       // day | week | month | year | all
         },
         dataType: "json",
-        success: function(json){
-            if (!json.data || !json.data[0]){
+        success: function(json){ // todo. color-coded feedback
+            if (!json.data || json.data.length === 0){
                 throw "home.js:getImgurPics:" + JSON.stringify(json, 0, 2);
             } else {
-                instagrams.eq(instapos)
-                    .attr("src", json.data[0].link)
-                    .attr("data-src", json.data[0].link);
-                instapos = (instapos + 1) % INSTAROW_SIZE;
+                loadImgurPic(json.data, relatedWord);
             }
         },
     });
+}
+
+// optional. put postType on gifs.
+function loadImgurPic(posts, relatedWord){
+    var index = getRandomImgurPostIndex(posts);
+    var post = posts[index];
+    var cell = instagrams.eq(instapos);
+    cell.find(".instagram")
+        .attr("src", post.link)
+        .attr("data-src", post.link)
+        .attr("alt", post.link)
+        .attr("data-original-title", post.title);
+    // cell.find(".imgurPostType").html(getImgurPostType(post));
+    cell.find(".instaComment")
+        .html(post.title)
+        .highlight(relatedWord);
+    instapos = (instapos + 1) % INSTAROW_SIZE;
+}
+
+function getRandomImgurPostIndex(posts){
+    // randomize through posts until non-album found, if not found
+    // return index 0
+    var index = 0;
+    for (var i = 0; i < posts.length; i++){
+        index = Math.floor(Math.random() * posts.length);
+        // type == "image/<type>", if doesn't exist probably an album,
+        // more than one picture so can't display
+        if (posts[index].type && posts[index].type.split("/")[0] == "image"){
+            break;
+        }
+    }
+    return index;
+}
+
+// only putting postType because sometimes gifs don't play, because
+// your css auto-resizes them, so the animation has to stop
+function getImgurPostType(post){
+    var postType = "";
+    if (post.type && post.type.split("/")[1] == "gif"){
+        postType = ".gif";
+    }
+    return postType;
 }
 
 function getOwnPosts(relatedWordsArray){
@@ -394,6 +440,7 @@ function cancelEditPost(){
     $("#editPostForm").hide();
     // clearNewPostForm();
     $("#newPostForm").show();
+    window.location = "#";
 }
 
 // todo. validate inputs and user feedback
@@ -525,13 +572,16 @@ function loginbutton(){
     });
 }
 
-// todo now
 function initRelatedPicDivs(){
     // magicallyCalculateBootstrapDimensions();
     var stuff = "<div class='instaRow'>";
     for (var i = 0; i < INSTAROW_SIZE; i++){
         stuff += "<div class='instaCell'>" +
-            '<img src="" data-src="" class="instagram">' +
+            "<div class='instaBox'>" +
+            '<img src="" data-src="" alt="" class="instagram" rel="tooltip">' +
+            "<div class='imgurPostType'></div>" +
+            "</div>" +
+            "<div class='instaComment'></div>" +
             "</div>"
     }
     stuff += "</div>";
@@ -700,6 +750,7 @@ function submitEditPost(){
         // }
     });
     cancelEditPost();
+    window.location = "#";
 }
 
 function clearEditPostForm(){
@@ -737,6 +788,7 @@ function newPost(){
     // clearNewPostForm();
     $("#newPostForm").show();
     $("#newPostTitle").focus();
+    window.location = "#";
 }
 
 function submitNewPost(){
@@ -758,6 +810,7 @@ function submitNewPost(){
     });
     clearNewPostForm();
     $("*:focus").blur();        // onfocusing submit button, cause it glows
+    window.location = "#";
 }
 
 function clearNewPostForm(){

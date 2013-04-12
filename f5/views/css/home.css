@@ -196,13 +196,13 @@ input {
     background: rgba(0, 0, 0, 0.9) !important;
 }
 
-textarea {
+textarea.postInput {
     font-family: IM Fell English, Special Elite, georgia;
     font-size: 1.5em;
     color: #fff !important;
     /* text-shadow: -1px -1px 2px #ff8c00, 1px 1px 2px #ff8c00; /\* makes text glow *\/ */
-    background: rgba(0, 0, 0, 0.9) !important;
-    min-height: 12em;
+    /* background: rgba(0, 0, 0, 0.9) !important; */
+    min-height: 24em;
 }
 
 /* changing selection color */
@@ -214,10 +214,8 @@ textarea {
     background: #08c;
 }
 
-/* todo now */
-
 #relatedpics {
-    height: 200px;
+    height: 250px;
     margin-bottom: 20px;
     float: right;
 }
@@ -232,30 +230,65 @@ textarea {
     padding: 0px 10px 10px 0px;
 }
 
-.instagram {
+.instaBox {
+    position: relative;
+    vertical-align: bottom;
+    max-height: 225px;
+}
+
+img.instagram {
     opacity: 0.95;
     height: auto;
     width: 100%;
-    max-height: 200px;
+    max-height: 225px;
     vertical-align: bottom;
+    font-weight: bold;
+    font-family: georgia;
 }
 
-.instagram:hover {
+img.instagram:hover {
     opacity: 1;
+}
+
+.imgurPostType {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0 5px 2px 0;
+    font-weight: bold;
+    font-family: helvetica, arial;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.instaComment {
+    width: 100%;
+    max-height: 2em;
+    text-align: bottom;
+    vertical-align: bottom;
+    /* font-family: find nice sans font */
+    font-weight: bold;
+    padding: 10px;
+    overflow: hidden;
+}
+
+#pairPanel {
+    padding-top: 30px;
+    width: 100%;
+    clear: both;
 }
 
 #relatedBox {
     /* margin: 10px 10px 10px 20px; */
-    width: 55%;
+    width: 45%;
     float: left;
 }
 
 #relatedPostBox {
-    padding: 10px;
+    padding: 20px;
 }
 
 #postFormBox {
-    width: 45%;
+    width: 55%;
     float: left;
 }
 
@@ -277,11 +310,15 @@ input.postInput {
 }
 
 textarea.postInput:focus,
-textarea.postInput:hover,
-input.postInput:focus,
-input.postInput:hover {
+input.postInput:focus {
     background: #000 !important;
     color: #fff !important;
+}
+
+textarea.postInput:hover,
+input.postInput:hover {
+    background: #fff !important;
+    color: #000 !important;
 }
 
 /* make it look like there's a grey flap on the inputs. TODO. write
@@ -378,6 +415,7 @@ button.postInput {
 .tooltip {
     font-weight: bold;
     font-size: 1em;
+    color: #fff !important;
 }
 
 #aboutmodal {
