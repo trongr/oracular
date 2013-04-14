@@ -164,7 +164,71 @@ function registerBindings(){
     $("#newPostTitle, #newPostBody, #editPostTitle, #editPostBody")
         .keydown(onEditKeydown)
         .on("blur", onPostInputBlur);
-    $("#searchBar").on("focus", onSearchBarFocus)
+    $("input.placeholder")
+        .on("focus", onPlaceholderFocus)
+        .on("blur", onPlaceholderBlur);
+    $("#searchBar").on("keydown", searchBar);
+}
+
+function searchBar(e){
+    var key = e.which || e.keyCode;
+    if (!e.ctrlKey && !e.shiftKey && !e.altKey){
+        switch (key){
+        case KEYENTER:
+            searchPosts($(this));
+            break;
+        }
+    }
+}
+
+function searchPosts(searchBar){
+    var keywords = searchBar.val().split(" ");
+    if (isLoggedIn){
+        $.ajax({
+            url: HOMEPAGE + "search",
+            type: "GET",
+            data: {
+                q: keywords
+            },
+            success: function(json){
+                if (!json.count || json.count === 0){
+                    throw "searchPosts:" + JSON.stringify(json, 0, 2);
+                } else {
+                    // todo. paginate
+                    loadSearchResults(json.posts, keywords);
+                }
+            }
+        });
+    }
+}
+
+// todo now
+function loadSearchResults(posts, keywords){
+    var box = $("#searchResults");
+    var stuff = "";
+    $.each(posts, function(i, post){
+        stuff += "<div class='resultBox " + (i%4===0 ? "clearResultBoxFloat" : "") + "'>" +
+            "<a href='#' id='" + post.id + "' class='result'>" +
+            "<span class='posttitle'>" + post.title + "</span> " +
+            "<span class='hiddentitle hide tex2jax_ignore'>" + post.title + "</span>" +
+            "<span class='postbody'>" + post.body.substring(0, 100) + "</span> " +
+            "<span class='hiddenbody hide tex2jax_ignore'>" + post.body + "</span>" +
+            "<span class='postdate'>" + parsedatetime(post.created) + "</span>" +
+            "</div>" +
+            "</div>";
+    });
+    box.html(stuff).highlight(keywords);
+    rejax();
+    window.location = "#searchResults";
+    $("#searchResults .result").on("click", editPost);
+}
+
+function onPlaceholderFocus(){
+    $(this).removeAttr("placeholder");
+}
+
+function onPlaceholderBlur(){
+    $(this).attr("placeholder", $(this).attr("data-placeholder"));
 }
 
 function onPostInputBlur(){
@@ -205,33 +269,35 @@ function readChar(key){
               ) {
         relatedwords += String.fromCharCode(key);
     }
-    showFeedback("TYPING", relatedwords);
+    showFeedback("", relatedwords);
 }
 
 // pressing backspace removes previous character instead of adding
 // space char
 function rollbackspace(){
     relatedwords = relatedwords.slice(0, -1);
-    showFeedback("TYPING", relatedwords);
+    showFeedback("", relatedwords);
 }
 
 function onEditKeydown(e) {
     var key = e.which || e.keyCode;
-    switch (key){
-    case KEYTAB:
-    case KEYSPACE:          // querying database on word
-    case KEYENTER:
-        getrelatedposts();
-        break;
-    case KEYBACKSPACE:
-        if (e.ctrlKey){     // ctrl + backspace deletes last word
-            clearRelatedWords();
-        } else {
-            rollbackspace();
+    if (!e.ctrlKey && !e.shiftKey && !e.altKey){
+        switch (key){
+        case KEYTAB:
+        case KEYSPACE:          // querying database on word
+        case KEYENTER:
+            getrelatedposts();
+            break;
+        case KEYBACKSPACE:
+            if (e.ctrlKey){     // ctrl + backspace deletes last word
+                clearRelatedWords();
+            } else {
+                rollbackspace();
+            }
+            break;
+        default:                // reading anything but punctuations
+            readChar(key);
         }
-        break;
-    default:                // reading anything but punctuations
-        readChar(key);
     }
     insertMathBrackets(e, $(this));
 }
@@ -411,7 +477,7 @@ function getOwnPosts(relatedWordsArray){
         },
         success: function(json){
             loadrelatedposts(json);
-            highlightpost(relatedWordsArray);
+            relatedPost.highlight(relatedWordsArray);
         },
     });
 }
@@ -429,17 +495,12 @@ function prepRelatedWords(){
     relatedwords = relatedwords.trim().toLowerCase();
 }
 
-function highlightpost(rw){
-    for (var i = 0; i < rw.length; i++){
-        relatedPost.highlight(rw[i]);
-    }
-}
-
 // closeallmodals() before opening another one, otw bootstrap too much
 // recursion error
 function clickityclickclick(){
     $("#newpostbutton").click(function(){newPost(); return false;});
     $("#reloadbutton").click(function(){mkrandomposts(); return false;});
+    $("#searchButton").click(function(){$("#searchBar").focus(); return false;});
 
     $(".randompost, .relatedpost").on("click", editPost);
 
@@ -465,7 +526,6 @@ function cancelEditPost(){
     $("#editPostForm").hide();
     // clearNewPostForm();
     $("#newPostForm").show();
-    window.location = "#";
 }
 
 // todo. validate inputs and user feedback
@@ -537,35 +597,6 @@ function loginout(){
     });
 }
 
-// hack fix for firefox placeholder cursor invisible when input empty
-function removeplaceholder(id){
-    if (id == "username"){
-        $("#username").removeAttr("placeholder");
-        $("#password").attr("placeholder", "password");
-    } else {
-        $("#password").removeAttr("placeholder");
-        $("#username").attr("placeholder", "username");
-    }
-}
-
-// same hack fix for signupform. someone needs to write a library for
-// this ff bug
-function removesignupplaceholder(id){
-    if (id == "signupusername"){
-        $("#signupusername").removeAttr("placeholder");
-        $("#signuppassword").attr("placeholder", "password");
-        $("#signuprepassword").attr("placeholder", "repassword");
-    } else if (id == "signuppassword"){
-        $("#signupusername").attr("placeholder", "username");
-        $("#signuppassword").removeAttr("placeholder");
-        $("#signuprepassword").attr("placeholder", "repassword");
-    } else {
-        $("#signupusername").attr("placeholder", "username");
-        $("#signuppassword").attr("placeholder", "password");
-        $("#signuprepassword").removeAttr("placeholder");
-    }
-}
-
 function showhideloginbar(isloggedin){
     if (isloggedin == true){
         // have to blur before hide or focus won't be returned
@@ -574,9 +605,11 @@ function showhideloginbar(isloggedin){
         $("#logout").show();
         $("#newpostbutton").show();
         $("#reloadbutton").show();
+        $("#searchBar").show();
     } else {
         $("#newpostbutton").hide();
         $("#reloadbutton").hide();
+        $("#searchBar").hide();
         $("#logout").hide();
         $("#loginbar").show();
     }
@@ -658,34 +691,47 @@ function inputEnterKeypress(){
 
 // should write a library for this
 function inputkeydownsignup(e){
-    switch (e.which || e.keyCode){
-    case KEYENTER:
-        if (!e.ctrlKey){
-            $("#signupbtn").click();
+    if (!e.ctrlKey && !e.shiftKey && !e.altKey){
+        switch (e.which || e.keyCode){
+        case KEYENTER:
+            if (!e.ctrlKey){
+                $("#signupbtn").click();
+            }
+            break;
         }
-        break;
     }
 }
 
 function inputkeydownlogin(e){
-    switch (e.which || e.keyCode){
-    case KEYENTER:
-        if (!e.ctrlKey){
-            $("#loginbutton").click();
+    if (!e.ctrlKey && !e.shiftKey && !e.altKey){
+        switch (e.which || e.keyCode){
+        case KEYENTER:
+            if (!e.ctrlKey){
+                $("#loginbutton").click();
+            }
+            break;
         }
-        break;
     }
 }
 
 // todo opt. ctrl + n to edit nth box
 function keyboardshortcuts(e){
+    var key = e.which || e.keyCode;
     if (e.ctrlKey){
-        switch (e.which || e.keyCode){
+        switch (key){
         case KEYSPACE:
-            $("#reloadbutton").click();
+            $("#newpostbutton").click();
             break;
         case KEYENTER:
-            newPost();
+            $("#searchButton").click();
+            break;
+        }
+    } else if (e.shiftKey){
+
+    } else if (e.altKey){
+        switch (key){
+        case KEYENTER:
+            $("#reloadbutton").click();
             break;
         }
     }
@@ -740,6 +786,7 @@ function editPost(){
     $("#newPostForm").hide();
     $("#editPostForm").show();
     $("#editPostTitle").focus();
+    window.location = "#";
 }
 
 function populateEditPost(post){

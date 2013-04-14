@@ -59,7 +59,6 @@ def savepost(request, postid):
     post.save()
     return post
 
-# todo. parse and save tags in model
 @login_required
 def editpost(request):
     postid = request.POST.get(POSTID, "")
@@ -67,6 +66,21 @@ def editpost(request):
         if Post.objects.filter(creator=request.user.id).filter(id=int(postid)).exists():
             post = savepost(request, postid)
             return JSONResponse(PostSerializer(post).data)
+    except:
+        return jsonerror()
+
+@login_required
+def note(request):
+    postid = request.GET.get(POSTID, "")
+    try:
+        # todo now
+        post = Post.objects.filter(creator=request.user.id).filter(id=int(postid))
+        if post:
+            return JSONResponse({
+                "post": PostSerializer(post).data
+            })
+        else:
+            return JSONResponse({})
     except:
         return jsonerror()
 
@@ -225,6 +239,27 @@ def relatedposts(req):
         return JSONResponse(data)
     else:
         # todo opt. return public posts
+        data = {
+        }
+        return JSONResponse(data)
+
+# todo. validate everything
+def search(req):
+    if req.user.is_authenticated():
+        creator = req.user.id
+        q = req.GET.getlist("q[]")
+
+        posts = []
+        qlist = (Q(title__icontains=rw) | Q(body__icontains=rw) for rw in q)
+        # todo now. sort reverse chrono
+        posts = Post.objects.filter(creator=creator).filter(reduce(operator.and_, qlist)).order_by("-updated")
+        data = {
+            # todo now. remove bodies from posts
+            "posts": PostSerializer(posts, many=True).data,
+            "count": len(posts)
+        }
+        return JSONResponse(data)
+    else:
         data = {
         }
         return JSONResponse(data)

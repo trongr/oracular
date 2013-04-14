@@ -14,4 +14,6 @@ urlpatterns = patterns(
     url(r'^createpost$', views.createpost, name='createpost'),
     url(r'^randomposts$', views.randomposts, name='randomposts'),
     url(r'^relatedposts$', views.relatedposts, name='relatedposts'),
+    url(r'^search$', views.search, name='search'),
+    url(r'^note$', views.note, name='note'),
 )

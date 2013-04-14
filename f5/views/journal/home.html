@@ -24,19 +24,23 @@
             <div class="span4">
                 <li>
                     <a id="newpostbutton" class="mydropdownbutton" href="#">N<i class="icon-file"></i>W
+                    <span class="shortcuttip">CTRL + SPACE</span></a>
+                </li>
+                <li>
+                    <a id="searchButton" class="mydropdownbutton" href="#randomposts">SEA<i class="icon-search"></i>CH
                     <span class="shortcuttip">CTRL + ENTER</span></a>
                 </li>
                 <li>
                     <a id="reloadbutton" class="mydropdownbutton" href="#randomposts">RAND<i class="icon-repeat"></i>M
-                    <span class="shortcuttip">CTRL + SPACE</span></a>
+                    <span class="shortcuttip">ALT + ENTER</span></a>
                 </li>
                 <li class="divider"></li>
                 <li><a id="aboutbutton" class="mydropdownbutton" href="#"><i class="icon-user"></i>BOUT</a></li>
+                <li><a id="logout" class="hide mydropdownbutton" href="#">LO<i class="icon-lock"></i>OUT</a></li>
             </div>
         </ul>
-        <!-- todo now -->
-        <input id="searchBar" class="placeholder" data-placeholder="search" placeholder="search" type="text">
-        <a id="feedback" class="navbar-text">
+        <input id="searchBar" class="placeholder pull-right hide" placeholder="search" data-placeholder="search" type="text">
+        <a id="feedback" class="navbar-text mycontrol">
             <span id="feedbackSignal"></span>
             <span id="feedbackMsg"></span>
         </a>
@@ -44,21 +48,19 @@
         <!-- <li><a id="newpostbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + enter">N<i class="icon-file"></i>W</a></li> -->
         <div class="navbar-text pull-right">
             <div id="loginbar" class="hide">
-                <!-- todo now -->
-                <input id="username" class="input-large placeholder" type="text" placeholder="username" onfocus="removeplaceholder('username')">
-                <input id="password" class="input-large placeholder" type="password" placeholder="password" onfocus="removeplaceholder('password')">
+                <input id="username" class="input-large placeholder" type="text" placeholder="username" data-placeholder="username">
+                <input id="password" class="input-large placeholder" type="password" placeholder="password" data-placeholder="password">
                 <a id="loginbutton" class="navbar-link mycontrol" href="#">LO<i class="icon-unlock"></i>IN</a>
                 <a id="signupbutton" class="navbar-link dropdown-toggle mycontrol" data-toggle="dropdown" href="#">SIG<i class="icon-key"></i>UP</a>
                 <div id="signupform" class="dropdown-menu pull-right">
                   <input id="signupcsrf" type="hidden" value="{{ csrf_token }}">
-                  <input id="signupusername" class="placeholder" type="text" placeholder="username" onfocus="removesignupplaceholder('signupusername')"><br>
-                  <input id="signuppassword" type="password" class="placeholder" type="text" placeholder="password" onfocus="removesignupplaceholder('signuppassword')"><br>
-                  <input id="signuprepassword" type="password" class="placeholder" type="text" placeholder="repassword" onfocus="removesignupplaceholder('repassword')"><br>
+                  <input id="signupusername" class="placeholder" type="text" placeholder="username" data-placeholder="username"><br>
+                  <input id="signuppassword" type="password" class="placeholder" type="text" placeholder="password" data-placeholder="password"><br>
+                  <input id="signuprepassword" type="password" class="placeholder" type="text" placeholder="repassword" data-placeholder="repassword"><br>
                   <button id="signupbtn" type="submit" class="btn btn-inverse pull-right mylabel">signup</button><br>
                   <div id="signupmsg" class="input-large"></div>
                 </div>
             </div>
-            <a id="logout" class="hide navbar-link mycontrol" href="#">LO<i class="icon-lock"></i>OUT</a>
         </div>
     </div>
   </div>
@@ -155,7 +157,14 @@ modals -->
     </div>
 </div>
 
-<div id="randomposts"></div>
+<div>
+    <div id="randomPostsTitle">RANDOM</div>
+    <div id="randomposts"></div>
+</div>
+<div>
+    <div id="searchResultsTitle">RESULTS</div>
+    <div id="searchResults"></div>
+</div>
 
 <script src="{{ STATIC_URL }}mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>

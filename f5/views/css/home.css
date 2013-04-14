@@ -5,8 +5,8 @@ body {
     background-color: #111;
     color: #fff;
     padding-top: 40px;
-    padding-left: 10px;
-    padding-right: 10px;
+    /* padding-left: 10px; */
+    /* padding-right: 10px; */
 }
 
 .btn {
@@ -41,6 +41,12 @@ body {
     font-weight: bold;
     background: rgba(0, 0, 0, 0.2);
     color: #00BFFF; /* nice blue. 08c is default bootstrap link color */
+}
+
+#feedbackSignal:hover, #feedbackMsg:hover {
+    text-decoration: none;
+    color: #009ddd;
+    text-shadow: none;
 }
 
 #saved {
@@ -250,15 +256,15 @@ img.instagram:hover {
     opacity: 1;
 }
 
-.imgurPostType {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin: 0 5px 2px 0;
-    font-weight: bold;
-    font-family: helvetica, arial;
-    color: rgba(255, 255, 255, 0.5);
-}
+/* .imgurPostType { */
+/*     position: absolute; */
+/*     bottom: 0; */
+/*     right: 0; */
+/*     margin: 0 5px 2px 0; */
+/*     font-weight: bold; */
+/*     font-family: helvetica, arial; */
+/*     color: rgba(255, 255, 255, 0.5); */
+/* } */
 
 .instaComment {
     width: 100%;
@@ -274,7 +280,7 @@ img.instagram:hover {
 }
 
 .instaComment:hover {
-    text-decoration: underline;
+    color: #ddd;
 }
 
 .instaComment .highlight {
@@ -483,3 +489,44 @@ button.postInput {
     color: #ff8c00;
 }
 
+#searchResults {
+    padding-top: 40px;
+    padding-left: 10px;
+}
+
+.resultBox {
+    float: left;
+    width: 25%;
+}
+
+.clearResultBoxFloat {
+    clear: both;
+}
+
+.resultBox:hover .postbody,
+.randompost:hover .postbody,
+#relatedPostBox:hover .postbody {
+    color: #ddd;
+}
+
+.result {
+    padding: 10px;
+    color: #fff;
+}
+
+.result:hover {
+    text-decoration: none;
+}
+
+.result .posttitle {
+    margin-left: -10px;
+}
+
+#randomPostsTitle, #searchResultsTitle {
+    font-size: 4em;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    padding-top: 40px;
+    padding-bottom: 20px;
+}
