@@ -2,16 +2,17 @@
 
 // todo. trigger events on edit: what kinds of events?
 
+// todo. load original image page instead of just the image on img
+// click. just remove the file type extension
+
 // todo. search and list notes by modified time: first step to a
 // proper editing environment: files.
 
 // todo. put related word below flickr picture. then put thesaurus
 // entries
 
-// todo. resize pictures properly
-
-// todo. load original image page instead of just the image on img
-// click. just remove the file type extension
+// todo. done i think. some pictures don't resize right sometimes, but
+// good enough. resize pictures properly
 
 // todo. don't save or create empty notes
 
@@ -132,7 +133,8 @@ $(document).ready(function(){
 
 function tooltips(){
     $("a").tooltip({'placement': 'bottom'});
-    $("img").tooltip({'placement': 'bottom'});
+    $(".instaComment").tooltip({'placement': 'bottom'});
+    // todo now
     $("button").tooltip({'placement': 'top'});
 }
 
@@ -188,8 +190,12 @@ function onPostInputBlur(){
     }
 }
 
-function openInstagramSrc(){
+function openImgurSrc(){
     window.open($(this).attr("data-src"));
+}
+
+function openImgurPage(){
+    window.open($(this).attr("data-imgurPage"));
 }
 
 // caching to save time
@@ -353,14 +359,27 @@ function loadImgurPic(posts, relatedWord){
     cell.find(".instagram")
         .attr("src", post.link)
         .attr("data-src", post.link)
-        .attr("alt", post.link)
-        .attr("data-original-title", post.title);
+        .attr("alt", post.link);
     // cell.find(".imgurPostType").html(getImgurPostType(post));
     cell.find(".instaComment")
+        .attr("data-original-title", post.title)
+        .attr("data-imgurPage", getImgurPageUrl(post.link))
+    // todo now
         .html(post.title)
         .highlight(relatedWord);
     instapos = (instapos + 1) % INSTAROW_SIZE;
     reloadGifs();
+}
+
+// todo now
+function getImgurPageUrl(link){
+    var page = link.match(/(.*)\.[a-zA-Z]+$/);
+    if (!page){ // not an image, should already be page url
+        page = link;
+    } else {
+        page = page[1];
+    }
+    return page;
 }
 
 // cause after a while gifs stop loading, probably because of the
@@ -452,7 +471,9 @@ function clickityclickclick(){
     // $("#settingsbutton").click(function(){settingsbutton()});
     $("#aboutbutton").click(function(){aboutbutton();});
 
-    $(".instagram").on("click", openInstagramSrc);
+    $(".instagram").on("click", openImgurSrc);
+    $(".instaComment").on("click", openImgurPage);
+    // todo now
 }
 
 function cancelEditPost(){
@@ -714,7 +735,7 @@ function loadrelatedposts(json){
         relatedPost.attr("id", post.id);
         relatedPost.find(".posttitle").html(post.title);
         relatedPost.find(".hiddentitle").html(post.title);
-        relatedPost.find(".postbody").html(post.body);
+        relatedPost.find(".postbody").html(post.body).removeClass("recentbody");
         relatedPost.find(".hiddenbody").html(post.body);
         relatedPost.find(".postdate").html(parsedatetime(post.created));
     });

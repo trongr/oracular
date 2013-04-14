@@ -30,14 +30,14 @@ body {
 
 #feedbackSignal {
     color: #ff8c00;
-    font-size: 1.5em;
+    font-size: 1em;
     font-weight: bold;
     font-family: georgia;
     margin: 0px 5px 0px 5px;
 }
 
 #feedbackMsg {
-    font-size: 1.5em;
+    font-size: 1em;
     font-weight: bold;
     background: rgba(0, 0, 0, 0.2);
     color: #00BFFF; /* nice blue. 08c is default bootstrap link color */
@@ -273,6 +273,10 @@ img.instagram:hover {
     overflow: hidden;
 }
 
+.instaComment:hover {
+    text-decoration: underline;
+}
+
 .instaComment .highlight {
     font-family: arial; /* IM Fell English, times; */
     font-style: normal;
@@ -421,8 +425,8 @@ button.postInput {
 
 .tooltip {
     font-weight: bold;
-    font-size: 1em;
-    color: #fff !important;
+    font-size: 1.2em;
+    font-family: georgia;
 }
 
 #aboutmodal {
@@ -459,17 +463,16 @@ button.postInput {
     /* background-color: #ff8; */
     /* border: 2px dotted #fff; */
     color: #ff8c00;
+    font-weight: bold;
     font-size: 1.5em;
     font-family: IM Fell English, times;
     font-style: italic;
 }
 
 .recentbody {
-    /* background-color: #ff8; */
-    /* border: 2px dotted #fff; */
     color: #ff8c00;
-    /* font-size: 2em; */
-    font-family: georgia;
+    font-size: 1.6em;
+    font-family: IM Fell English, times;
 }
 
 #signupmsg {
