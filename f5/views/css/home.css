@@ -202,7 +202,7 @@ textarea.postInput {
     color: #fff !important;
     /* text-shadow: -1px -1px 2px #ff8c00, 1px 1px 2px #ff8c00; /\* makes text glow *\/ */
     /* background: rgba(0, 0, 0, 0.9) !important; */
-    min-height: 24em;
+    height: 9em;
 }
 
 /* changing selection color */
@@ -265,14 +265,21 @@ img.instagram:hover {
     max-height: 2em;
     text-align: bottom;
     vertical-align: bottom;
-    /* font-family: find nice sans font */
+    font-family: helvetica, arial; /* todo find some nice sans fonts */
+    font-size: 1em;
     font-weight: bold;
+    line-height: 1em;
     padding: 10px;
     overflow: hidden;
 }
 
+.instaComment .highlight {
+    font-family: arial; /* IM Fell English, times; */
+    font-style: normal;
+}
+
 #pairPanel {
-    padding-top: 30px;
+    padding-top: 10px;
     width: 100%;
     clear: both;
 }

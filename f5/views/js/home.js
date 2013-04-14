@@ -1,24 +1,34 @@
-// todo. put related word below flickr picture. then put thesaurus
-// entries
+// todo. oracular could be used as a mass crowd-sourcing mechanism
 
-// todo. restart gifs, cause they stop on resize
+// todo. trigger events on edit: what kinds of events?
 
 // todo. search and list notes by modified time: first step to a
 // proper editing environment: files.
 
-// todo. save files by mere virtue of modifying them, without having
-// to click save.... aw that means we're losing the red and blue pill
-// buttons.......... MAYBE NOT. IT'S NOT INTUITIVE
+// todo. put related word below flickr picture. then put thesaurus
+// entries
+
+// todo. resize pictures properly
+
+// todo. load original image page instead of just the image on img
+// click. just remove the file type extension
 
 // todo. don't save or create empty notes
 
-// todo. oracular could be used as a mass crowd-sourcing mechanism
+// todo. clip imgur titles.
+
+// todo. show img url on image cell hover, i.e. including comment, not
+// just image.
 
 // todo opt. remove some of the common words: you want to maximize the
 // number of imgur requests and results. maybe let user choose which
 // words to not request.
 
 // todo opt. autoresize textarea height
+
+// todo. save files by mere virtue of modifying them, without having
+// to click save.... aw that means we're losing the red and blue pill
+// buttons.......... MAYBE NOT. IT'S NOT INTUITIVE
 
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
@@ -52,11 +62,8 @@ var SPANWIDTH = BOOTSTRAP_GRID / POSTSPERCOL;
 
 var instagrams;
 var instapos = 0;
-var INSTAROW_SIZE = 4;         // number of pics in instagram row
+var INSTAROW_SIZE = 4;          // number of pics in instagram row
 var FLICKR_WIDTH = 200;         // size of img.instagram
-
-var recentpanels;              // divs for newly submitted posts
-var recentpostpos = 0;         // where to insert the next recent post
 
 var displaypanels;              // divs for random posts
 
@@ -68,7 +75,7 @@ var COMMON_WORDS = {
     "no":true, "and":true,
     "had":true,
     "a":true, "by":true, "about":true,
-    "could":true, "to":true, "word":true,
+    "could":true, "to":true,
     "out":true, "in":true,
     "but":true, "my":true,
     "is":true, "not":true, "then":true,
@@ -77,15 +84,15 @@ var COMMON_WORDS = {
     "them":true, "it":true,
     "were":true, "so":true, "been":true,
     "he":true, "we":true, "some":true,
-    "call":true, "was":true, "when":true,
+    "was":true, "when":true,
     "her":true, "who":true, "for":true,
     "your":true, "would":true,
     "on":true, "can":true,
     "its":true, "are":true, "said":true,
-    "like":true, "now":true, "as":true,
+    "now":true, "as":true,
     "here":true, "here's":true, "there":true,
     "there're":true, "him":true, "find":true,
-    "with":true, "use":true, "into":true,
+    "with":true, "into":true,
     "his":true, "an":true,
     "they":true,
     "has":true,
@@ -94,7 +101,6 @@ var COMMON_WORDS = {
     "did":true, "at":true, "she":true,
     "get":true, "be":true,
     "do":true, "does":true,
-    "come":true,
     "this":true, "how":true,
     "have":true, "their":true,
     "may":true, "from":true,
@@ -103,6 +109,8 @@ var COMMON_WORDS = {
 };
 
 var feedback, feedbackSignal, feedbackMsg;
+
+var isLoggedIn = false;
 
 $(document).ready(function(){
     loginout();
@@ -188,7 +196,6 @@ function openInstagramSrc(){
 function cachedivs(){
     relatedPost = $(".relatedpost");
     displaypanels = $(".randompost");
-    recentpanels = $(".recentpost");
     instagrams = $(".instaCell");
     feedback = $("#feedback");
     feedbackSignal = $("#feedbackSignal");
@@ -245,7 +252,9 @@ function clearRelatedWords(){
 function getrelatedposts(){
     prepRelatedWords();
     if (!isCommonWord(relatedwords)){
-        getOwnPosts(relatedwordsarray());
+        if (isLoggedIn){
+            getOwnPosts(relatedwordsarray());
+        }
         getImgurPics(relatedwordsarray()[0]);
         // getFlickrPics(relatedwordsarray()[0]);
         // getInstagramPics(relatedwordsarray()[0]);
@@ -351,6 +360,16 @@ function loadImgurPic(posts, relatedWord){
         .html(post.title)
         .highlight(relatedWord);
     instapos = (instapos + 1) % INSTAROW_SIZE;
+    reloadGifs();
+}
+
+// cause after a while gifs stop loading, probably because of the
+// autoresizing
+function reloadGifs(){
+    for (var i = 0; i < INSTAROW_SIZE; i++){
+        var post = instagrams.eq(i).find(".instagram");
+        post.attr("src", post.attr("src"));
+    }
 }
 
 function getRandomImgurPostIndex(posts){
@@ -462,6 +481,7 @@ function signup(){
             if (json.error){
                 $("#signupmsg").html(json.error);
             } else {
+                isLoggedIn = json.isloggedin;
                 showhideloginbar(json.isloggedin);
                 // mkrandomposts();
                 clearrandomposts();
@@ -493,6 +513,7 @@ function logout(){
         url: HOMEPAGE + "logout",
         type: "GET",
         success: function(json){
+            isLoggedIn = json.isloggedin;
             showhideloginbar(json.isloggedin);
         }
     });
@@ -503,6 +524,7 @@ function loginout(){
         url: HOMEPAGE + "isloggedin",
         type: "GET",
         success: function(json){
+            isLoggedIn = json.isloggedin;
             showhideloginbar(json.isloggedin);
             getrelatedposts();
         }
@@ -564,6 +586,7 @@ function loginbutton(){
         },
         success: function(json){
             // todo. check return status
+            isLoggedIn = json.isloggedin;
             showhideloginbar(json.isloggedin);
             clearrandomposts();
             mkrandomposts(true);
@@ -605,7 +628,7 @@ function initPostDivs(){
         stuff += "<div class='row-fluid myrandomrow'>";
         for (var j = 0; j < POSTSPERCOL; j++){
             stuff += "<div class='span" + SPANWIDTH + "'>" +
-                "<a href='#' class='randompost recentpost'>" +
+                "<a href='#' class='randompost'>" +
                 "<span class='posttitle'></span> " + // putting spaces after spans let them fill over to new lines
                 "<span class='hiddentitle hide tex2jax_ignore'></span> " + // putting spaces after spans let them fill over to new lines
                 "<span class='postbody'></span> " +
@@ -759,24 +782,14 @@ function clearEditPostForm(){
 }
 
 function showSubmittedPost(post){
-    clearPreviousSubmittedPostStyle();
-
-    var rp = recentpanels.eq(recentpostpos);
-    recentpostpos = (recentpostpos + 1) % recentpanels.length;
-
-    rp.attr("id", post.id);
-    rp.find(".posttitle").html(post.title);
-    rp.find(".hiddentitle").html(post.title);
-    rp.find(".postbody").html(post.body).addClass("recentbody");
-    rp.find(".hiddenbody").html(post.body);
-    rp.find(".postdate").html(parsedatetime(post.created));
+    relatedPost.attr("id", post.id);
+    relatedPost.find(".posttitle").html(post.title);
+    relatedPost.find(".hiddentitle").html(post.title);
+    relatedPost.find(".postbody").html(post.body).addClass("recentbody");
+    relatedPost.find(".hiddenbody").html(post.body);
+    relatedPost.find(".postdate").html(parsedatetime(post.created));
 
     rejax();
-}
-
-function clearPreviousSubmittedPostStyle(){
-    recentpanels.eq((recentpostpos - 1 + recentpanels.length) % recentpanels.length)
-        .find(".postbody").removeClass("recentbody");
 }
 
 function changeMode(newMode){
