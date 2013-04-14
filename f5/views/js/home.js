@@ -1,35 +1,20 @@
-// todo. oracular could be used as a mass crowd-sourcing mechanism
-
-// todo. trigger events on edit: what kinds of events?
-
-// todo. load original image page instead of just the image on img
-// click. just remove the file type extension
-
 // todo. search and list notes by modified time: first step to a
 // proper editing environment: files.
 
 // todo. put related word below flickr picture. then put thesaurus
 // entries
 
-// todo. done i think. some pictures don't resize right sometimes, but
-// good enough. resize pictures properly
+// todo. search other sites, e.g. google if imgur returns no results.
 
 // todo. don't save or create empty notes
 
 // todo. clip imgur titles.
-
-// todo. show img url on image cell hover, i.e. including comment, not
-// just image.
 
 // todo opt. remove some of the common words: you want to maximize the
 // number of imgur requests and results. maybe let user choose which
 // words to not request.
 
 // todo opt. autoresize textarea height
-
-// todo. save files by mere virtue of modifying them, without having
-// to click save.... aw that means we're losing the red and blue pill
-// buttons.......... MAYBE NOT. IT'S NOT INTUITIVE
 
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
@@ -179,6 +164,7 @@ function registerBindings(){
     $("#newPostTitle, #newPostBody, #editPostTitle, #editPostBody")
         .keydown(onEditKeydown)
         .on("blur", onPostInputBlur);
+    $("#searchBar").on("focus", onSearchBarFocus)
 }
 
 function onPostInputBlur(){
