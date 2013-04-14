@@ -134,7 +134,6 @@ $(document).ready(function(){
 function tooltips(){
     $("a").tooltip({'placement': 'bottom'});
     $(".instaComment").tooltip({'placement': 'bottom'});
-    // todo now
     $("button").tooltip({'placement': 'top'});
 }
 
@@ -209,12 +208,15 @@ function cachedivs(){
 }
 
 function readChar(key){
-    // js can't read single quote ' from e.which, so hack:
+    // js can't read single quote ' - from e.which, so hack:
     var letter = parseInt(key);
-    if (key == "222"){
+    if (letter === 222){
         relatedwords += "'";
+    } else if (key === 173){
+        relatedwords += "-";
     } else if ((65 <= letter && letter <= 90) ||
-               (97 <= letter && letter <= 122)) {
+               (97 <= letter && letter <= 122)
+              ) {
         relatedwords += String.fromCharCode(key);
     }
     showFeedback("TYPING", relatedwords);
@@ -364,14 +366,12 @@ function loadImgurPic(posts, relatedWord){
     cell.find(".instaComment")
         .attr("data-original-title", post.title)
         .attr("data-imgurPage", getImgurPageUrl(post.link))
-    // todo now
         .html(post.title)
         .highlight(relatedWord);
     instapos = (instapos + 1) % INSTAROW_SIZE;
-    reloadGifs();
+    setTimeout(reloadGifs, 500);
 }
 
-// todo now
 function getImgurPageUrl(link){
     var page = link.match(/(.*)\.[a-zA-Z]+$/);
     if (!page){ // not an image, should already be page url
@@ -473,7 +473,6 @@ function clickityclickclick(){
 
     $(".instagram").on("click", openImgurSrc);
     $(".instaComment").on("click", openImgurPage);
-    // todo now
 }
 
 function cancelEditPost(){
