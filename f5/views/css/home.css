@@ -37,6 +37,7 @@ body {
 }
 
 #feedbackMsg {
+    margin: 0px 15px 0px 5px;
     font-size: 1em;
     font-weight: bold;
     background: rgba(0, 0, 0, 0.2);
@@ -84,7 +85,6 @@ body {
 
 #randomposts {
     margin: 10px;
-    padding-top: 40px;
 }
 
 .myrandomrow {
@@ -246,8 +246,8 @@ img.instagram {
     opacity: 0.95;
     height: auto;
     width: 100%;
-    max-height: 225px;
-    vertical-align: bottom;
+    max-height: 220px;
+    vertical-align: top;
     font-weight: bold;
     font-family: georgia;
 }
@@ -268,8 +268,10 @@ img.instagram:hover {
 
 .instaComment {
     width: 100%;
-    max-height: 2em;
-    text-align: bottom;
+    /* max-height: 2em; */
+    height: auto;
+    max-height: auto;
+    /* text-align: bottom; */
     vertical-align: bottom;
     font-family: helvetica, arial; /* todo find some nice sans fonts */
     font-size: 1em;
@@ -490,13 +492,13 @@ button.postInput {
 }
 
 #searchResults {
-    padding-top: 40px;
     padding-left: 10px;
 }
 
 .resultBox {
     float: left;
     width: 25%;
+    margin-top: 20px;
 }
 
 .clearResultBoxFloat {
@@ -528,5 +530,5 @@ button.postInput {
     text-align: center;
     width: 100%;
     padding-top: 40px;
-    padding-bottom: 20px;
+    padding-bottom: 40px;
 }

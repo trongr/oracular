@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>oracular</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}awesome/css/font-awesome.min.css">
 <!-- <link href='http://fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'> -->
@@ -39,11 +39,6 @@
                 <li><a id="logout" class="hide mydropdownbutton" href="#">LO<i class="icon-lock"></i>OUT</a></li>
             </div>
         </ul>
-        <input id="searchBar" class="placeholder pull-right hide" placeholder="search" data-placeholder="search" type="text">
-        <a id="feedback" class="navbar-text mycontrol">
-            <span id="feedbackSignal"></span>
-            <span id="feedbackMsg"></span>
-        </a>
         <!-- fyi. how to make a tooltip -->
         <!-- <li><a id="newpostbutton" class="mycontrol" href="#" rel="tooltip" title="ctrl + enter">N<i class="icon-file"></i>W</a></li> -->
         <div class="navbar-text pull-right">
@@ -62,6 +57,11 @@
                 </div>
             </div>
         </div>
+        <input id="searchBar" class="placeholder pull-right hide" placeholder="search" data-placeholder="search" type="text">
+        <a id="feedback" class="navbar-text mycontrol pull-right">
+            <span id="feedbackSignal"></span>
+            <span id="feedbackMsg"></span>
+        </a>
     </div>
   </div>
 </div>
@@ -115,7 +115,9 @@ modals -->
             <a href="#" class="relatedpost recentpost">
                 <span class="posttitle"><span style="line-height: 1em; font-size: 1.5em;">Try typing something on the right</span></span>
                 <span class="hiddentitle hide tex2jax_ignore"></span>
-                <span class="postbody"><span style="line-height: 1em; font-size: 1.5em;">Oracular is like Google Instant Search, but instead of a search bar it has an editor, so you can do some neat things with it. For the first time in internet history, you can truly procrastinate while doing serious work.</span></span>
+                <span class="postbody"><span style="line-height: 1em; font-size: 1.5em;">For example, &ldquo;Somehow it fills my head with ideas, only i don't exactly know what they are.&rdquo;
+
+Oracular is like Google Instant Search, but instead of a search bar it has an editor, so you can do some neat things with it: for the first time in Internet history, you can truly procrastinate while doing serious work!</span></span>
                 <span class="hiddenbody hide tex2jax_ignore"></span>
                 <span class="postdate"></span>
             </a>

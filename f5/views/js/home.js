@@ -1,6 +1,9 @@
 // todo. search and list notes by modified time: first step to a
 // proper editing environment: files.
 
+// todo. make three radio buttons for imgur, flickr, and instagram,
+// for the user to choose who to get pictures from. use color codes.
+
 // todo. put related word below flickr picture. then put thesaurus
 // entries
 
@@ -149,10 +152,14 @@ function loadInterestingness(json){
             // var thumbPic = basePic + '_q.jpg';
             var medPic = basePic + ".jpg";
             var largePic = basePic + "_b.jpg";
-            instagrams.eq(i).find(".instagram")
+            var cell = instagrams.eq(i);
+            cell.find(".instagram")
                 .attr("src", medPic)
             // .attr("src", thumbPic)
                 .attr("data-src", largePic);
+            cell.find(".instaComment")
+                .attr("data-original-title", item.title)
+                .html(item.title);
         }
     }
 }
@@ -202,7 +209,6 @@ function searchPosts(searchBar){
     }
 }
 
-// todo now
 function loadSearchResults(posts, keywords){
     var box = $("#searchResults");
     var stuff = "";
@@ -219,7 +225,7 @@ function loadSearchResults(posts, keywords){
     });
     box.html(stuff).highlight(keywords);
     rejax();
-    window.location = "#searchResults";
+    window.location = "#searchResultsTitle";
     $("#searchResults .result").on("click", editPost);
 }
 
@@ -335,25 +341,30 @@ function getFlickrPics(relatedWord){
         },
         dataType: "jsonp",
         success: function(json){
-            jsonFlickrApi(json);
+            jsonFlickrApi(json, relatedWord);
         }
     });
 }
 
 // flickr's api is not intuitive at all
-function jsonFlickrApi(json){
+function jsonFlickrApi(json, relatedWord){
     if (!json.photos || !json.photos.photo[0]){
         // throw "home.js:getFlickrPics:" + JSON.stringify(json, 0, 2)
     } else {
         var item = json.photos.photo[0];
         var basePic = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret;
-        var thumbPic = basePic + '_q.jpg';
-        // var medPic = basePic + ".jpg";
+        // var thumbPic = basePic + '_q.jpg';
+        var medPic = basePic + ".jpg";
         var largePic = basePic + "_b.jpg";
-        instagrams.eq(instapos)
-            .attr("src", thumbPic)
-            // .attr("data-src", medPic);
+        var cell = instagrams.eq(instapos);
+        cell.find(".instagram")
+            // .attr("src", thumbPic)
+            .attr("src", medPic)
             .attr("data-src", largePic);
+        cell.find(".instaComment")
+            .attr("data-original-title", item.title)
+            .html(item.title)
+            .highlight(relatedWord);
         instapos = (instapos + 1) % INSTAROW_SIZE;
     }
 }
@@ -371,8 +382,8 @@ function getInstagramPics(relatedWord){
             if (!json.data || !json.data[0]){
                 throw "home.js:getInstagramPics:" + JSON.stringify(json, 0, 2);
             } else {
-                instagrams.eq(instapos)
-                    .attr("src", json.data[0].images.thumbnail.url)
+                instagrams.eq(instapos).find(".instagram")
+                    .attr("src", json.data[0].images.low_resolution.url)
                     .attr("data-src", json.data[0].link);
                 instapos = (instapos + 1) % INSTAROW_SIZE;
             }
@@ -606,12 +617,14 @@ function showhideloginbar(isloggedin){
         $("#newpostbutton").show();
         $("#reloadbutton").show();
         $("#searchBar").show();
+        $("#searchButton").show();
     } else {
         $("#newpostbutton").hide();
         $("#reloadbutton").hide();
         $("#searchBar").hide();
         $("#logout").hide();
         $("#loginbar").show();
+        $("#searchButton").hide();
     }
 }
 
@@ -743,7 +756,7 @@ function mkrandomposts(firstTime){
     }, function(json){
         loadposts(json);
         if (!firstTime){
-            window.location = "#randomposts";
+            window.location = "#randomPostsTitle";
         }
     });
 }
