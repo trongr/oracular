@@ -157,8 +157,10 @@ function loadInterestingness(json){
                 .attr("src", medPic)
             // .attr("src", thumbPic)
                 .attr("data-src", largePic);
+            // todo now
             cell.find(".instaComment")
                 .attr("data-original-title", item.title)
+                .attr("data-imgurPage", largePic)
                 .html(item.title);
         }
     }
@@ -295,14 +297,17 @@ function onEditKeydown(e) {
             getrelatedposts();
             break;
         case KEYBACKSPACE:
-            if (e.ctrlKey){     // ctrl + backspace deletes last word
-                clearRelatedWords();
-            } else {
-                rollbackspace();
-            }
+            rollbackspace();
             break;
         default:                // reading anything but punctuations
             readChar(key);
+        }
+    }
+    if (e.ctrlKey){
+        switch (key){
+        case KEYBACKSPACE:
+            clearRelatedWords();
+            break;
         }
     }
     insertMathBrackets(e, $(this));
@@ -416,7 +421,6 @@ function getImgurPics(relatedWord){
     });
 }
 
-// optional. put postType on gifs.
 function loadImgurPic(posts, relatedWord){
     var index = getRandomImgurPostIndex(posts);
     var post = posts[index];
@@ -425,7 +429,6 @@ function loadImgurPic(posts, relatedWord){
         .attr("src", post.link)
         .attr("data-src", post.link)
         .attr("alt", post.link);
-    // cell.find(".imgurPostType").html(getImgurPostType(post));
     cell.find(".instaComment")
         .attr("data-original-title", post.title)
         .attr("data-imgurPage", getImgurPageUrl(post.link))
@@ -467,16 +470,6 @@ function getRandomImgurPostIndex(posts){
         }
     }
     return index;
-}
-
-// only putting postType because sometimes gifs don't play, because
-// your css auto-resizes them, so the animation has to stop
-function getImgurPostType(post){
-    var postType = "";
-    if (post.type && post.type.split("/")[1] == "gif"){
-        postType = ".gif";
-    }
-    return postType;
 }
 
 function getOwnPosts(relatedWordsArray){
@@ -653,10 +646,9 @@ function initRelatedPicDivs(){
     for (var i = 0; i < INSTAROW_SIZE; i++){
         stuff += "<div class='instaCell'>" +
             "<div class='instaBox'>" +
-            '<img src="" data-src="" alt="" class="instagram" rel="tooltip">' +
-            "<div class='imgurPostType'></div>" +
-            "</div>" +
             "<div class='instaComment'></div>" +
+            '<img src="" data-src="" alt="" class="instagram" rel="tooltip">' +
+            "</div>" +
             "</div>"
     }
     stuff += "</div>";
