@@ -62,7 +62,7 @@ var COMMON_WORDS = {
     "the":true, "or":true, "will":true,
     "of":true, "just": true,
     "no":true, "and":true,
-    "had":true,
+    "had":true, "each":true,
     "a":true, "by":true, "about":true,
     "could":true, "to":true,
     "out":true, "in":true,
@@ -119,6 +119,23 @@ $(document).ready(function(){
     tooltips();
 });
 
+function loadARandomPost(){
+    $.getJSON(HOMEPAGE + "randomposts", {
+        postcount: 1
+    }, function(json){
+        if (json.posts && json.posts.length != 0){
+            var post = json.posts[0];
+            var rp = $("#relatedBox").find(".relatedpost");
+            rp.attr("id", post.id);
+            rp.find(".posttitle").html(post.title);
+            rp.find(".hiddentitle").html(post.title);
+            rp.find(".postbody").html(post.body);
+            rp.find(".hiddenbody").html(post.body);
+            rp.find(".postdate").html(parsedatetime(post.created));
+        }
+    });
+}
+
 function tooltips(){
     $("a").tooltip({'placement': 'bottom'});
     $(".instaComment").tooltip({'placement': 'bottom'});
@@ -157,7 +174,6 @@ function loadInterestingness(json){
                 .attr("src", medPic)
             // .attr("src", thumbPic)
                 .attr("data-src", largePic);
-            // todo now
             cell.find(".instaComment")
                 .attr("data-original-title", item.title)
                 .attr("data-imgurPage", largePic)
@@ -168,14 +184,19 @@ function loadInterestingness(json){
 
 function registerBindings(){
     clickityclickclick(); // setting button onclicks
+
     $(document).bind("keydown", keyboardshortcuts);
+
     inputEnterKeypress();
+
     $("#newPostTitle, #newPostBody, #editPostTitle, #editPostBody")
         .keydown(onEditKeydown)
         .on("blur", onPostInputBlur);
+
     $("input.placeholder")
         .on("focus", onPlaceholderFocus)
         .on("blur", onPlaceholderBlur);
+
     $("#searchBar").on("keydown", searchBar);
 }
 
@@ -257,7 +278,7 @@ function openImgurPage(){
 
 // caching to save time
 function cachedivs(){
-    relatedPost = $(".relatedpost");
+    relatedPost = $("#relatedBox .relatedpost");
     displaypanels = $(".randompost");
     instagrams = $(".instaCell");
     feedback = $("#feedback");
@@ -322,7 +343,7 @@ function clearRelatedWords(){
 // todo. smarter algorithm to get posts with similar ideas
 function getrelatedposts(){
     prepRelatedWords();
-    if (!isCommonWord(relatedwords)){
+    if (!isCommonWord(relatedwords) && relatedwords.length >= 4){
         if (isLoggedIn){
             getOwnPosts(relatedwordsarray());
         }
@@ -506,6 +527,11 @@ function clickityclickclick(){
     $("#reloadbutton").click(function(){mkrandomposts(); return false;});
     $("#searchButton").click(function(){$("#searchBar").focus(); return false;});
 
+    // bootstrap dropdown menu doesn't close on item click, so:
+    $("#moreDropdownMenu .mydropdownbutton").on("click", function(){
+        $("#moreDropdownMenu").dropdown("toggle");
+    });
+
     $(".randompost, .relatedpost").on("click", editPost);
 
     $("#newPostSubmit").on("click", submitNewPost);
@@ -552,9 +578,10 @@ function signup(){
                 $("#signupmsg").html(json.error);
             } else {
                 isLoggedIn = json.isloggedin;
-                showhideloginbar(json.isloggedin);
-                // mkrandomposts();
-                clearrandomposts();
+                showhideloginbar(isLoggedIn);
+                if (isLoggedIn){
+                    clearrandomposts();
+                }
             }
         }
     });
@@ -584,7 +611,7 @@ function logout(){
         type: "GET",
         success: function(json){
             isLoggedIn = json.isloggedin;
-            showhideloginbar(json.isloggedin);
+            showhideloginbar(isLoggedIn);
         }
     });
 }
@@ -596,7 +623,9 @@ function loginout(){
         success: function(json){
             isLoggedIn = json.isloggedin;
             showhideloginbar(json.isloggedin);
-            getrelatedposts();
+            if (isLoggedIn){
+                loadARandomPost();
+            }
         }
     });
 }
@@ -611,6 +640,8 @@ function showhideloginbar(isloggedin){
         $("#reloadbutton").show();
         $("#searchBar").show();
         $("#searchButton").show();
+        $("#frontispiece").hide();
+        $("#relatedBox").show();
     } else {
         $("#newpostbutton").hide();
         $("#reloadbutton").hide();
@@ -618,6 +649,8 @@ function showhideloginbar(isloggedin){
         $("#logout").hide();
         $("#loginbar").show();
         $("#searchButton").hide();
+        $("#frontispiece").show();
+        $("#relatedBox").hide();
     }
 }
 
@@ -632,10 +665,13 @@ function loginbutton(){
         success: function(json){
             // todo. check return status
             isLoggedIn = json.isloggedin;
-            showhideloginbar(json.isloggedin);
-            clearrandomposts();
-            mkrandomposts(true);
-            getrelatedposts();
+            showhideloginbar(isLoggedIn);
+            if (isLoggedIn){
+                getrelatedposts();
+                clearrandomposts();
+                mkrandomposts(true);
+                loadARandomPost();
+            }
         }
     });
 }
@@ -725,10 +761,10 @@ function keyboardshortcuts(e){
     if (e.ctrlKey){
         switch (key){
         case KEYSPACE:
-            $("#newpostbutton").click();
+            newPost();
             break;
         case KEYENTER:
-            $("#searchButton").click();
+            $("#searchBar").focus();
             break;
         }
     } else if (e.shiftKey){
@@ -736,7 +772,7 @@ function keyboardshortcuts(e){
     } else if (e.altKey){
         switch (key){
         case KEYENTER:
-            $("#reloadbutton").click();
+            mkrandomposts();
             break;
         }
     }

@@ -19,8 +19,8 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner mynavbar">
     <div class="container-fluid">
-        <a class="dropdown-toggle navbar-text mycontrol" data-toggle="dropdown" href="#">MOR<i class="icon-align-justify"></i></a>
-        <ul class="dropdown-menu mydropdownmenu">
+        <a id="moreMenuButton" class="dropdown-toggle navbar-text mycontrol" data-toggle="dropdown" href="#">MOR<i class="icon-align-justify"></i></a>
+        <ul id="moreDropdownMenu" class="dropdown-menu mydropdownmenu">
             <div class="span4">
                 <li>
                     <a id="newpostbutton" class="mydropdownbutton" href="#">N<i class="icon-file"></i>W
@@ -114,18 +114,25 @@ modals -->
 <div id="relatedpics"></div>
 
 <div id="pairPanel" class="row-fluid">
-    <div id="relatedBox">
-        <div id="relatedPostBox">
-            <a href="#" class="relatedpost recentpost">
-                <span class="posttitle"><span style="line-height: 1em; font-size: 1.5em;">Try typing something on the right</span></span>
-                <span class="hiddentitle hide tex2jax_ignore"></span>
-                <span class="postbody"><span style="line-height: 1em; font-size: 1.5em;">For example, &ldquo;Somehow it fills my head with ideas, only i don't exactly know what they are.&rdquo;
+    <div id="relatedBox" class="hide">
+        <a href="#" class="relatedpost recentpost">
+            <span class="posttitle"></span>
+            <span class="hiddentitle hide tex2jax_ignore"></span>
+            <span class="postbody"></span>
+            <span class="hiddenbody hide tex2jax_ignore"></span>
+            <span class="postdate"></span>
+        </a>
+    </div>
+    <div id="frontispiece">
+        <span class="relatedpost recentpost">
+            <span class="posttitle"><span style="line-height: 1em; font-size: 1.5em;">Try typing something on the right</span></span>
+            <span class="hiddentitle hide tex2jax_ignore"></span>
+            <span class="postbody"><span style="line-height: 1em; font-size: 1.5em;">For example, &ldquo;Somehow it fills my head with ideas, only i don't exactly know what they are.&rdquo;
 
 Oracular is like Google Instant Search, but instead of a search bar it has an editor, so you can do some neat things with it: for the first time in Internet history, you can truly procrastinate while doing serious work!</span></span>
-                <span class="hiddenbody hide tex2jax_ignore"></span>
-                <span class="postdate"></span>
-            </a>
-        </div>
+            <span class="hiddenbody hide tex2jax_ignore"></span>
+            <span class="postdate"></span>
+        </span>
     </div>
     <div id="postFormBox">
         <div id="newPostForm" class="form-horizontal">

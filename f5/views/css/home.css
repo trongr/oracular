@@ -208,7 +208,7 @@ textarea.postInput {
     color: #fff !important;
     /* text-shadow: -1px -1px 2px #ff8c00, 1px 1px 2px #ff8c00; /\* makes text glow *\/ */
     /* background: rgba(0, 0, 0, 0.9) !important; */
-    height: 14em;
+    height: 27em;
 }
 
 /* changing selection color */
@@ -264,27 +264,28 @@ img.instagram {
 
 img.instagram:hover {
     opacity: 1;
+    color: #ddd;                /* alt text color */
 }
 
 #pairPanel {
     padding-top: 10px;
     width: 100%;
     clear: both;
+    display: table;
 }
 
-#relatedBox {
-    /* margin: 10px 10px 10px 20px; */
-    width: 45%;
-    float: left;
-}
-
-#relatedPostBox {
+#relatedBox, #frontispiece {
+    display: table-cell;
     padding: 20px;
+    width: 45%;
+    vertical-align: top;
 }
 
 #postFormBox {
+    display: table-cell;
+    padding: 20px;
     width: 55%;
-    float: left;
+    vertical-align: top;
 }
 
 #newPostForm, #editPostForm {
