@@ -38,6 +38,8 @@ POST = "post"
 
 POSTCOUNT = "postcount"
 
+PAGE_SIZE = 12
+
 # todo. replace this with home.html. show a sample public app on
 # index.html: the only difference between home.html and index.html
 # would be that one has a login bar and the other doesn't.
@@ -73,7 +75,6 @@ def editpost(request):
 def note(request):
     postid = request.GET.get(POSTID, "")
     try:
-        # todo now
         post = Post.objects.filter(creator=request.user.id).filter(id=int(postid))
         if post:
             return JSONResponse({
@@ -248,15 +249,16 @@ def search(req):
     if req.user.is_authenticated():
         creator = req.user.id
         q = req.GET.getlist("q[]")
-
+        page = max(int(req.GET.get("page", 0)), 0)
+        # todo now
         posts = []
         qlist = (Q(title__icontains=rw) | Q(body__icontains=rw) for rw in q)
-        # todo now. sort reverse chrono
         posts = Post.objects.filter(creator=creator).filter(reduce(operator.and_, qlist)).order_by("-updated")
         data = {
-            # todo now. remove bodies from posts
-            "posts": PostSerializer(posts, many=True).data,
-            "count": len(posts)
+            "posts": PostSerializer(posts[page * PAGE_SIZE:(page + 1) * PAGE_SIZE], many=True).data,
+            "pages": posts.count() / PAGE_SIZE,
+            "page": page,
+            "q": q
         }
         return JSONResponse(data)
     else:

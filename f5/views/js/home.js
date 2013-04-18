@@ -1,11 +1,7 @@
-// todo. search and list notes by modified time: first step to a
-// proper editing environment: files.
-
 // todo. make three radio buttons for imgur, flickr, and instagram,
 // for the user to choose who to get pictures from. use color codes.
 
-// todo. put related word below flickr picture. then put thesaurus
-// entries
+// todo. thesaurus entries
 
 // todo. search other sites, e.g. google if imgur returns no results.
 
@@ -41,6 +37,11 @@ var KEYONE = 49;                // shift + one = !
 var KEYSLASH = 191;             // shift + slash = ?
 var KEYBACKSPACE = 8;
 var KEY_M = 77;
+
+var KEYLEFT = 37;
+var KEYUP = 38;
+var KEYRIGHT = 39;
+var KEYDOWN = 40;
 
 var BOOTSTRAP_GRID = 12;
 
@@ -101,6 +102,11 @@ var feedback, feedbackSignal, feedbackMsg;
 
 var isLoggedIn = false;
 
+// pagination
+var searchString = "";
+var currPage = 0;
+var totalPages = 0;             // 0-indexed
+
 $(document).ready(function(){
     loginout();
 
@@ -140,6 +146,7 @@ function tooltips(){
     $("a").tooltip({'placement': 'bottom'});
     $(".instaComment").tooltip({'placement': 'bottom'});
     $("button").tooltip({'placement': 'top'});
+    $(".pageButton").tooltip({'placement': 'top'});
 }
 
 function loadInterestingFlickrPics(){
@@ -205,31 +212,39 @@ function searchBar(e){
     if (!e.ctrlKey && !e.shiftKey && !e.altKey){
         switch (key){
         case KEYENTER:
-            searchPosts($(this));
+            searchPosts($(this).val().split(" "), 0);
             break;
         }
     }
 }
 
-function searchPosts(searchBar){
-    var keywords = searchBar.val().split(" ");
+function searchPosts(keywords, page){
     if (isLoggedIn){
         $.ajax({
             url: HOMEPAGE + "search",
             type: "GET",
             data: {
-                q: keywords
+                q: keywords,
+                page: page
             },
             success: function(json){
-                if (!json.count || json.count === 0){
+                if (!json.pages){
                     throw "searchPosts:" + JSON.stringify(json, 0, 2);
                 } else {
-                    // todo. paginate
                     loadSearchResults(json.posts, keywords);
+                    setPagination(json);
                 }
             }
         });
     }
+}
+
+function setPagination(json){
+    searchString = json.q;
+    currPage = json.page;
+    totalPages = json.pages;
+    $(".currPage").html(json.page);
+    $(".totalPages").html(" / " + json.pages);
 }
 
 function loadSearchResults(posts, keywords){
@@ -550,6 +565,36 @@ function clickityclickclick(){
 
     $(".instagram").on("click", openImgurSrc);
     $(".instaComment").on("click", openImgurPage);
+
+    // todo. hide page buttons on page load, show on first search
+    $(".firstPage").on("click", searchResultsFirstPage);
+    $(".prevPage").on("click", searchResultsPrevPage);
+    $(".nextPage").on("click", searchResultsNextPage);
+    $(".lastPage").on("click", searchResultsLastPage);
+}
+
+function searchResultsLastPage(){
+    if (currPage != totalPages){
+        searchPosts(searchString, totalPages);
+    }
+}
+
+function searchResultsNextPage(){
+    if (currPage != totalPages){
+        searchPosts(searchString, currPage + 1);
+    }
+}
+
+function searchResultsPrevPage(){
+    if (currPage != 0){
+        searchPosts(searchString, currPage - 1);
+    }
+}
+
+function searchResultsFirstPage(){
+    if (currPage != 0){
+        searchPosts(searchString, 0);
+    }
 }
 
 function cancelEditPost(){
@@ -681,10 +726,8 @@ function initRelatedPicDivs(){
     var stuff = "<div class='instaRow'>";
     for (var i = 0; i < INSTAROW_SIZE; i++){
         stuff += "<div class='instaCell'>" +
-            "<div class='instaBox'>" +
             "<div class='instaComment'></div>" +
             '<img src="" data-src="" alt="" class="instagram" rel="tooltip">' +
-            "</div>" +
             "</div>"
     }
     stuff += "</div>";
@@ -765,6 +808,18 @@ function keyboardshortcuts(e){
             break;
         case KEYENTER:
             $("#searchBar").focus();
+            break;
+        case KEYRIGHT:
+            searchResultsNextPage();
+            break;
+        case KEYLEFT:
+            searchResultsPrevPage();
+            break;
+        case KEYUP:
+            searchResultsLastPage();
+            break;
+        case KEYDOWN:
+            searchResultsFirstPage();
             break;
         }
     } else if (e.shiftKey){

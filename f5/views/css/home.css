@@ -221,7 +221,6 @@ textarea.postInput {
 }
 
 #relatedpics {
-    margin-bottom: 20px;
     float: right;
     height: 230px;
 }
@@ -229,12 +228,14 @@ textarea.postInput {
 .instaRow {
     display: table-row;
     padding: 0px 30px 20px 30px;
+    height: 230px;
 }
 
 .instaCell {
     display: table-cell;
     padding: 0px 10px 10px 0px;
     vertical-align: bottom;
+    overflow: hidden;
 }
 
 .instaComment {
@@ -268,7 +269,7 @@ img.instagram:hover {
 }
 
 #pairPanel {
-    padding-top: 10px;
+    padding-top: 30px;
     width: 100%;
     clear: both;
     display: table;
@@ -501,11 +502,38 @@ button.postInput {
     margin-left: -10px;
 }
 
-#randomPostsTitle, #searchResultsTitle {
+#randomPostsTitle {
     font-size: 4em;
     font-weight: bold;
     text-align: center;
     width: 100%;
     padding-top: 40px;
     padding-bottom: 40px;
+}
+
+#searchResultsTitle {
+    font-size: 4em;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    padding-top: 40px;
+}
+
+#pagination {
+    display: table;
+    padding-top: 30px;
+    width: 100%;
+    text-align: center;
+}
+
+.pageButton {
+    display: table-cell;
+    font-size: 3em;
+    font-family: IM Fell English, helvetica;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.pageButton:hover {
+    color: #ff8c00;
 }
