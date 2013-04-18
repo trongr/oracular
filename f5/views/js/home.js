@@ -178,12 +178,13 @@ function loadInterestingness(json){
             var largePic = basePic + "_b.jpg";
             var cell = instagrams.eq(i);
             cell.find(".instagram")
-                .attr("src", medPic)
-            // .attr("src", thumbPic)
-                .attr("data-src", largePic);
+                .attr("src", medPic);
+            // .attr("src", thumbPic);
+            cell.find(".instalink")
+                .attr("href", largePic);
             cell.find(".instaComment")
                 .attr("data-original-title", item.title)
-                .attr("data-imgurPage", largePic)
+                .attr("href", largePic)
                 .html(item.title);
         }
     }
@@ -228,7 +229,7 @@ function searchPosts(keywords, page){
                 page: page
             },
             success: function(json){
-                if (!json.pages){
+                if (!json.posts || !json.posts[0]){
                     throw "searchPosts:" + JSON.stringify(json, 0, 2);
                 } else {
                     loadSearchResults(json.posts, keywords);
@@ -281,14 +282,6 @@ function onPostInputBlur(){
     } else {
         $(this).removeClass("postInputBlack").addClass("postInputGrey");
     }
-}
-
-function openImgurSrc(){
-    window.open($(this).attr("data-src"));
-}
-
-function openImgurPage(){
-    window.open($(this).attr("data-imgurPage"));
 }
 
 // caching to save time
@@ -463,11 +456,12 @@ function loadImgurPic(posts, relatedWord){
     var cell = instagrams.eq(instapos);
     cell.find(".instagram")
         .attr("src", post.link)
-        .attr("data-src", post.link)
         .attr("alt", post.link);
+    cell.find(".instalink")
+        .attr("href", post.link);
     cell.find(".instaComment")
         .attr("data-original-title", post.title)
-        .attr("data-imgurPage", getImgurPageUrl(post.link))
+        .attr("href", getImgurPageUrl(post.link))
         .html(post.title)
         .highlight(relatedWord);
     instapos = (instapos + 1) % INSTAROW_SIZE;
@@ -562,9 +556,6 @@ function clickityclickclick(){
 
     // $("#settingsbutton").click(function(){settingsbutton()});
     $("#aboutbutton").click(function(){aboutbutton();});
-
-    $(".instagram").on("click", openImgurSrc);
-    $(".instaComment").on("click", openImgurPage);
 
     // todo. hide page buttons on page load, show on first search
     $(".firstPage").on("click", searchResultsFirstPage);
@@ -726,8 +717,8 @@ function initRelatedPicDivs(){
     var stuff = "<div class='instaRow'>";
     for (var i = 0; i < INSTAROW_SIZE; i++){
         stuff += "<div class='instaCell'>" +
-            "<div class='instaComment'></div>" +
-            '<img src="" data-src="" alt="" class="instagram" rel="tooltip">' +
+            "<a target='_blank' class='instaComment'></a>" +
+            '<a target="_blank" class="instalink"><img class="instagram" rel="tooltip"></a>' +
             "</div>"
     }
     stuff += "</div>";
@@ -815,10 +806,10 @@ function keyboardshortcuts(e){
         case KEYLEFT:
             searchResultsPrevPage();
             break;
-        case KEYUP:
+        case KEYDOWN:
             searchResultsLastPage();
             break;
-        case KEYDOWN:
+        case KEYUP:
             searchResultsFirstPage();
             break;
         }

@@ -239,11 +239,13 @@ textarea.postInput {
 }
 
 .instaComment {
+    display: block;
     font-family: times;
     font-size: 1em;
     font-weight: bold;
     line-height: 1em;
-    padding: 10px;
+    text-decoration: none;
+    color: #fff;
 }
 
 .instaComment:hover {
@@ -255,6 +257,7 @@ textarea.postInput {
 }
 
 img.instagram {
+    margin-top: 5px;
     opacity: 0.95;
     height: auto;
     width: 100%;
