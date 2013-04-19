@@ -530,7 +530,7 @@ button.postInput {
     padding-top: 40px;
 }
 
-#pagination {
+.pagination {
     display: table;
     padding-top: 30px;
     width: 100%;
@@ -556,4 +556,8 @@ button.postInput {
 
 .pageButton:hover {
     color: #ff8c00;
+}
+
+#toggleTV {
+    padding: 0 20px 0 20px;
 }

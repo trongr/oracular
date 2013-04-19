@@ -1,20 +1,3 @@
-// todo. make three radio buttons for imgur, flickr, and instagram,
-// for the user to choose who to get pictures from. use color codes.
-
-// todo. thesaurus entries
-
-// todo. search other sites, e.g. google if imgur returns no results.
-
-// todo. don't save or create empty notes
-
-// todo. clip imgur titles.
-
-// todo opt. remove some of the common words: you want to maximize the
-// number of imgur requests and results. maybe let user choose which
-// words to not request.
-
-// todo opt. autoresize textarea height
-
 var HOMEPAGE = "http://localhost:8000/journal/";
 // var HOMEPAGE = "http://oracular.herokuapp.com/journal/";
 
@@ -26,6 +9,7 @@ var moode = MODE_GLOBAL;        // weird name to avoid nameclashing.
                                 // in closure
 
 // keycodes
+var KEYESC = 27;
 var KEYSPACE = 32;
 var KEYENTER = 13;
 var KEYE = 69;
@@ -36,6 +20,8 @@ var KEYSEMICOLON = 59;
 var KEYONE = 49;                // shift + one = !
 var KEYSLASH = 191;             // shift + slash = ?
 var KEYBACKSPACE = 8;
+
+var KEY_E = 69;
 var KEY_M = 77;
 
 var KEYLEFT = 37;
@@ -50,6 +36,7 @@ var POSTCOUNT = 9;
 var POSTSPERCOL = 3;
 var SPANWIDTH = BOOTSTRAP_GRID / POSTSPERCOL;
 
+var isTVOn = true;             // showing related pics or not
 var instagrams;
 var instapos = 0;
 var INSTAROW_SIZE = 4;          // number of pics in instagram row
@@ -238,9 +225,11 @@ function searchPosts(keywords, page){
                 if (!json.posts){
                     throw "searchPosts:" + JSON.stringify(json, 0, 2);
                 } else if (!json.posts[0]){
-                    $("#searchResults").html("<div id='searchResultsMsg'>A note must contain all keywords exactly to show up.</div>");
+                    $(".pagination").hide();
+                    $("#searchResults").html("<div id='searchResultsMsg'>No results. A note must contain all keywords exactly to show up.</div>");
                     setPagination("", 0, 0);
                 } else {
+                    $(".pagination").show();
                     loadSearchResults(json.posts, keywords);
                     setPagination(json.q, json.pages, json.page);
                 }
@@ -355,17 +344,17 @@ function clearRelatedWords(){
 }
 
 // getting a post with the same words as what you're writing
-//
-// todo. smarter algorithm to get posts with similar ideas
 function getrelatedposts(){
     prepRelatedWords();
     if (!isCommonWord(relatedwords) && relatedwords.length >= 4){
         if (isLoggedIn){
             getOwnPosts(relatedwordsarray());
         }
-        getImgurPics(relatedwordsarray()[0]);
-        // getFlickrPics(relatedwordsarray()[0]);
-        // getInstagramPics(relatedwordsarray()[0]);
+        if (isTVOn){
+            getImgurPics(relatedwordsarray()[0]);
+            // getFlickrPics(relatedwordsarray()[0]);
+            // getInstagramPics(relatedwordsarray()[0]);
+        }
     }
     clearRelatedWords();
 }
@@ -448,7 +437,7 @@ function getImgurPics(relatedWord){
             window: "all"       // day | week | month | year | all
         },
         dataType: "json",
-        success: function(json){ // todo. color-coded feedback
+        success: function(json){
             if (!json.data || json.data.length === 0){
                 throw "home.js:getImgurPics:" + JSON.stringify(json, 0, 2);
             } else {
@@ -549,6 +538,8 @@ function clickityclickclick(){
         $("#moreDropdownMenu").dropdown("toggle");
     });
 
+    $("#toggleTV").on("click", toggleTV);
+
     $(".randompost, .relatedpost").on("click", editPost);
 
     $("#newPostSubmit").on("click", submitNewPost);
@@ -571,6 +562,11 @@ function clickityclickclick(){
     $(".prevPage").on("click", searchResultsPrevPage);
     $(".nextPage").on("click", searchResultsNextPage);
     $(".lastPage").on("click", searchResultsLastPage);
+}
+
+function toggleTV(){
+    isTVOn = !isTVOn;
+    $("#relatedpics").toggle();
 }
 
 function searchResultsLastPage(){
@@ -601,30 +597,6 @@ function searchResultsFirstPage(){
     }
 }
 
-// todo now remove
-function submitEditPost(){
-    $.ajax({
-        url: HOMEPAGE + "editpost",
-        type: "POST",
-        data: {
-            id: $("#editPostID").val(),
-            csrfmiddlewaretoken: getCSRF("editPostCSRF"),
-            title: $("#editPostTitle").val(),
-            body: $("#editPostBody").val(),
-            subject: "",
-        },
-        success: function(json){ // todo. check json status
-            showFeedback("SAVED", json.title, json.id);
-            showSubmittedPost(json);
-        },
-        // complete: function(){
-        // }
-    });
-    cancelEditPost();
-    window.location = "#";
-}
-
-// todo now
 function deleteEditPost(){
     $("#editPostForm").hide();
     $("#newPostForm").show();
@@ -849,7 +821,6 @@ function inputkeydownlogin(e){
     }
 }
 
-// todo opt. ctrl + n to edit nth box
 function keyboardshortcuts(e){
     var key = e.which || e.keyCode;
     if (e.ctrlKey){
@@ -879,6 +850,9 @@ function keyboardshortcuts(e){
             if (!$("input, textarea").is(":focus")){
                 searchResultsFirstPage();
             }
+            break;
+        case KEY_E:
+            toggleTV();
             break;
         }
     } else if (e.shiftKey){
