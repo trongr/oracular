@@ -94,6 +94,8 @@ var searchString = "";
 var currPage = 0;
 var totalPages = 0;             // 0-indexed
 
+var thesaurus;
+
 $(document).ready(function(){
     loginout();
 
@@ -180,7 +182,9 @@ function loadInterestingness(json){
 function registerBindings(){
     clickityclickclick(); // setting button onclicks
 
-    $(document).bind("keydown", keyboardshortcuts);
+    $(document)
+        .bind("keydown", keyboardshortcuts)
+        .bind("mousemove", documentMousemove);
 
     inputEnterKeypress();
 
@@ -193,6 +197,13 @@ function registerBindings(){
         .on("blur", onPlaceholderBlur);
 
     $("#searchBar").on("keydown", searchBar);
+}
+
+function documentMousemove(e){
+    $("#thesaurus").css({
+        left: e.pageX,
+        top: e.pageY
+    });
 }
 
 function searchBar(e){
@@ -289,6 +300,7 @@ function cachedivs(){
     feedback = $("#feedback");
     feedbackSignal = $("#feedbackSignal");
     feedbackMsg = $("#feedbackMsg");
+    thesaurus = $("#thesaurus");
 }
 
 function readChar(key){
@@ -346,7 +358,7 @@ function clearRelatedWords(){
 // getting a post with the same words as what you're writing
 function getrelatedposts(){
     prepRelatedWords();
-    if (!isCommonWord(relatedwords) && relatedwords.length >= 4){
+    if (!isCommonWord(relatedwords) && relatedwords.length >= 3){
         if (isLoggedIn){
             getOwnPosts(relatedwordsarray());
         }
@@ -354,9 +366,42 @@ function getrelatedposts(){
             getImgurPics(relatedwordsarray()[0]);
             // getFlickrPics(relatedwordsarray()[0]);
             // getInstagramPics(relatedwordsarray()[0]);
+            getSynonyms(relatedwordsarray()[0]);
         }
+        // todo. give the thesaurus its own toggle short cut
     }
     clearRelatedWords();
+}
+
+function getSynonyms(word){
+    $.ajax({
+        url: "http://api.wordreference.com/0.8/48d1b/json/thesaurus/" + word,
+        // big huge labs redirects if the word can't be found, but
+        // can't use ajax to follow links:
+        //
+        // url: "http://words.bighugelabs.com/api/2/b0aa4cc82f3bbd7e0ced3c26633ba08d/" + word + "/json",
+        type: "GET",
+        dataType: "jsonp",
+        data: {
+            callback: "loadSynonyms"
+        },
+    });
+}
+
+function loadSynonyms(json){
+    if (!json || !json.term0 || !json.term0.senses){
+        throw "loadSynonyms:" + JSON.stringify(json, 0, 2)
+    } else {
+        var stuff = "<span class='headword'>" + json.term0.term + "</span> ";
+        $.each(json.term0.senses, function(i, sense){
+            stuff += "<span class='wordsense'>" + sense.sensetext + "</span> ";
+            $.each(sense.synonyms, function(j, syn){
+                stuff += syn.synonym + ", ";
+            });
+            stuff = stuff.replace(/, $/, ". ");
+        });
+        thesaurus.html(stuff);
+    }
 }
 
 function getFlickrPics(relatedWord){
@@ -567,6 +612,7 @@ function clickityclickclick(){
 function toggleTV(){
     isTVOn = !isTVOn;
     $("#relatedpics").toggle();
+    thesaurus.toggle();
 }
 
 function searchResultsLastPage(){

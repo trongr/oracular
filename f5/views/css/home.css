@@ -349,8 +349,11 @@ button.postInput {
 }
 
 #editPostCancel, #editPostDelete {
-    /* background: #111; */
     padding: 20px 10px 20px 10px;
+}
+
+#editPostDelete {
+    margin-left: 40px;
 }
 
 #newPostSubmit,
@@ -553,4 +556,29 @@ button.postInput {
 
 #toggleTV {
     padding: 0 20px 0 20px;
+}
+
+#thesaurus {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    margin: 20px;
+    max-width: 30%;
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 0.9);
+    font-family: helvetica;
+    font-size: 1.2em;
+    font-weight: bold;
+    line-height: 1em;
+}
+
+.headword {
+    font-size: 1.4em;
+    color: #00BFFF;
+}
+
+.wordsense {
+    font-size: 1.2em;
+    color: #ff8c00;
 }
