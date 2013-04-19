@@ -72,6 +72,18 @@ def editpost(request):
         return jsonerror()
 
 @login_required
+def deletepost(request):
+    postid = int(request.POST.get(POSTID, ""))
+    try:
+        post = Post.objects.filter(creator=request.user.id).get(id=postid)
+        post.delete()
+        return JSONResponse({
+            "post": PostSerializer(post).data
+        })
+    except:
+        return jsonerror()
+
+@login_required
 def note(request):
     postid = request.GET.get(POSTID, "")
     try:
@@ -250,13 +262,12 @@ def search(req):
         creator = req.user.id
         q = req.GET.getlist("q[]")
         page = max(int(req.GET.get("page", 0)), 0)
-        # todo now
         posts = []
         qlist = (Q(title__icontains=rw) | Q(body__icontains=rw) for rw in q)
         posts = Post.objects.filter(creator=creator).filter(reduce(operator.and_, qlist)).order_by("-updated")
         data = {
             "posts": PostSerializer(posts[page * PAGE_SIZE:(page + 1) * PAGE_SIZE], many=True).data,
-            "pages": posts.count() / PAGE_SIZE,
+            "pages": (posts.count() - 1) / PAGE_SIZE,
             "page": page,
             "q": q
         }

@@ -258,7 +258,6 @@ textarea.postInput {
 
 img.instagram {
     margin-top: 5px;
-    opacity: 0.95;
     height: auto;
     width: 100%;
     max-height: 200px;
@@ -267,7 +266,7 @@ img.instagram {
 }
 
 img.instagram:hover {
-    opacity: 1;
+    opacity: 0.90;
     color: #ddd;                /* alt text color */
 }
 
@@ -476,6 +475,15 @@ button.postInput {
     padding-left: 10px;
 }
 
+#searchResultsMsg {
+    font-family: helvetica, arial;
+    font-size: 2em;
+    line-height: 1em;
+    font-weight: bold;
+    padding: 100px;
+    text-align: center;
+}
+
 .resultBox {
     float: left;
     width: 25%;
@@ -488,7 +496,7 @@ button.postInput {
 
 .resultBox:hover .postbody,
 .randompost:hover .postbody,
-#relatedPostBox:hover .postbody {
+.relatedpost:hover .postbody {
     color: #ddd;
 }
 
@@ -531,10 +539,19 @@ button.postInput {
 
 .pageButton {
     display: table-cell;
+    width: 20%;
     font-size: 3em;
     font-family: IM Fell English, helvetica;
     font-weight: bold;
     white-space: nowrap;
+}
+
+.prevPage {
+    text-align: right;
+}
+
+.nextPage {
+    text-align: left;
 }
 
 .pageButton:hover {

@@ -16,4 +16,5 @@ urlpatterns = patterns(
     url(r'^relatedposts$', views.relatedposts, name='relatedposts'),
     url(r'^search$', views.search, name='search'),
     url(r'^note$', views.note, name='note'),
+    url(r'^deletepost$', views.deletepost, name='deletepost'),
 )

@@ -61,7 +61,7 @@ var relatedPost;                // div for related post
 var relatedwords = "";
 var COMMON_WORDS = {
     "the":true, "or":true, "will":true,
-    "of":true, "just": true,
+    "of":true, "just": true, "most":true,
     "no":true, "and":true,
     "had":true, "each":true,
     "a":true, "by":true, "about":true,
@@ -214,9 +214,15 @@ function searchBar(e){
         switch (key){
         case KEYENTER:
             searchPosts($(this).val().split(" "), 0);
+            window.location = "#searchResultsTitle";
             break;
         }
     }
+}
+
+function loadRecent(){
+    $("#searchResultsWrapper").show();
+    searchPosts([""], -1);
 }
 
 function searchPosts(keywords, page){
@@ -229,23 +235,26 @@ function searchPosts(keywords, page){
                 page: page
             },
             success: function(json){
-                if (!json.posts || !json.posts[0]){
+                if (!json.posts){
                     throw "searchPosts:" + JSON.stringify(json, 0, 2);
+                } else if (!json.posts[0]){
+                    $("#searchResults").html("<div id='searchResultsMsg'>A note must contain all keywords exactly to show up.</div>");
+                    setPagination("", 0, 0);
                 } else {
                     loadSearchResults(json.posts, keywords);
-                    setPagination(json);
+                    setPagination(json.q, json.pages, json.page);
                 }
             }
         });
     }
 }
 
-function setPagination(json){
-    searchString = json.q;
-    currPage = json.page;
-    totalPages = json.pages;
-    $(".currPage").html(json.page);
-    $(".totalPages").html(" / " + json.pages);
+function setPagination(keywords, pages, page){
+    searchString = keywords;
+    currPage = page;
+    totalPages = pages;
+    $(".currPage").html(currPage);
+    $(".totalPages").html(" / " + totalPages);
 }
 
 function loadSearchResults(posts, keywords){
@@ -264,7 +273,6 @@ function loadSearchResults(posts, keywords){
     });
     box.html(stuff).highlight(keywords);
     rejax();
-    window.location = "#searchResultsTitle";
     $("#searchResults .result").on("click", editPost);
 }
 
@@ -546,6 +554,7 @@ function clickityclickclick(){
     $("#newPostSubmit").on("click", submitNewPost);
     $("#editPostSubmit").on("click", submitEditPost);
     $("#editPostCancel").on("click", cancelEditPost);
+    $("#editPostDelete").on("click", deleteEditPost);
 
     // fixing bug making register box closing when clicking on input
     $('#signupform').click(function (e) {e.stopPropagation();});
@@ -567,30 +576,79 @@ function clickityclickclick(){
 function searchResultsLastPage(){
     if (currPage != totalPages){
         searchPosts(searchString, totalPages);
+        window.location = "#searchResultsTitle";
     }
 }
 
 function searchResultsNextPage(){
     if (currPage != totalPages){
         searchPosts(searchString, currPage + 1);
+        window.location = "#searchResultsTitle";
     }
 }
 
 function searchResultsPrevPage(){
     if (currPage != 0){
         searchPosts(searchString, currPage - 1);
+        window.location = "#searchResultsTitle";
     }
 }
 
 function searchResultsFirstPage(){
     if (currPage != 0){
         searchPosts(searchString, 0);
+        window.location = "#searchResultsTitle";
+    }
+}
+
+// todo now remove
+function submitEditPost(){
+    $.ajax({
+        url: HOMEPAGE + "editpost",
+        type: "POST",
+        data: {
+            id: $("#editPostID").val(),
+            csrfmiddlewaretoken: getCSRF("editPostCSRF"),
+            title: $("#editPostTitle").val(),
+            body: $("#editPostBody").val(),
+            subject: "",
+        },
+        success: function(json){ // todo. check json status
+            showFeedback("SAVED", json.title, json.id);
+            showSubmittedPost(json);
+        },
+        // complete: function(){
+        // }
+    });
+    cancelEditPost();
+    window.location = "#";
+}
+
+// todo now
+function deleteEditPost(){
+    $("#editPostForm").hide();
+    $("#newPostForm").show();
+    if (isLoggedIn){
+        $.ajax({
+            url: HOMEPAGE + "deletepost",
+            type: "POST",
+            data: {
+                id: $("#editPostID").val(),
+                csrfmiddlewaretoken: getCSRF("editPostCSRF"),
+            },
+            success: function(json){
+                if (!json.post){
+                    throw "deleteEditPost:" + JSON.stringify(json, 0, 2);
+                } else {
+                    showFeedback("DELETED", json.post.title);
+                }
+            }
+        });
     }
 }
 
 function cancelEditPost(){
     $("#editPostForm").hide();
-    // clearNewPostForm();
     $("#newPostForm").show();
 }
 
@@ -661,6 +719,7 @@ function loginout(){
             showhideloginbar(json.isloggedin);
             if (isLoggedIn){
                 loadARandomPost();
+                loadRecent();
             }
         }
     });
@@ -707,6 +766,7 @@ function loginbutton(){
                 clearrandomposts();
                 mkrandomposts(true);
                 loadARandomPost();
+                loadRecent();
             }
         }
     });
@@ -801,16 +861,24 @@ function keyboardshortcuts(e){
             $("#searchBar").focus();
             break;
         case KEYRIGHT:
-            searchResultsNextPage();
+            if (!$("input, textarea").is(":focus")){
+                searchResultsNextPage();
+            }
             break;
         case KEYLEFT:
-            searchResultsPrevPage();
+            if (!$("input, textarea").is(":focus")){
+                searchResultsPrevPage();
+            }
             break;
         case KEYDOWN:
-            searchResultsLastPage();
+            if (!$("input, textarea").is(":focus")){
+                searchResultsLastPage();
+            }
             break;
         case KEYUP:
-            searchResultsFirstPage();
+            if (!$("input, textarea").is(":focus")){
+                searchResultsFirstPage();
+            }
             break;
         }
     } else if (e.shiftKey){
