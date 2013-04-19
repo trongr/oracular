@@ -223,6 +223,7 @@ textarea.postInput {
 #relatedpics {
     float: right;
     height: 230px;
+    margin-bottom: 30px;
 }
 
 .instaRow {
@@ -271,7 +272,6 @@ img.instagram:hover {
 }
 
 #pairPanel {
-    padding-top: 30px;
     width: 100%;
     clear: both;
     display: table;
@@ -513,7 +513,8 @@ button.postInput {
     margin-left: -10px;
 }
 
-#randomPostsTitle {
+#randomPostsTitle,
+#searchResultsTitle {
     font-size: 4em;
     font-weight: bold;
     text-align: center;
@@ -522,17 +523,9 @@ button.postInput {
     padding-bottom: 40px;
 }
 
-#searchResultsTitle {
-    font-size: 4em;
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
-    padding-top: 40px;
-}
-
 .pagination {
     display: table;
-    padding-top: 30px;
+    padding: 50px 0 50px 0;
     width: 100%;
     text-align: center;
 }
