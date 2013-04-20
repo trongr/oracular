@@ -39,7 +39,7 @@
                 <li><a id="logout" class="hide mydropdownbutton" href="#">LO<i class="icon-lock"></i>OUT</a></li>
             </div>
         </ul>
-        <a id="toggleTV" class="navbar-link mycontrol" rel="tooltip" title="CTRL + E" href="#">T<i class="icon-resize-vertical"></i>V</a>
+        <a id="toggleTV" class="navbar-link mycontrol" rel="tooltip" title="CTRL + E" href="#"><i class="icon-move"></i></a>
         <div class="navbar-text pull-right">
             <div id="loginbar" class="hide">
                 <input id="username" class="input-large placeholder" type="text" placeholder="username" data-placeholder="username">
@@ -115,25 +115,27 @@ modals -->
 <div id="thesaurusBox"></div>
 
 <div id="pairPanel" class="row-fluid">
-    <div id="relatedBox" class="hide">
-        <a href="#" class="relatedpost recentpost">
-            <span class="posttitle"></span>
-            <span class="hiddentitle hide tex2jax_ignore"></span>
-            <span class="postbody"></span>
-            <span class="hiddenbody hide tex2jax_ignore"></span>
-            <span class="postdate"></span>
-        </a>
-    </div>
-    <div id="frontispiece">
-        <span class="relatedpost recentpost">
-            <span class="posttitle"><span style="line-height: 1em; font-size: 1.5em;">Try typing something on the right</span></span>
-            <span class="hiddentitle hide tex2jax_ignore"></span>
-            <span class="postbody"><span style="line-height: 1em; font-size: 1.5em;">For example, &ldquo;Somehow it fills my head with ideas, only i don't exactly know what they are.&rdquo;
+    <div id="bigRelatedBox">
+        <div id="relatedBox" class="hide">
+            <a href="#" class="relatedpost recentpost">
+                <span class="posttitle"></span>
+                <span class="hiddentitle hide tex2jax_ignore"></span>
+                <span class="postbody"></span>
+                <span class="hiddenbody hide tex2jax_ignore"></span>
+                <span class="postdate"></span>
+            </a>
+        </div>
+        <div id="frontispiece">
+            <span class="relatedpost recentpost">
+                <span class="posttitle"><span style="line-height: 1em; font-size: 1.5em;">Try typing something on the right</span></span>
+                <span class="hiddentitle hide tex2jax_ignore"></span>
+                <span class="postbody"><span style="line-height: 1em; font-size: 1.5em;">For example, &ldquo;Somehow it fills my head with ideas, only i don't exactly know what they are.&rdquo;
 
 Oracular is like Google Instant Search, but instead of a search bar it has an editor, so you can do some neat things with it: for the first time in Internet history, you can truly procrastinate while doing serious work!</span></span>
-            <span class="hiddenbody hide tex2jax_ignore"></span>
-            <span class="postdate"></span>
-        </span>
+                <span class="hiddenbody hide tex2jax_ignore"></span>
+                <span class="postdate"></span>
+            </span>
+        </div>
     </div>
     <div id="postFormBox">
         <div id="newPostForm" class="form-horizontal">

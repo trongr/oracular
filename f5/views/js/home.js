@@ -357,7 +357,6 @@ function getrelatedposts(){
         // getFlickrPics(relatedwordsarray()[0]);
         // getInstagramPics(relatedwordsarray()[0]);
         getSynonyms(relatedwordsarray()[0]);
-        // todo now. give the thesaurus its own toggle short cut
     }
     clearRelatedWords();
 }
@@ -603,8 +602,7 @@ function toggleTV(){
     isTVOn = !isTVOn;
     $("#relatedpics").toggle();
     $("#thesaurusBox").toggle();
-    $("#relatedBox").toggle();
-    // todo now
+    $("#bigRelatedBox").toggle();
 }
 
 function searchResultsLastPage(){

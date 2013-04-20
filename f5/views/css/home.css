@@ -276,17 +276,19 @@ img.instagram:hover {
     display: table;
 }
 
-#relatedBox, #frontispiece {
+#bigRelatedBox {
     display: table-cell;
     padding: 20px;
     width: 45%;
     vertical-align: top;
 }
 
+#relatedBox, #frontispiece {
+}
+
 #postFormBox {
     display: table-cell;
     padding: 10px 20px 20px 20px;
-    width: 55%;
     vertical-align: top;
 }
 
