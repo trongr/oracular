@@ -562,11 +562,18 @@ button.postInput {
 #thesaurusBox {
     float: left;
     margin-top: 10px;
-    padding: 0 20px 0 40px;
     font-family: helvetica, arial;
     font-weight: bold;
     font-size: 1.2em;
     line-height: 1em;
+    height: 3em;
+    width: 100%;
+    right: -30px;
+    overflow-y: scroll;
+}
+
+#thesaurus {
+    margin: 0 40px 0 40px;
 }
 
 .headword {

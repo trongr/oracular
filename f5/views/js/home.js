@@ -291,7 +291,7 @@ function cachedivs(){
     feedback = $("#feedback");
     feedbackSignal = $("#feedbackSignal");
     feedbackMsg = $("#feedbackMsg");
-    thesaurus = $("#thesaurusBox");
+    thesaurus = $("#thesaurus");
 }
 
 function readChar(key){
