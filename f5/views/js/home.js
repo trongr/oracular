@@ -182,9 +182,7 @@ function loadInterestingness(json){
 function registerBindings(){
     clickityclickclick(); // setting button onclicks
 
-    $(document)
-        .bind("keydown", keyboardshortcuts)
-        .bind("mousemove", documentMousemove);
+    $(document).bind("keydown", keyboardshortcuts);
 
     inputEnterKeypress();
 
@@ -197,13 +195,6 @@ function registerBindings(){
         .on("blur", onPlaceholderBlur);
 
     $("#searchBar").on("keydown", searchBar);
-}
-
-function documentMousemove(e){
-    $("#thesaurus").css({
-        left: e.pageX,
-        top: e.pageY
-    });
 }
 
 function searchBar(e){
@@ -300,7 +291,7 @@ function cachedivs(){
     feedback = $("#feedback");
     feedbackSignal = $("#feedbackSignal");
     feedbackMsg = $("#feedbackMsg");
-    thesaurus = $("#thesaurus");
+    thesaurus = $("#thesaurusBox");
 }
 
 function readChar(key){
@@ -358,17 +349,15 @@ function clearRelatedWords(){
 // getting a post with the same words as what you're writing
 function getrelatedposts(){
     prepRelatedWords();
-    if (!isCommonWord(relatedwords) && relatedwords.length >= 3){
+    if (isTVOn && !isCommonWord(relatedwords) && relatedwords.length >= 3){
         if (isLoggedIn){
             getOwnPosts(relatedwordsarray());
         }
-        if (isTVOn){
-            getImgurPics(relatedwordsarray()[0]);
-            // getFlickrPics(relatedwordsarray()[0]);
-            // getInstagramPics(relatedwordsarray()[0]);
-            getSynonyms(relatedwordsarray()[0]);
-        }
-        // todo. give the thesaurus its own toggle short cut
+        getImgurPics(relatedwordsarray()[0]);
+        // getFlickrPics(relatedwordsarray()[0]);
+        // getInstagramPics(relatedwordsarray()[0]);
+        getSynonyms(relatedwordsarray()[0]);
+        // todo now. give the thesaurus its own toggle short cut
     }
     clearRelatedWords();
 }
@@ -394,11 +383,12 @@ function loadSynonyms(json){
     } else {
         var stuff = "<span class='headword'>" + json.term0.term + "</span> ";
         $.each(json.term0.senses, function(i, sense){
-            stuff += "<span class='wordsense'>" + sense.sensetext + "</span> ";
+            stuff += "<span class='" + (i%2===0 ? "orangeSyns" : "whiteSyns") + "'>";
             $.each(sense.synonyms, function(j, syn){
                 stuff += syn.synonym + ", ";
             });
-            stuff = stuff.replace(/, $/, ". ");
+            stuff = stuff.replace(/, $/, "");
+            stuff += "</span> ";
         });
         thesaurus.html(stuff);
     }
@@ -612,7 +602,9 @@ function clickityclickclick(){
 function toggleTV(){
     isTVOn = !isTVOn;
     $("#relatedpics").toggle();
-    thesaurus.toggle();
+    $("#thesaurusBox").toggle();
+    $("#relatedBox").toggle();
+    // todo now
 }
 
 function searchResultsLastPage(){

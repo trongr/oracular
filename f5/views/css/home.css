@@ -223,7 +223,6 @@ textarea.postInput {
 #relatedpics {
     float: right;
     height: 230px;
-    margin-bottom: 30px;
 }
 
 .instaRow {
@@ -286,7 +285,7 @@ img.instagram:hover {
 
 #postFormBox {
     display: table-cell;
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
     width: 55%;
     vertical-align: top;
 }
@@ -558,27 +557,25 @@ button.postInput {
     padding: 0 20px 0 20px;
 }
 
-#thesaurus {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 20px;
-    margin: 20px;
-    max-width: 30%;
-    border-radius: 2px;
-    background-color: rgba(0, 0, 0, 0.9);
-    font-family: helvetica;
-    font-size: 1.2em;
+#thesaurusBox {
+    float: left;
+    margin-top: 10px;
+    padding: 0 20px 0 40px;
+    font-family: helvetica, arial;
     font-weight: bold;
+    font-size: 1.2em;
     line-height: 1em;
 }
 
 .headword {
-    font-size: 1.4em;
+    font-size: 1.2em;
     color: #00BFFF;
 }
 
-.wordsense {
-    font-size: 1.2em;
+.orangeSyns {
     color: #ff8c00;
+}
+
+.whiteSyns {
+    color: #fff;
 }
