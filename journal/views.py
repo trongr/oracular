@@ -205,14 +205,14 @@ def randomposts(request):
         posts = getrandomposts(creator, postcount)
         return JSONResponse(posts)
     else:
-        data = getrandompublicposts(postcount)
-        return JSONResponse(data)
+        # data = getrandompublicposts(postcount)
+        return JSONResponse({})
 
-def getrandompublicposts(postcount):
-    posts = Post.objects.filter(creator__username="public").order_by("id")
-    return {
-        "posts": PostSerializer(posts, many=True).data
-    }
+# def getrandompublicposts(postcount):
+#     posts = Post.objects.filter(creator__username="public").order_by("id")
+#     return {
+#         "posts": PostSerializer(posts, many=True).data
+#     }
 
 def getrandomposts(creator, postcount):
     limit = 20
@@ -251,10 +251,7 @@ def relatedposts(req):
         }
         return JSONResponse(data)
     else:
-        # todo opt. return public posts
-        data = {
-        }
-        return JSONResponse(data)
+        return JSONResponse({})
 
 # todo. validate everything
 def search(req):
@@ -273,9 +270,7 @@ def search(req):
         }
         return JSONResponse(data)
     else:
-        data = {
-        }
-        return JSONResponse(data)
+        return JSONResponse({})
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:

@@ -69,26 +69,50 @@
 <div id="aboutmodal" class="modal hide" tabindex="-1">
     <div id="byline">
         <p>
+            My name is
+
+            <a href="https://twitter.com/nahnturong" target="_blank">Tr<i class="icon-twitter-sign smallicon"></i>ng.</a>
+
+            I'm studying Math,<sup>+</sup> Visual Art, and Computer
+            Science at the University of Toronto, Canada.
+        </p>
+        <p style="font-size: 0.8em">
+            <sup>+</sup> For mathematicians: press ctrl + m in the
+            editor to enter \(\LaTeX.\)
+        </p>
+        <br>
+        <p>
             This project's source is on
             <a href="https://github.com/trongtruong/f5" target="_blank">gith<i class="icon-github-alt"></i>b.</a>
 
             If you have any questions, comments, or general
             objections, please send them to me at
-
             <span id="email">oracular.app@gmail.com</span>
         </p>
         <br>
-        <p>
-            My name is
-            <a href="https://twitter.com/nahnturong" target="_blank">Tr<i class="icon-twitter-sign smallicon"></i>ng.</a>
+        <p style="font-size: 0.8em; line-height: 1em">
+            Oracular is built with jQuery, Bootstrap, Django and
+            Postgres, Javascript libraries
 
-            I'm studying Math,<sup>+</sup> Visual Art, and Computer Science at the
-            University of Toronto, in Canada. I love making simple
-            tools that do big things.
-        </p>
-        <p style="font-size: 0.8em">
-            <sup>+</sup> For mathematicians: press ctrl + m in the
-            editor to enter \(\LaTeX.\)
+            <a href="http://www.mathjax.org/" target="_blank">MathJax,</a>
+
+            <a href="http://bartaz.github.io/sandbox.js/jquery.highlight.html" target="_blank">jQuery highlight,</a>
+
+            and
+
+            <a href="http://momentjs.com/" target="_blank">Moment.js.</a>
+
+            The pictures on the front page are from
+
+            <a href="http://flickr.com/" target="_blank">Flickr,</a>
+
+            and the type-search ones are from
+
+            <a href="http://imgur.com/" target="_blank">Imgur.</a>
+
+            The synonyms are from
+
+            <a href="http://wordreference.com/" target="_blank">wordreference.com.</a>
         </p>
     </div>
 </div>
@@ -110,9 +134,9 @@ modals -->
 <!--     </div> -->
 <!-- </div> -->
 
-<div id="relatedpics"></div>
-
 <div id="thesaurusBox"><div id="thesaurus"></div></div>
+
+<div id="relatedpics"></div>
 
 <div id="pairPanel" class="row-fluid">
     <div id="bigRelatedBox">
@@ -127,11 +151,14 @@ modals -->
         </div>
         <div id="frontispiece">
             <span class="relatedpost recentpost">
-                <span class="posttitle"><span style="line-height: 1em; font-size: 1.5em;">Try typing something on the right</span></span>
+                <span class="posttitle">Try typing something on the right</span>
                 <span class="hiddentitle hide tex2jax_ignore"></span>
-                <span class="postbody"><span style="line-height: 1em; font-size: 1.5em;">For example, &ldquo;Somehow it fills my head with ideas, only i don't exactly know what they are.&rdquo;
+                <span class="postbody">For example, &ldquo;Somehow it fills my head with ideas, only I don't exactly know what they are.&rdquo;
 
-Oracular is like Google Instant Search, but instead of a search bar it has an editor, so you can do some neat things with it: for the first time in Internet history, you can truly procrastinate while doing serious work!</span></span>
+You should've seen some pictures flashing by at the top as you typed. They're from <a href="http://imgur.com" target="_blank">Imgur,</a> which has some of the funniest pictures online. They're meant to keep you entertained while using the main feature of the app:
+
+Oracular is a personal journal that reminds you of old entries as you write new ones. Every time you type an important word, it'll search all your notes and display an entry containing that word. Students can use this for example to keep lecture notes.
+                </span>
                 <span class="hiddenbody hide tex2jax_ignore"></span>
                 <span class="postdate"></span>
             </span>
@@ -177,7 +204,7 @@ Oracular is like Google Instant Search, but instead of a search bar it has an ed
     </div>
 </div>
 
-<div>
+<div id="randomPostBox" class="hide">
     <div id="randomPostsTitle">RANDOM</div>
     <div id="randomposts"></div>
 </div>

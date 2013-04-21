@@ -47,17 +47,17 @@ var displaypanels;              // divs for random posts
 var relatedPost;                // div for related post
 var relatedwords = "";
 var COMMON_WORDS = {
-    "the":true, "or":true, "will":true,
-    "of":true, "just": true, "most":true,
-    "no":true, "and":true,
-    "had":true, "each":true,
-    "a":true, "by":true, "about":true,
-    "could":true, "to":true,
-    "out":true, "in":true,
+    "the":true, "or":true, "will":true, "where":true, "know":true,
+    "of":true, "just": true, "most":true, "going":true, "go":true,
+    "no":true, "and":true, "thing":true, "think":true, "during":true,
+    "had":true, "each":true, "enough":true, "it's":true, "really":true,
+    "a":true, "by":true, "about":true, "well":true, "what's":true,
+    "could":true, "to":true, "there's":true,
+    "out":true, "in":true, "like":true,
     "but":true, "my":true,
     "is":true, "not":true, "then":true,
     "than":true, "you":true, "you're": true,
-    "you've":true,
+    "you've":true, "something":true,
     "them":true, "it":true,
     "were":true, "so":true, "been":true,
     "he":true, "we":true, "some":true,
@@ -102,9 +102,10 @@ $(document).ready(function(){
     clearNewPostForm();
 
     initRelatedPicDivs();
+    initPostDivs();
+
     loadInterestingFlickrPics();
 
-    initPostDivs();
     mkrandomposts(true);
 
     cachedivs();
@@ -603,6 +604,15 @@ function toggleTV(){
     $("#relatedpics").toggle();
     $("#thesaurusBox").toggle();
     $("#bigRelatedBox").toggle();
+    if (isTVOn){
+        $("textarea.postInput").css({
+            height: "10em"
+        })
+    } else {
+        $("textarea.postInput").css({
+            height: "36em"
+        })
+    }
 }
 
 function searchResultsLastPage(){
@@ -648,7 +658,7 @@ function deleteEditPost(){
                 if (!json.post){
                     throw "deleteEditPost:" + JSON.stringify(json, 0, 2);
                 } else {
-                    showFeedback("DELETED", json.post.title);
+                    showFeedback("<i class='icon-trash'></i>", json.post.title);
                 }
             }
         });
@@ -745,6 +755,8 @@ function showhideloginbar(isloggedin){
         $("#searchButton").show();
         $("#frontispiece").hide();
         $("#relatedBox").show();
+        $("#randomPostBox").show();
+        $("#searchResultsWrapper").show();
     } else {
         $("#newpostbutton").hide();
         $("#reloadbutton").hide();
@@ -754,6 +766,8 @@ function showhideloginbar(isloggedin){
         $("#searchButton").hide();
         $("#frontispiece").show();
         $("#relatedBox").hide();
+        $("#randomPostBox").hide();
+        $("#searchResultsWrapper").hide();
     }
 }
 
@@ -906,9 +920,13 @@ function mkrandomposts(firstTime){
     $.getJSON(HOMEPAGE + "randomposts", {
         postcount: POSTCOUNT
     }, function(json){
-        loadposts(json);
-        if (!firstTime){
-            window.location = "#randomPostsTitle";
+        if (json.posts && json.posts[0]){
+            loadposts(json);
+            if (!firstTime){
+                window.location = "#randomPostsTitle";
+            }
+        } else {
+            throw "mkrandomposts:" + JSON.stringify(json, 0, 2);
         }
     });
 }
@@ -983,9 +1001,13 @@ function submitEditPost(){
             subject: "",
             csrfmiddlewaretoken: getCSRF("editPostCSRF"),
         },
-        success: function(json){ // todo. check json status
-            showFeedback("SAVED", json.title, json.id);
-            showSubmittedPost(json);
+        success: function(json){
+            if (!json.id){
+                throw "submitEditPost:" + JSON.stringify(json, 0, 2)
+            } else {
+                showFeedback("<i class='icon-plus'></i>", json.title, json.id);
+                showSubmittedPost(json);
+            }
         },
         // complete: function(){
         // }
@@ -1033,11 +1055,13 @@ function submitNewPost(){
             csrfmiddlewaretoken: getCSRF("newPostCSRF"),
         },
         success: function(json){
-            showFeedback("CREATED", json.title, json.id); // todo. check response status
-            showSubmittedPost(json);
+            if (!json.id){
+                throw "submitNewPost:" + JSON.stringify(json, 0, 2)
+            } else {
+                showFeedback("<i class='icon-plus'></i>", json.title, json.id);
+                showSubmittedPost(json);
+            }
         },
-        // complete: function(){
-        // }
     });
     clearNewPostForm();
     $("*:focus").blur();        // onfocusing submit button, cause it glows
