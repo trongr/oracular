@@ -52,9 +52,9 @@ var COMMON_WORDS = {
     "no":true, "and":true, "thing":true, "think":true, "during":true,
     "had":true, "each":true, "enough":true, "it's":true, "really":true,
     "a":true, "by":true, "about":true, "well":true, "what's":true,
-    "could":true, "to":true, "there's":true,
-    "out":true, "in":true, "like":true,
-    "but":true, "my":true,
+    "could":true, "to":true, "there's":true, "somehow":true, "only":true,
+    "out":true, "in":true, "like":true, "what":true, "sometimes":true,
+    "but":true, "my":true, "yourself":true, "myself":true,
     "is":true, "not":true, "then":true,
     "than":true, "you":true, "you're": true,
     "you've":true, "something":true,
@@ -137,6 +137,7 @@ function tooltips(){
     $(".instaComment").tooltip({'placement': 'bottom'});
     $("button").tooltip({'placement': 'top'});
     $(".pageButton").tooltip({'placement': 'top'});
+    $("input#searchBar").tooltip({"placement": "bottom"});
 }
 
 function loadInterestingFlickrPics(){
@@ -567,13 +568,13 @@ function clickityclickclick(){
     $("#newpostbutton").click(function(){newPost(); return false;});
     $("#reloadbutton").click(function(){mkrandomposts(); return false;});
     $("#searchButton").click(function(){$("#searchBar").focus(); return false;});
+    $("#toggleTV").on("click", function(){toggleTV(); return false});
 
     // bootstrap dropdown menu doesn't close on item click, so:
     $("#moreDropdownMenu .mydropdownbutton").on("click", function(){
         $("#moreDropdownMenu").dropdown("toggle");
     });
 
-    $("#toggleTV").on("click", toggleTV);
 
     $(".randompost, .relatedpost").on("click", editPost);
 

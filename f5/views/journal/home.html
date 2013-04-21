@@ -19,33 +19,36 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner mynavbar">
     <div class="container-fluid">
-        <a id="moreMenuButton" class="dropdown-toggle navbar-text mycontrol" data-toggle="dropdown" href="#">MOR<i class="icon-align-justify"></i></a>
+        <a id="moreMenuButton" class="dropdown-toggle navbar-text mycontrol" data-toggle="dropdown" href="#"><i class="icon-align-justify"></i> MORE</a>
         <ul id="moreDropdownMenu" class="dropdown-menu mydropdownmenu">
             <div class="span4">
                 <li>
-                    <a id="newpostbutton" class="mydropdownbutton" href="#">N<i class="icon-file"></i>W
+                    <a id="newpostbutton" class="mydropdownbutton" href="#"><i class="icon-file"></i> NEW
                     <span class="shortcuttip">CTRL + SPACE</span></a>
                 </li>
                 <li>
-                    <a id="searchButton" class="mydropdownbutton" href="#randomposts">SEA<i class="icon-search"></i>CH
+                    <a id="searchButton" class="mydropdownbutton" href="#randomposts"><i class="icon-search"></i> SEARCH
                     <span class="shortcuttip">CTRL + ENTER</span></a>
                 </li>
                 <li>
-                    <a id="reloadbutton" class="mydropdownbutton" href="#randomposts">RAND<i class="icon-repeat"></i>M
+                    <a id="reloadbutton" class="mydropdownbutton" href="#randomposts"><i class="icon-repeat"></i> RANDOM
                     <span class="shortcuttip">ALT + ENTER</span></a>
                 </li>
+                <li>
+                    <a id="toggleTV" class="mydropdownbutton" href="#"><i class="icon-move"></i> TOGGLE SCREEN
+                    <span class="shortcuttip">CTRL + E</span></a>
+                </li>
                 <li class="divider"></li>
-                <li><a id="aboutbutton" class="mydropdownbutton" href="#"><i class="icon-user"></i>BOUT</a></li>
-                <li><a id="logout" class="hide mydropdownbutton" href="#">LO<i class="icon-lock"></i>OUT</a></li>
+                <li><a id="aboutbutton" class="mydropdownbutton" href="#"><i class="icon-user"></i> ABOUT</a></li>
+                <li><a id="logout" class="hide mydropdownbutton" href="#"><i class="icon-lock"></i> LOGOUT</a></li>
             </div>
         </ul>
-        <a id="toggleTV" class="navbar-link mycontrol" rel="tooltip" title="CTRL + E" href="#"><i class="icon-move"></i></a>
         <div class="navbar-text pull-right">
             <div id="loginbar" class="hide">
                 <input id="username" class="input-large placeholder" type="text" placeholder="username" data-placeholder="username">
                 <input id="password" class="input-large placeholder" type="password" placeholder="password" data-placeholder="password">
-                <a id="loginbutton" class="navbar-link mycontrol" href="#">LO<i class="icon-unlock"></i>IN</a>
-                <a id="signupbutton" class="navbar-link dropdown-toggle mycontrol" data-toggle="dropdown" href="#">SIG<i class="icon-key"></i>UP</a>
+                <a id="loginbutton" class="navbar-link mycontrol" href="#">LOGIN</a>
+                <a id="signupbutton" class="navbar-link dropdown-toggle mycontrol" data-toggle="dropdown" href="#">SIGNUP</a>
                 <div id="signupform" class="dropdown-menu pull-right">
                   <input id="signupcsrf" type="hidden" value="{{ csrf_token }}">
                   <input id="signupusername" class="placeholder" type="text" placeholder="username" data-placeholder="username"><br>
@@ -56,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <input id="searchBar" class="placeholder pull-right hide" placeholder="search" data-placeholder="search" type="text">
+        <input id="searchBar" class="placeholder pull-right hide" rel="tooltip" title="Leave blank and press enter to see all your notes" placeholder="search" data-placeholder="search" type="text">
         <a id="feedback" class="navbar-text mycontrol pull-right">
             <span id="feedbackSignal"></span>
             <span id="feedbackMsg"></span>
@@ -153,11 +156,11 @@ modals -->
             <span class="relatedpost recentpost">
                 <span class="posttitle">Try typing something on the right</span>
                 <span class="hiddentitle hide tex2jax_ignore"></span>
-                <span class="postbody">For example, &ldquo;Somehow it fills my head with ideas, only I don't exactly know what they are.&rdquo;
+                <span class="postbody">For example, &ldquo;The egg came first, then the chicken egg, and finally the chicken.&rdquo;
 
-You should've seen some pictures flashing by at the top as you typed. They're from <a href="http://imgur.com" target="_blank">Imgur,</a> which has some of the funniest pictures online. They're meant to keep you entertained while using the main feature of the app:
+There should've been some pictures flashing by at the top as you typed. They're meant to keep you entertained while using the main feature of the app:
 
-Oracular is a personal journal that reminds you of old entries as you write new ones. Every time you type an important word, it'll search all your notes and display an entry containing that word. Students can use this for example to keep lecture notes.
+Oracular is a personal journal that reminds you of old entries as you write new ones. Every time you type an important word, it'll search all your notes and display an entry containing that word. Students can use this for example to record lecture notes.
                 </span>
                 <span class="hiddenbody hide tex2jax_ignore"></span>
                 <span class="postdate"></span>
